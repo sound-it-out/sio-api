@@ -2,11 +2,11 @@
 using System.IO;
 using System.Threading.Tasks;
 using Clipboard;
-using SIO.Abstraction.Commands;
-using SIO.Domain.Translation.Commands;
-using SIO.Domain.Translation.Services;
+using OpenEventSourcing.Commands;
+using SIO.Domain.Translationss.Commands;
+using SIO.Domain.Translationss.Services;
 
-namespace SIO.Domain.Translation.CommandHandlers
+namespace SIO.Domain.Translations.CommandHandlers
 {
     internal class QueueTranslationCommandHandler : ICommandHandler<QueueTranslationCommand>
     {

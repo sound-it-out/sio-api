@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace SIO.Domain.Translation.Services
+namespace SIO.Domain.Translations.Services
 {
     internal interface ISpeechSynthesizer
     {
