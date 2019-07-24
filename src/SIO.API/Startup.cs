@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OpenEventSourcing.EntityFrameworkCore.SqlServer;
+using OpenEventSourcing.Extensions;
+using OpenEventSourcing.Serialization.Json.Extensions;
 
 namespace SIO.API
 {
@@ -26,6 +29,12 @@ namespace SIO.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddOpenEventSourcing()
+                .AddCommands()
+                .AddEvents()
+                .AddQueries()
+                .AddJsonSerializers();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
