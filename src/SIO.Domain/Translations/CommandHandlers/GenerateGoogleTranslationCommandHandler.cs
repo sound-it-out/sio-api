@@ -37,7 +37,7 @@ namespace SIO.Domain.Translations.Commands
 
             var client = TextToSpeechClient.Create(channel);
 
-            var chunks = command.Content.ChunkWithSentance(5000);
+            var chunks = command.Content.ChunkWithDelimeters(5000, '.', '!', '?');
 
             var response = await client.SynthesizeSpeechAsync(
                 input: new SynthesisInput

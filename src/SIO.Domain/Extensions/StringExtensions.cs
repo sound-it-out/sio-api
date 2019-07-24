@@ -6,42 +6,46 @@ namespace SIO.Domain.Extensions
 {
     internal static class StringExtensions
     {
-        public static IEnumerable<string> ChunkWithSentance(this string source, int maxChar)
+        public static IEnumerable<string> ChunkWithDelimeters(this string source, int maxChar, params char[] delimeters)
         {
             var sourceSpan = source.AsSpan();
-            var currentText = new char[maxChar];
-            var items = new List<char[]>();
+            var items = new List<string>();
 
             var pointer = 0;
             var lazyPointer = 0;
-            var currentIndex = 0;
 
-            for (int i = 0; pointer <= sourceSpan.Length; i++, pointer++, currentIndex++)
+            while (pointer <= sourceSpan.Length)
             {
-                if (currentIndex == maxChar - 1 || pointer == sourceSpan.Length)
+                bool foundMatch = false;
+
+                pointer = Math.Min(lazyPointer + maxChar, sourceSpan.Length);
+
+                if (pointer == sourceSpan.Length)
                 {
-                    for (var j = maxChar - 1; j >= 0; j--)
+                    items.Add(sourceSpan.Slice(lazyPointer, pointer - lazyPointer).ToString().Trim());
+                    break;
+                }
+
+                for (var j = pointer; j >= lazyPointer; j--)
+                {
+                    var tempChar = sourceSpan[j];
+
+                    if (delimeters.Contains(tempChar))
                     {
-                        var tempChar = currentText.AsSpan()[j];
-
-                        if (tempChar == '.')
-                        {
-                            items.Add((char[])currentText.Clone());
-                            Array.Clear(currentText, 0, currentText.Length);
-                            pointer = j + 1 + lazyPointer;
-                            lazyPointer = pointer;
-                            currentIndex = -1;
-                            break;
-                        }
-
-                        currentText[j] = ' ';
+                        foundMatch = true;
+                        items.Add(sourceSpan.Slice(lazyPointer, j + 1 - lazyPointer).ToString().Trim());
+                        lazyPointer = j + 1;
                     }
                 }
-                else
-                    currentText[currentIndex] = sourceSpan[pointer];
+
+                if (!foundMatch)
+                {
+                    items.Add(sourceSpan.Slice(lazyPointer, pointer - lazyPointer).ToString().Trim());
+                    lazyPointer = pointer;
+                }
             }
 
-            return items.Select(i => new string(i).Trim());
+            return items;
         }
     }
 }
