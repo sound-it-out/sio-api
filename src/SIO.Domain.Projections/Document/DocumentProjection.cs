@@ -55,7 +55,7 @@ namespace SIO.Domain.Projections.Document
 
         private async Task ApplyAsync(TranslationQueued @event)
         {
-            await _writer.Update(@event.AggregateId, document =>
+            await _writer.Update(@event.CorrelationId.Value, document =>
             {
                 document.Data.Condition = DocumentCondition.TranslationQueued;
                 document.LastModifiedDate = @event.Timestamp;
@@ -65,7 +65,7 @@ namespace SIO.Domain.Projections.Document
 
         private async Task ApplyAsync(TranslationStarted @event)
         {
-            await _writer.Update(@event.AggregateId, document =>
+            await _writer.Update(@event.CorrelationId.Value, document =>
             {
                 document.Data.Condition = DocumentCondition.TranslationStarted;
                 document.LastModifiedDate = @event.Timestamp;
@@ -75,7 +75,7 @@ namespace SIO.Domain.Projections.Document
 
         private async Task ApplyAsync(TranslationSucceded @event)
         {
-            await _writer.Update(@event.AggregateId, document =>
+            await _writer.Update(@event.CorrelationId.Value, document =>
             {
                 document.Data.Condition = DocumentCondition.TranslationSucceded;
                 document.Data.TranslationPath = @event.TranslationPath;
@@ -86,7 +86,7 @@ namespace SIO.Domain.Projections.Document
 
         private async Task ApplyAsync(TranslationFailed @event)
         {
-            await _writer.Update(@event.AggregateId, document =>
+            await _writer.Update(@event.CorrelationId.Value, document =>
             {
                 document.Data.Condition = DocumentCondition.TranslationFailed;
                 document.LastModifiedDate = @event.Timestamp;

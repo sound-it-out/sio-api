@@ -30,8 +30,8 @@ namespace SIO.Domain.Document.EventHandlers
             await _hubContext.NotifyAsync(@event);
 
             await _commandDispatcher.DispatchAsync(new QueueTranslationCommand(
-                aggregateId: @event.AggregateId,
-                correlationId: @event.CorrelationId.Value,
+                aggregateId: Guid.NewGuid(),
+                correlationId: @event.AggregateId,
                 version: @event.Version + 1,
                 userId: @event.UserId,
                 translationType: @event.TranslationType

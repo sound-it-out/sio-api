@@ -9,8 +9,9 @@ using Google.Protobuf;
 using Grpc.Auth;
 using Grpc.Core;
 using OpenEventSourcing.Commands;
+using OpenEventSourcing.Domain;
 using OpenEventSourcing.Events;
-using SIO.Domain.Translation.Events;
+using SIO.Domain.Document;
 
 namespace SIO.Domain.Translation.Commands
 {
@@ -18,28 +19,36 @@ namespace SIO.Domain.Translation.Commands
     {
         private readonly IEventBus _eventBus;
         private readonly ICommandDispatcher _commandDispatcher;
+        private readonly IAggregateRepository _aggregateRepository;
 
-        public StartGoogleTranslationCommandHandler(IEventBus eventBus, ICommandDispatcher commandDispatcher)
+        public StartGoogleTranslationCommandHandler(IEventBus eventBus, ICommandDispatcher commandDispatcher, IAggregateRepository aggregateRepository)
         {
             if (eventBus == null)
                 throw new ArgumentNullException(nameof(eventBus));
             if (commandDispatcher == null)
                 throw new ArgumentNullException(nameof(commandDispatcher));
+            if (aggregateRepository == null)
+                throw new ArgumentNullException(nameof(aggregateRepository));
 
             _eventBus = eventBus;
             _commandDispatcher = commandDispatcher;
+            _aggregateRepository = aggregateRepository;
         }
 
         public async Task ExecuteAsync(StartGoogleTranslationCommand command)
         {
-            var startedEvent = new TranslationStarted(
-                aggregateId: command.AggregateId,
-                version: command.Version
-            );
+            var aggregate = await _aggregateRepository.GetAsync<Document.Document, DocumentState>(command.CorrelationId);
+            aggregate.StartTranslation(command.CorrelationId, command.Version);
 
-            startedEvent.UpdateFrom(command);
+            var events = aggregate.GetUncommittedEvents();
 
-            await _eventBus.PublishAsync(startedEvent);
+            foreach (var @event in events)
+                @event.UpdateFrom(command);
+
+            events = events.ToList();
+
+            await _aggregateRepository.SaveAsync<Document.Document, DocumentState>(aggregate, 0);
+            await _eventBus.PublishAsync(events);
 
             try
             {
@@ -101,15 +110,17 @@ namespace SIO.Domain.Translation.Commands
             }
             catch(Exception e)
             {
-                var failedEvent = new TranslationFailed(
-                    aggregateId: command.AggregateId,
-                    version: command.Version,
-                    error: e.Message
-                );
+                aggregate.FailTranslation(command.CorrelationId, command.Version, e.Message);
 
-                failedEvent.UpdateFrom(command);
+                var newEvents = aggregate.GetUncommittedEvents();
 
-                await _eventBus.PublishAsync(failedEvent);
+                foreach (var @event in events)
+                    @event.UpdateFrom(command);
+
+                events = events.ToList();
+
+                await _aggregateRepository.SaveAsync<Document.Document, DocumentState>(aggregate, 0);
+                await _eventBus.PublishAsync(events);
             }
                       
         }

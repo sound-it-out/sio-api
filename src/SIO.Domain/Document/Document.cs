@@ -30,6 +30,40 @@ namespace SIO.Domain.Document
             ));
         }
 
+        public void QueueTranslation(Guid aggregateId, int version)
+        {
+            Apply(new TranslationQueued(
+                aggregateId: aggregateId,
+                version: version
+            ));
+        }
+
+        public void StartTranslation(Guid aggregateId, int version)
+        {
+            Apply(new TranslationStarted(
+                aggregateId: aggregateId,
+                version: version
+            ));
+        }
+
+        public void AcceptTranslation(Guid aggregateId, int version, string translationPath)
+        {
+            Apply(new TranslationSucceded(
+                aggregateId: aggregateId,
+                version: version,
+                translationPath: translationPath
+            ));
+        }
+
+        public void FailTranslation(Guid aggregateId, int version, string error)
+        {
+            Apply(new TranslationFailed(
+                aggregateId: aggregateId,
+                version: version,
+                error: error
+            ));
+        }
+
         public void Handle(DocumentUploaded @event)
         {
             _state.Id = @event.AggregateId;

@@ -1,22 +1,31 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using OpenEventSourcing.Commands;
+using OpenEventSourcing.Domain;
 using OpenEventSourcing.Events;
 using SIO.Domain.Document.Commands;
-using SIO.Domain.Document.Events;
 
 namespace SIO.Domain.Document.CommandHandlers
 {
     internal class UploadDocumentCommandHandler : ICommandHandler<UploadDocumentCommand>
     {
         private readonly IEventBus _eventBus;
+        private readonly IAggregateRepository _aggregateRepository;
+        private readonly IAggregateFactory _aggregateFactory;
 
-        public UploadDocumentCommandHandler(IEventBus eventBus)
+        public UploadDocumentCommandHandler(IEventBus eventBus, IAggregateRepository aggregateRepository, IAggregateFactory aggregateFactory)
         {
             if (eventBus == null)
                 throw new ArgumentNullException(nameof(eventBus));
+            if (aggregateRepository == null)
+                throw new ArgumentNullException(nameof(aggregateRepository));
+            if (aggregateFactory == null)
+                throw new ArgumentNullException(nameof(aggregateFactory));
 
             _eventBus = eventBus;
+            _aggregateRepository = aggregateRepository;
+            _aggregateFactory = aggregateFactory;
         }
 
         public async Task ExecuteAsync(UploadDocumentCommand command)
@@ -27,10 +36,22 @@ namespace SIO.Domain.Document.CommandHandlers
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var @event = new DocumentUploaded(command.AggregateId, command.Version, command.TranslationType, "");
-            @event.UpdateFrom(command);
+            var aggregate = _aggregateFactory.FromHistory<Document, DocumentState>(Enumerable.Empty<IEvent>());
 
-            await _eventBus.PublishAsync(@event);
+            if(aggregate == null)
+                throw new ArgumentNullException(nameof(aggregate));
+
+            aggregate.UploadDocument(translationType: command.TranslationType, filePath: "");
+
+            var events = aggregate.GetUncommittedEvents();
+
+            foreach (var @event in events)
+                @event.UpdateFrom(command);
+
+            events = events.ToList();
+
+            await _aggregateRepository.SaveAsync<Document, DocumentState>(aggregate, 0);
+            await _eventBus.PublishAsync(events);
         }
     }
 }
