@@ -2,16 +2,16 @@
 using System.Threading.Tasks;
 using OpenEventSourcing.Commands;
 using OpenEventSourcing.Events;
-using SIO.Domain.Translations.Commands;
-using SIO.Domain.Translations.Events;
+using SIO.Domain.Document.Commands;
+using SIO.Domain.Document.Events;
 
-namespace SIO.Domain.Translations.CommandHandlers
+namespace SIO.Domain.Document.CommandHandlers
 {
-    internal class CreateTranslationCommandHandler : ICommandHandler<CreateTranslationCommand>
+    internal class UploadDocumentCommandHandler : ICommandHandler<UploadDocumentCommand>
     {
         private readonly IEventBus _eventBus;
 
-        public CreateTranslationCommandHandler(IEventBus eventBus)
+        public UploadDocumentCommandHandler(IEventBus eventBus)
         {
             if (eventBus == null)
                 throw new ArgumentNullException(nameof(eventBus));
@@ -19,16 +19,15 @@ namespace SIO.Domain.Translations.CommandHandlers
             _eventBus = eventBus;
         }
 
-        public async Task ExecuteAsync(CreateTranslationCommand command)
+        public async Task ExecuteAsync(UploadDocumentCommand command)
         {
             // TODO(Matt): 
             // 1. Write file to blob storage
-            // 2. Create DB entry
 
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var @event = new TranslationCreated(command.AggregateId, command.Version, command.TranslationType);
+            var @event = new DocumentUploaded(command.AggregateId, command.Version, command.TranslationType, "");
             @event.UpdateFrom(command);
 
             await _eventBus.PublishAsync(@event);

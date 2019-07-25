@@ -1,4 +1,4 @@
-﻿namespace SIO.Domain.Translations
+﻿namespace SIO.Domain.Translation
 {
     public enum TranslationType
     {

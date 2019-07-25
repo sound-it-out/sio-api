@@ -2,16 +2,16 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using OpenEventSourcing.Events;
-using SIO.Domain.Translations.Events;
-using SIO.Domain.Translations.Hubs;
+using SIO.Domain.Translation.Events;
+using SIO.Domain.Translation.Hubs;
 
-namespace SIO.Domain.Translations.EventHandlers
+namespace SIO.Domain.Translation.EventHandlers
 {
-    internal class TranslationGeneratedEventHandler : IEventHandler<TranslationGenerated>
+    internal class TranslationFailedEventHandler : IEventHandler<TranslationFailed>
     {
         private readonly IHubContext<TranslationHub> _hubContext;
 
-        public TranslationGeneratedEventHandler(IHubContext<TranslationHub> hubContext)
+        public TranslationFailedEventHandler(IHubContext<TranslationHub> hubContext)
         {
             if (hubContext == null)
                 throw new ArgumentNullException(nameof(hubContext));
@@ -19,7 +19,7 @@ namespace SIO.Domain.Translations.EventHandlers
             _hubContext = hubContext;
         }
 
-        public async Task HandleAsync(TranslationGenerated @event)
+        public async Task HandleAsync(TranslationFailed @event)
         {
             await _hubContext.NotifyAsync(@event);
         }

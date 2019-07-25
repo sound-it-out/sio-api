@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SIO.Domain.Projections\SIO.Domain.Projections.csproj" />
     <ProjectReference Include="..\SIO.Domain\SIO.Domain.csproj" />
     <ProjectReference Include="..\SIO.Migrations\SIO.Migrations.csproj" />
   </ItemGroup>

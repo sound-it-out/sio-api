@@ -22,7 +22,7 @@ namespace SIO.Domain.Extensions
 
                 if (pointer == sourceSpan.Length)
                 {
-                    items.Add(sourceSpan.Slice(lazyPointer, pointer - lazyPointer).ToString().Trim());
+                    items.Add(sourceSpan.Slice(lazyPointer, pointer - lazyPointer).TrimStart().ToString());
                     break;
                 }
 
@@ -33,14 +33,14 @@ namespace SIO.Domain.Extensions
                     if (delimeters.Contains(tempChar))
                     {
                         foundMatch = true;
-                        items.Add(sourceSpan.Slice(lazyPointer, j + 1 - lazyPointer).ToString().Trim());
+                        items.Add(sourceSpan.Slice(lazyPointer, j + 1 - lazyPointer).TrimStart().ToString());
                         lazyPointer = j + 1;
                     }
                 }
 
                 if (!foundMatch)
                 {
-                    items.Add(sourceSpan.Slice(lazyPointer, pointer - lazyPointer).ToString().Trim());
+                    items.Add(sourceSpan.Slice(lazyPointer, pointer - lazyPointer).Trim().ToString());
                     lazyPointer = pointer;
                 }
             }

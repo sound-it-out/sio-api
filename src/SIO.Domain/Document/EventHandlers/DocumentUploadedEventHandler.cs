@@ -3,18 +3,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using OpenEventSourcing.Commands;
 using OpenEventSourcing.Events;
-using SIO.Domain.Translations.Commands;
-using SIO.Domain.Translations.Events;
-using SIO.Domain.Translations.Hubs;
+using SIO.Domain.Document.Events;
+using SIO.Domain.Document.Hubs;
+using SIO.Domain.Translation.Commands;
 
-namespace SIO.Domain.Translations.EventHandlers
+namespace SIO.Domain.Document.EventHandlers
 {
-    internal class TranslationCreatedEventHandler : IEventHandler<TranslationCreated>
+    internal class DocumentUploadedEventHandler : IEventHandler<DocumentUploaded>
     {
-        private readonly IHubContext<TranslationHub> _hubContext;
+        private readonly IHubContext<DocumentHub> _hubContext;
         private readonly ICommandDispatcher _commandDispatcher;
 
-        public TranslationCreatedEventHandler(IHubContext<TranslationHub> hubContext, ICommandDispatcher commandDispatcher)
+        public DocumentUploadedEventHandler(IHubContext<DocumentHub> hubContext, ICommandDispatcher commandDispatcher)
         {
             if (hubContext == null)
                 throw new ArgumentNullException(nameof(hubContext));
@@ -25,14 +25,14 @@ namespace SIO.Domain.Translations.EventHandlers
             _commandDispatcher = commandDispatcher;
         }
 
-        public async Task HandleAsync(TranslationCreated @event)
+        public async Task HandleAsync(DocumentUploaded @event)
         {
             await _hubContext.NotifyAsync(@event);
 
             await _commandDispatcher.DispatchAsync(new QueueTranslationCommand(
                 aggregateId: @event.AggregateId,
                 correlationId: @event.CorrelationId.Value,
-                version: @event.Version,
+                version: @event.Version + 1,
                 userId: @event.UserId,
                 translationType: @event.TranslationType
             ));

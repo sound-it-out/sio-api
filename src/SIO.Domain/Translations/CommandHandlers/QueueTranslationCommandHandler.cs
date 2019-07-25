@@ -2,11 +2,13 @@
 using System.IO;
 using System.Threading.Tasks;
 using Clipboard;
+using Hangfire;
 using OpenEventSourcing.Commands;
 using OpenEventSourcing.Events;
-using SIO.Domain.Translations.Commands;
+using SIO.Domain.Translation.Commands;
+using SIO.Domain.Translation.Events;
 
-namespace SIO.Domain.Translations.CommandHandlers
+namespace SIO.Domain.Translation.CommandHandlers
 {
     internal class QueueTranslationCommandHandler : ICommandHandler<QueueTranslationCommand>
     {
@@ -34,22 +36,33 @@ namespace SIO.Domain.Translations.CommandHandlers
                 content = await extractor.ExtractAsync();
             }
 
+            // Need to enqueue using hangfire as azure service bus has a peek lock of 5 mins and this could be a long running command.
             switch (command.TranslationType)
             {
                 case TranslationType.Google:
-                    await _commandDispatcher.DispatchAsync(new GenerateGoogleTranslationCommand(
-                        aggregateId: command.AggregateId,
-                        correlationId: command.CorrelationId,
-                        version: command.Version,
-                        userId: command.UserId,
-                        content: content
-                    ));
+                    BackgroundJob.Enqueue(() => _commandDispatcher.DispatchAsync(new GenerateGoogleTranslationCommand(
+                            command.AggregateId,
+                            command.CorrelationId,
+                            command.Version + 1,
+                            command.UserId,
+                            content
+                        ))
+                    );
                     break;
                 case TranslationType.AWS:
                     throw new NotImplementedException();
                 case TranslationType.Microsoft:
                     throw new NotImplementedException();
             }
+
+            var @event = new TranslationQueued(
+                aggregateId: command.AggregateId,
+                version: command.Version
+            );
+
+            @event.UpdateFrom(command);
+
+            await _eventBus.PublishAsync(@event);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 
-namespace SIO.Domain.Translations.Hubs
+namespace SIO.Domain.Translation.Hubs
 {
     internal class TranslationHub : Hub
     {

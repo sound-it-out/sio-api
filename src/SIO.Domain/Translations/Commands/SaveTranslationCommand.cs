@@ -2,7 +2,7 @@
 using System.IO;
 using OpenEventSourcing.Commands;
 
-namespace SIO.Domain.Translations.Commands
+namespace SIO.Domain.Translation.Commands
 {
     public class SaveTranslationCommand : Command
     {

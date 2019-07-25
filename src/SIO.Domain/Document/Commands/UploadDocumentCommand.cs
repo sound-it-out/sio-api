@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using Microsoft.AspNetCore.Http;
 using OpenEventSourcing.Commands;
+using SIO.Domain.Translation;
 
-namespace SIO.Domain.Translations.Commands
+namespace SIO.Domain.Document.Commands
 {
-    public class CreateTranslationCommand : Command
+    public class UploadDocumentCommand : Command
     {
         public IFormFile File { get; set; }
         public TranslationType TranslationType { get; set; }
 
-        public CreateTranslationCommand(Guid aggregateId, Guid correlationId, int version, string userId, IFormFile file, TranslationType translationType) : base(aggregateId, correlationId, version, userId)
+        public UploadDocumentCommand(Guid aggregateId, Guid correlationId, int version, string userId, IFormFile file, TranslationType translationType) : base(aggregateId, correlationId, version, userId)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));

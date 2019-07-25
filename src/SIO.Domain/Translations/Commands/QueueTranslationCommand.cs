@@ -1,7 +1,7 @@
 ﻿using System;
 using OpenEventSourcing.Commands;
 
-namespace SIO.Domain.Translations.Commands
+namespace SIO.Domain.Translation.Commands
 {
     public class QueueTranslationCommand : Command
     {

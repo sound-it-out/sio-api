@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="Clipboard" Version="1.0.0" />
     <PackageReference Include="Google.Cloud.TextToSpeech.V1" Version="1.0.0" />
+    <PackageReference Include="Hangfire" Version="1.7.5" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
     <PackageReference Include="OpenEventSourcing" Version="0.1.0" />
   </ItemGroup>
