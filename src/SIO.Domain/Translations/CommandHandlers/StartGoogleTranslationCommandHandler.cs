@@ -10,7 +10,6 @@ using Grpc.Auth;
 using Grpc.Core;
 using OpenEventSourcing.Commands;
 using OpenEventSourcing.Events;
-using SIO.Domain.Extensions;
 using SIO.Domain.Translation.Events;
 
 namespace SIO.Domain.Translation.Commands

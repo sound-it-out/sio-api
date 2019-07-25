@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SIO.Domain.Extensions
+namespace SIO.Domain
 {
     internal static class StringExtensions
     {
