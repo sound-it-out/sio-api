@@ -1,17 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SIO.Abstraction\SIO.Abstraction.csproj" />
-    <ProjectReference Include="..\SIO.Entities\SIO.Entities.csproj" />
+    <Compile Remove="Translations\Projections\**" />
+    <EmbeddedResource Remove="Translations\Projections\**" />
+    <None Remove="Translations\Projections\**" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Clipboard" Version="1.0.0" />
     <PackageReference Include="Google.Cloud.TextToSpeech.V1" Version="1.0.0" />
+    <PackageReference Include="Hangfire" Version="1.7.5" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
+    <PackageReference Include="OpenEventSourcing" Version="0.1.0" />
   </ItemGroup>
 
 </Project>
