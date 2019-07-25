@@ -18,6 +18,7 @@ namespace SIO.Domain.Document
             Handles<TranslationStarted>(Handle);
             Handles<TranslationSucceded>(Handle);
             Handles<TranslationFailed>(Handle);
+            Handles<TranslationCharactersProcessed>(Handle);
         }
 
         public void UploadDocument(TranslationType translationType, string filePath)
@@ -38,11 +39,12 @@ namespace SIO.Domain.Document
             ));
         }
 
-        public void StartTranslation(Guid aggregateId, int version)
+        public void StartTranslation(Guid aggregateId, int version, long characterCount)
         {
             Apply(new TranslationStarted(
                 aggregateId: aggregateId,
-                version: version
+                version: version,
+                characterCount: characterCount
             ));
         }
 
@@ -52,6 +54,15 @@ namespace SIO.Domain.Document
                 aggregateId: aggregateId,
                 version: version,
                 translationPath: translationPath
+            ));
+        }
+
+        public void ProcessTranslationCharacters(Guid aggregateId, int version, long charactersProcessed)
+        {
+            Apply(new TranslationCharactersProcessed(
+                aggregateId: aggregateId,
+                version: version,
+                charactersProcessed: charactersProcessed
             ));
         }
 
@@ -80,6 +91,7 @@ namespace SIO.Domain.Document
         public void Handle(TranslationStarted @event)
         {
             _state.Condition = DocumentCondition.TranslationStarted;
+            _state.TranslationCharactersTotal = @event.CharacterCount;
             _state.Version = @event.Version;
         }
 
@@ -93,6 +105,13 @@ namespace SIO.Domain.Document
         public void Handle(TranslationFailed @event)
         {
             _state.Condition = DocumentCondition.TranslationFailed;
+            _state.Version = @event.Version;
+        }
+
+        public void Handle(TranslationCharactersProcessed @event)
+        {
+            _state.Condition = DocumentCondition.TranslationFailed;
+            _state.TranslationCharactersProcessed += @event.CharactersProcessed;
             _state.Version = @event.Version;
         }
     }

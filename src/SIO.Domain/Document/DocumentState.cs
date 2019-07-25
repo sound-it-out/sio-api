@@ -10,6 +10,8 @@ namespace SIO.Domain.Document
         public Guid? Id { get; set; }
         public DocumentCondition Condition { get; set; }
         public string FilePath { get; set; }
+        public long TranslationCharactersTotal { get; set; }
+        public long TranslationCharactersProcessed { get; set; }
         public string TranslationPath { get; set; }
         public int Version { get; set; }
 

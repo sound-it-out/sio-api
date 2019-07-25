@@ -22,5 +22,9 @@ namespace SIO.Domain.Translation.Hubs
         {
             return source.Clients.User(@event.UserId).SendAsync(nameof(TranslationFailed), @event);
         }
+        public static Task NotifyAsync(this IHubContext<TranslationHub> source, TranslationCharactersProcessed @event)
+        {
+            return source.Clients.User(@event.UserId).SendAsync(nameof(TranslationCharactersProcessed), @event);
+        }
     }
 }

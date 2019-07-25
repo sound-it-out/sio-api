@@ -27,6 +27,7 @@ namespace SIO.Domain.Projections.Document
             Handles<TranslationStarted>(ApplyAsync);
             Handles<TranslationSucceded>(ApplyAsync);
             Handles<TranslationFailed>(ApplyAsync);
+            Handles<TranslationCharactersProcessed>(ApplyAsync);
         }
 
         public async Task HandleAsync(IEvent @event)
@@ -68,6 +69,7 @@ namespace SIO.Domain.Projections.Document
             await _writer.Update(@event.CorrelationId.Value, document =>
             {
                 document.Data.Condition = DocumentCondition.TranslationStarted;
+                document.Data.TranslationCharactersTotal = @event.CharacterCount;
                 document.LastModifiedDate = @event.Timestamp;
                 document.Version = @event.Version;
             });
@@ -89,6 +91,17 @@ namespace SIO.Domain.Projections.Document
             await _writer.Update(@event.CorrelationId.Value, document =>
             {
                 document.Data.Condition = DocumentCondition.TranslationFailed;
+                document.LastModifiedDate = @event.Timestamp;
+                document.Version = @event.Version;
+            });
+        }
+
+        private async Task ApplyAsync(TranslationCharactersProcessed @event)
+        {
+            await _writer.Update(@event.CorrelationId.Value, document =>
+            {
+                document.Data.Condition = DocumentCondition.TranslationFailed;
+                document.Data.TranslationCharactersProcessed += @event.CharactersProcessed;
                 document.LastModifiedDate = @event.Timestamp;
                 document.Version = @event.Version;
             });

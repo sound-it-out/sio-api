@@ -37,8 +37,10 @@ namespace SIO.Domain.Translation.Commands
 
         public async Task ExecuteAsync(StartGoogleTranslationCommand command)
         {
+            var textChunks = command.Content.ChunkWithDelimeters(5000, '.', '!', '?', ')', '"', '}', ']');
+
             var aggregate = await _aggregateRepository.GetAsync<Document.Document, DocumentState>(command.CorrelationId);
-            aggregate.StartTranslation(command.CorrelationId, command.Version);
+            aggregate.StartTranslation(command.CorrelationId, command.Version, string.Join(" ", textChunks).Length);
 
             var events = aggregate.GetUncommittedEvents();
 
@@ -49,6 +51,8 @@ namespace SIO.Domain.Translation.Commands
 
             await _aggregateRepository.SaveAsync<Document.Document, DocumentState>(aggregate, 0);
             await _eventBus.PublishAsync(events);
+
+            int version = command.Version;
 
             try
             {
@@ -73,14 +77,12 @@ namespace SIO.Domain.Translation.Commands
                     AudioEncoding = AudioEncoding.Mp3
                 };
 
-                var textChunks = command.Content.ChunkWithDelimeters(5000, '.', '!', '?', ')', '"', '}', ']');
-
                 var values = new List<KeyValuePair<int, ByteString>>();
-
+                
                 foreach(var requestChunks in textChunks.Chunk(300))
                 {
                     await Task.WhenAll(requestChunks.Select((c, i) =>
-                        QueueText(client, c, i, voice, audioConfig, values)
+                        QueueText(aggregate, command, version, client, c, i, voice, audioConfig, values)
                     ));
 
                     // Need to wait some time due to rate limits
@@ -102,7 +104,7 @@ namespace SIO.Domain.Translation.Commands
                     await _commandDispatcher.DispatchAsync(new SaveTranslationCommand(
                         aggregateId: command.AggregateId,
                         command.CorrelationId,
-                        version: command.Version + 1,
+                        version: version + 1,
                         userId: command.UserId,
                         stream: ms
                     ));
@@ -110,11 +112,11 @@ namespace SIO.Domain.Translation.Commands
             }
             catch(Exception e)
             {
-                aggregate.FailTranslation(command.CorrelationId, command.Version, e.Message);
+                aggregate.FailTranslation(command.CorrelationId, version, e.Message);
 
                 var newEvents = aggregate.GetUncommittedEvents();
 
-                foreach (var @event in events)
+                foreach (var @event in newEvents)
                     @event.UpdateFrom(command);
 
                 events = events.ToList();
@@ -136,7 +138,7 @@ namespace SIO.Domain.Translation.Commands
             while (i == 0) { };
         }
 
-        private async Task QueueText(TextToSpeechClient client, string text, int index, VoiceSelectionParams voice, AudioConfig audioConfig, List<KeyValuePair<int, ByteString>> values)
+        private async Task QueueText(Document.Document aggregate, StartGoogleTranslationCommand command, int version, TextToSpeechClient client, string text, int index, VoiceSelectionParams voice, AudioConfig audioConfig, List<KeyValuePair<int, ByteString>> values)
         {
             var response = await client.SynthesizeSpeechAsync(
                 input: new SynthesisInput {
@@ -147,6 +149,20 @@ namespace SIO.Domain.Translation.Commands
             );
 
             values.Add(new KeyValuePair<int, ByteString>(index, response.AudioContent));
+
+            version += 1;
+
+            aggregate.ProcessTranslationCharacters(command.CorrelationId, version, text.Length);
+
+            var events = aggregate.GetUncommittedEvents();
+
+            foreach (var @event in events)
+                @event.UpdateFrom(command);
+
+            events = events.ToList();
+
+            await _aggregateRepository.SaveAsync<Document.Document, DocumentState>(aggregate, 0);
+            await _eventBus.PublishAsync(events);
         }
     }
 }

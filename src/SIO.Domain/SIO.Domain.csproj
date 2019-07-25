@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Translations\Projections\**" />
-    <EmbeddedResource Remove="Translations\Projections\**" />
-    <None Remove="Translations\Projections\**" />
+    <Compile Remove="Translation\Projections\**" />
+    <EmbeddedResource Remove="Translation\Projections\**" />
+    <None Remove="Translation\Projections\**" />
   </ItemGroup>
 
   <ItemGroup>
