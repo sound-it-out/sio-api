@@ -64,15 +64,19 @@ namespace SIO.Domain.Translation.Commands
                     AudioEncoding = AudioEncoding.Mp3
                 };
 
-                //TODO(matt): Need to further chunk to 300 as the rate limit is 300 requests per min
-
-                var chunks = command.Content.ChunkWithDelimeters(5000, '.', '!', '?', ')', '"', '}', ']');
+                var textChunks = command.Content.ChunkWithDelimeters(5000, '.', '!', '?', ')', '"', '}', ']');
 
                 var values = new List<KeyValuePair<int, ByteString>>();
 
-                var responses = Task.WhenAll(chunks.Select((c, i) =>
-                    QueueText(client, c, i, voice, audioConfig, values)
-                ));
+                foreach(var requestChunks in textChunks.Chunk(300))
+                {
+                    await Task.WhenAll(requestChunks.Select((c, i) =>
+                        QueueText(client, c, i, voice, audioConfig, values)
+                    ));
+
+                    // Need to wait some time due to rate limits
+                    Delay(70000);
+                }
 
                 using (var ms = new MemoryStream())
                 {
@@ -108,6 +112,17 @@ namespace SIO.Domain.Translation.Commands
                 await _eventBus.PublishAsync(failedEvent);
             }
                       
+        }
+
+        private static void Delay(int delay)
+        {
+            int i = 0;
+            var delayTimer = new System.Timers.Timer();
+            delayTimer.Interval = delay;
+            delayTimer.AutoReset = false; //so that it only calls the method once
+            delayTimer.Elapsed += (s, args) => i = 1;
+            delayTimer.Start();
+            while (i == 0) { };
         }
 
         private async Task QueueText(TextToSpeechClient client, string text, int index, VoiceSelectionParams voice, AudioConfig audioConfig, List<KeyValuePair<int, ByteString>> values)
