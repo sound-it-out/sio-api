@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.TextToSpeech.V1;
@@ -37,27 +37,35 @@ namespace SIO.Domain.Translations.Commands
 
             var client = TextToSpeechClient.Create(channel);
 
-            var chunks = command.Content.ChunkWithDelimeters(5000, '.', '!', '?');
+            var voice = new VoiceSelectionParams
+            {
+                LanguageCode = "en-US",
+                SsmlGender = SsmlVoiceGender.Neutral
+            };
 
-            var response = await client.SynthesizeSpeechAsync(
-                input: new SynthesisInput
-                {
-                    Text = command.Content
-                },
-                voice: new VoiceSelectionParams
-                {
-                    LanguageCode = "en-US",
-                    SsmlGender = SsmlVoiceGender.Neutral
-                },
-                audioConfig: new AudioConfig
-                {
-                    AudioEncoding = AudioEncoding.Mp3
-                }
-            );
+            var audioConfig = new AudioConfig
+            {
+                AudioEncoding = AudioEncoding.Mp3
+            };
+
+            //TODO(matt): Need to further chunk to 300 as the rate limit is 300 requests per min
+
+            var chunks = command.Content.ChunkWithDelimeters(5000, '.', '!', '?', ')', '"', '}', ']');
+
+            var values = new List<KeyValuePair<int, ByteString>>();
+
+            var responses = Task.WhenAll(chunks.Select((c, i) =>
+                QueueText(client, c, i, voice, audioConfig, values)
+            ));
 
             using (var ms = new MemoryStream())
             {
-                response.AudioContent.WriteTo(ms);
+                var position = 0;
+                foreach(var kvp in values.OrderBy(kvp => kvp.Key))
+                {
+                    await ms.WriteAsync(kvp.Value.ToByteArray(), position, kvp.Value.Length);
+                    position += kvp.Value.Length;
+                }
 
                 await _commandDispatcher.DispatchAsync(new SaveTranslationCommand(
                     aggregateId: command.AggregateId,
@@ -66,7 +74,20 @@ namespace SIO.Domain.Translations.Commands
                     userId: command.UserId,
                     stream: ms
                 ));
-            }
+            }            
+        }
+
+        private async Task QueueText(TextToSpeechClient client, string text, int index, VoiceSelectionParams voice, AudioConfig audioConfig, List<KeyValuePair<int, ByteString>> values)
+        {
+            var response = await client.SynthesizeSpeechAsync(
+                input: new SynthesisInput {
+                    Text = text
+                },
+                voice: voice,
+                audioConfig: audioConfig
+            );
+
+            values.Add(new KeyValuePair<int, ByteString>(index, response.AudioContent));
         }
     }
 }
