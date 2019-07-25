@@ -15,12 +15,12 @@ using SIO.Domain.Translation.Events;
 
 namespace SIO.Domain.Translation.Commands
 {
-    public class GenerateGoogleTranslationCommandHandler : ICommandHandler<GenerateGoogleTranslationCommand>
+    public class StartGoogleTranslationCommandHandler : ICommandHandler<StartGoogleTranslationCommand>
     {
         private readonly IEventBus _eventBus;
         private readonly ICommandDispatcher _commandDispatcher;
 
-        public GenerateGoogleTranslationCommandHandler(IEventBus eventBus, ICommandDispatcher commandDispatcher)
+        public StartGoogleTranslationCommandHandler(IEventBus eventBus, ICommandDispatcher commandDispatcher)
         {
             if (eventBus == null)
                 throw new ArgumentNullException(nameof(eventBus));
@@ -31,7 +31,7 @@ namespace SIO.Domain.Translation.Commands
             _commandDispatcher = commandDispatcher;
         }
 
-        public async Task ExecuteAsync(GenerateGoogleTranslationCommand command)
+        public async Task ExecuteAsync(StartGoogleTranslationCommand command)
         {
             var startedEvent = new TranslationStarted(
                 aggregateId: command.AggregateId,

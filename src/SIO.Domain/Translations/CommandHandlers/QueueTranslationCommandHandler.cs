@@ -40,7 +40,7 @@ namespace SIO.Domain.Translation.CommandHandlers
             switch (command.TranslationType)
             {
                 case TranslationType.Google:
-                    BackgroundJob.Enqueue(() => _commandDispatcher.DispatchAsync(new GenerateGoogleTranslationCommand(
+                    BackgroundJob.Enqueue(() => _commandDispatcher.DispatchAsync(new StartGoogleTranslationCommand(
                             command.AggregateId,
                             command.CorrelationId,
                             command.Version + 1,
