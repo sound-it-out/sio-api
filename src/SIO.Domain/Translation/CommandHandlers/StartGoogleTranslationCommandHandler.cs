@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.TextToSpeech.V1;
@@ -150,7 +151,7 @@ namespace SIO.Domain.Translation.Commands
 
             values.Add(new KeyValuePair<int, ByteString>(index, response.AudioContent));
 
-            version += 1;
+            Interlocked.Increment(ref version);
 
             aggregate.ProcessTranslationCharacters(command.CorrelationId, version, text.Length);
 
