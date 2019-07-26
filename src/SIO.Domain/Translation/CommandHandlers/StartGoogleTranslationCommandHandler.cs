@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Clipboard;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.TextToSpeech.V1;
 using Google.Protobuf;
@@ -13,6 +14,7 @@ using OpenEventSourcing.Commands;
 using OpenEventSourcing.Domain;
 using OpenEventSourcing.Events;
 using SIO.Domain.Document;
+using SIO.Infrastructure.File;
 
 namespace SIO.Domain.Translation.Commands
 {
@@ -21,8 +23,12 @@ namespace SIO.Domain.Translation.Commands
         private readonly IEventBus _eventBus;
         private readonly ICommandDispatcher _commandDispatcher;
         private readonly IAggregateRepository _aggregateRepository;
+        private readonly IFileClient _fileClient;
 
-        public StartGoogleTranslationCommandHandler(IEventBus eventBus, ICommandDispatcher commandDispatcher, IAggregateRepository aggregateRepository)
+        public StartGoogleTranslationCommandHandler(IEventBus eventBus, 
+            ICommandDispatcher commandDispatcher, 
+            IAggregateRepository aggregateRepository,
+            IFileClient fileClient)
         {
             if (eventBus == null)
                 throw new ArgumentNullException(nameof(eventBus));
@@ -30,18 +36,34 @@ namespace SIO.Domain.Translation.Commands
                 throw new ArgumentNullException(nameof(commandDispatcher));
             if (aggregateRepository == null)
                 throw new ArgumentNullException(nameof(aggregateRepository));
+            if (fileClient == null)
+                throw new ArgumentNullException(nameof(fileClient));
 
             _eventBus = eventBus;
             _commandDispatcher = commandDispatcher;
             _aggregateRepository = aggregateRepository;
+            _fileClient = fileClient;
         }
 
         public async Task ExecuteAsync(StartGoogleTranslationCommand command)
         {
-            var textChunks = command.Content.ChunkWithDelimeters(5000, '.', '!', '?', ')', '"', '}', ']');
+            var fileResult = await _fileClient.DownloadAsync(
+                fileName: command.CorrelationId.ToString(),
+                userId: command.UserId
+            );
+
+            var stream = await fileResult.OpenStreamAsync();
+            var textExtractor = TextExtractor.Open(stream, fileResult.ContentType);
+
+            var text = await textExtractor.ExtractAsync();
+
+            textExtractor.Dispose();
+            stream.Dispose();
+
+            var textChunks = text.ChunkWithDelimeters(5000, '.', '!', '?', ')', '"', '}', ']');
 
             var aggregate = await _aggregateRepository.GetAsync<Document.Document, DocumentState>(command.CorrelationId);
-            aggregate.StartTranslation(command.CorrelationId, command.Version, string.Join(" ", textChunks).Length);
+            aggregate.StartTranslation(command.CorrelationId, command.Version, textChunks.Sum(tc => tc.Length));
 
             var events = aggregate.GetUncommittedEvents();
 
@@ -87,7 +109,7 @@ namespace SIO.Domain.Translation.Commands
                     ));
 
                     // Need to wait some time due to rate limits
-                    Delay(70000);
+                    Delay(61000);
                 }
 
                 using (var ms = new MemoryStream())

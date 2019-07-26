@@ -1,10 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using OpenEventSourcing.Commands;
 using OpenEventSourcing.Domain;
 using OpenEventSourcing.Events;
 using SIO.Domain.Document.Commands;
+using SIO.Infrastructure.File;
 
 namespace SIO.Domain.Document.CommandHandlers
 {
@@ -13,8 +15,12 @@ namespace SIO.Domain.Document.CommandHandlers
         private readonly IEventBus _eventBus;
         private readonly IAggregateRepository _aggregateRepository;
         private readonly IAggregateFactory _aggregateFactory;
+        private readonly IFileClient _fileClient;
 
-        public UploadDocumentCommandHandler(IEventBus eventBus, IAggregateRepository aggregateRepository, IAggregateFactory aggregateFactory)
+        public UploadDocumentCommandHandler(IEventBus eventBus, 
+            IAggregateRepository aggregateRepository, 
+            IAggregateFactory aggregateFactory,
+            IFileClient fileClient)
         {
             if (eventBus == null)
                 throw new ArgumentNullException(nameof(eventBus));
@@ -22,26 +28,36 @@ namespace SIO.Domain.Document.CommandHandlers
                 throw new ArgumentNullException(nameof(aggregateRepository));
             if (aggregateFactory == null)
                 throw new ArgumentNullException(nameof(aggregateFactory));
+            if (fileClient == null)
+                throw new ArgumentNullException(nameof(fileClient));
 
             _eventBus = eventBus;
             _aggregateRepository = aggregateRepository;
             _aggregateFactory = aggregateFactory;
+            _fileClient = fileClient;
         }
 
         public async Task ExecuteAsync(UploadDocumentCommand command)
         {
-            // TODO(Matt): 
-            // 1. Write file to blob storage
-
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
+
+            using(var stream = command.File.OpenReadStream())
+            {
+                await _fileClient.UploadAsync(
+                    fileName: command.AggregateId.ToString(),
+                    userId: command.UserId,
+                    stream: stream,
+                    contentType: command.File.ContentType
+                );
+            }            
 
             var aggregate = _aggregateFactory.FromHistory<Document, DocumentState>(Enumerable.Empty<IEvent>());
 
             if(aggregate == null)
                 throw new ArgumentNullException(nameof(aggregate));
 
-            aggregate.UploadDocument(translationType: command.TranslationType, filePath: "");
+            aggregate.UploadDocument(translationType: command.TranslationType);
 
             var events = aggregate.GetUncommittedEvents();
 

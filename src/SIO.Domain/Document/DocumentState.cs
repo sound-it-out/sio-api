@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using OpenEventSourcing.Domain;
 
 namespace SIO.Domain.Document
@@ -8,11 +6,10 @@ namespace SIO.Domain.Document
     public class DocumentState : IAggregateState
     {
         public Guid? Id { get; set; }
+        public Guid? TranslationId { get; set; }
         public DocumentCondition Condition { get; set; }
-        public string FilePath { get; set; }
-        public long TranslationCharactersTotal { get; set; }
         public long TranslationCharactersProcessed { get; set; }
-        public string TranslationPath { get; set; }
+        public long TranslationCharactersTotal { get; set; }
         public int Version { get; set; }
 
         public DocumentState() { }
@@ -23,8 +20,6 @@ namespace SIO.Domain.Document
 
             Id = state.Id;
             Condition = state.Condition;
-            FilePath = state.FilePath;
-            TranslationPath = state.TranslationPath;
             Version = state.Version;
         }
     }

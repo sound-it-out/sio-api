@@ -54,8 +54,7 @@ namespace SIO.Domain.Translation.CommandHandlers
                             command.AggregateId,
                             command.CorrelationId,
                             command.Version + 1,
-                            command.UserId,
-                            content
+                            command.UserId
                         ))
                     );
                     break;

@@ -34,7 +34,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SIO.Tests.Integration.API",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SIO.Tests.Unit.Translation", "tests\Unit\SIO.Tests.Unit.Translation\SIO.Tests.Unit.Translation.csproj", "{0C1A312E-49E6-44C8-9A5A-111FD341263D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SIO.Domain.Projections", "src\SIO.Domain.Projections\SIO.Domain.Projections.csproj", "{1AC03928-B368-4DC4-A1B2-148B4D2448DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SIO.Domain.Projections", "src\SIO.Domain.Projections\SIO.Domain.Projections.csproj", "{1AC03928-B368-4DC4-A1B2-148B4D2448DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SIO.Infrastructure.AWS", "src\SIO.Infrastructure.AWS\SIO.Infrastructure.AWS.csproj", "{2841E6D3-D173-4709-AEEB-2BE3D3AA0780}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SIO.Infrastructure", "src\SIO.Infrastructure\SIO.Infrastructure.csproj", "{429C202F-F271-4878-AD44-68049DFCFC22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +70,14 @@ Global
 		{1AC03928-B368-4DC4-A1B2-148B4D2448DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AC03928-B368-4DC4-A1B2-148B4D2448DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AC03928-B368-4DC4-A1B2-148B4D2448DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2841E6D3-D173-4709-AEEB-2BE3D3AA0780}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2841E6D3-D173-4709-AEEB-2BE3D3AA0780}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2841E6D3-D173-4709-AEEB-2BE3D3AA0780}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2841E6D3-D173-4709-AEEB-2BE3D3AA0780}.Release|Any CPU.Build.0 = Release|Any CPU
+		{429C202F-F271-4878-AD44-68049DFCFC22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{429C202F-F271-4878-AD44-68049DFCFC22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{429C202F-F271-4878-AD44-68049DFCFC22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{429C202F-F271-4878-AD44-68049DFCFC22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,6 +91,8 @@ Global
 		{8CA810FD-4AFC-4956-A45F-726459C44B09} = {11D0091E-088E-42F4-8D75-75448B5EE6D2}
 		{0C1A312E-49E6-44C8-9A5A-111FD341263D} = {96B3CE48-24E0-4514-8197-F02F4D753B9A}
 		{1AC03928-B368-4DC4-A1B2-148B4D2448DA} = {3992E848-E52E-46A2-9088-E60B9DD0BC10}
+		{2841E6D3-D173-4709-AEEB-2BE3D3AA0780} = {3992E848-E52E-46A2-9088-E60B9DD0BC10}
+		{429C202F-F271-4878-AD44-68049DFCFC22} = {3992E848-E52E-46A2-9088-E60B9DD0BC10}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DC760A09-5C97-4316-B75F-1F4FEA9D4CFE}

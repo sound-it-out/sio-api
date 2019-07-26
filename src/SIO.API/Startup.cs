@@ -7,6 +7,8 @@ using OpenEventSourcing.EntityFrameworkCore.SqlServer;
 using OpenEventSourcing.Extensions;
 using OpenEventSourcing.Serialization.Json.Extensions;
 using SIO.Domain.Projections;
+using SIO.Infrastructure;
+using SIO.Infrastructure.AWS;
 
 namespace SIO.API
 {
@@ -32,6 +34,8 @@ namespace SIO.API
 
             services.AddProjections();
 
+            services.AddSIOInfrastructure()
+                .AddS3FileStorage();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

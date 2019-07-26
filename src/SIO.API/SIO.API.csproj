@@ -12,11 +12,14 @@
     <PackageReference Include="OpenEventSourcing.Azure.ServiceBus" Version="0.1.0" />
     <PackageReference Include="OpenEventSourcing.EntityFrameworkCore.SqlServer" Version="0.1.0" />
     <PackageReference Include="OpenEventSourcing.Serialization.Json" Version="0.1.0" />
+    <PackageReference Include="Sentry" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SIO.Domain.Projections\SIO.Domain.Projections.csproj" />
     <ProjectReference Include="..\SIO.Domain\SIO.Domain.csproj" />
+    <ProjectReference Include="..\SIO.Infrastructure.AWS\SIO.Infrastructure.AWS.csproj" />
+    <ProjectReference Include="..\SIO.Infrastructure\SIO.Infrastructure.csproj" />
     <ProjectReference Include="..\SIO.Migrations\SIO.Migrations.csproj" />
   </ItemGroup>
 

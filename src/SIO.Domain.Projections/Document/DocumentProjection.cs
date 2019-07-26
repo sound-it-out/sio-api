@@ -47,8 +47,7 @@ namespace SIO.Domain.Projections.Document
                     Version = @event.Version,
                     Data = new DocumentData
                     {
-                        Condition = DocumentCondition.Uploaded,
-                        FilePath = @event.FilePath
+                        Condition = DocumentCondition.Uploaded
                     }
                 };
             });
@@ -58,6 +57,7 @@ namespace SIO.Domain.Projections.Document
         {
             await _writer.Update(@event.CorrelationId.Value, document =>
             {
+                document.TranslationId = @event.AggregateId;
                 document.Data.Condition = DocumentCondition.TranslationQueued;
                 document.LastModifiedDate = @event.Timestamp;
                 document.Version = @event.Version;
@@ -80,7 +80,6 @@ namespace SIO.Domain.Projections.Document
             await _writer.Update(@event.CorrelationId.Value, document =>
             {
                 document.Data.Condition = DocumentCondition.TranslationSucceded;
-                document.Data.TranslationPath = @event.TranslationPath;
                 document.LastModifiedDate = @event.Timestamp;
                 document.Version = @event.Version;
             });
