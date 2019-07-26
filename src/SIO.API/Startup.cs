@@ -9,6 +9,7 @@ using OpenEventSourcing.Serialization.Json.Extensions;
 using SIO.Domain.Projections;
 using SIO.Infrastructure;
 using SIO.Infrastructure.AWS;
+using SIO.Infrastructure.Google;
 
 namespace SIO.API
 {
@@ -35,7 +36,8 @@ namespace SIO.API
             services.AddProjections();
 
             services.AddSIOInfrastructure()
-                .AddS3FileStorage();
+                .AddS3FileStorage()
+                .AddGoogleSpeechToText();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
