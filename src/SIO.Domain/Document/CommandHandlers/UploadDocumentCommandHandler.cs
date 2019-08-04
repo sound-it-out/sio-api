@@ -57,7 +57,7 @@ namespace SIO.Domain.Document.CommandHandlers
             if(aggregate == null)
                 throw new ArgumentNullException(nameof(aggregate));
 
-            aggregate.UploadDocument(translationType: command.TranslationType);
+            aggregate.Upload(translationType: command.TranslationType);
 
             var events = aggregate.GetUncommittedEvents();
 

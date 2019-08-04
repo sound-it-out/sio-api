@@ -21,7 +21,7 @@ namespace SIO.Domain.Document
             Handles<TranslationCharactersProcessed>(Handle);
         }
 
-        public void UploadDocument(TranslationType translationType)
+        public void Upload(TranslationType translationType)
         {
             Apply(new DocumentUploaded(
                 aggregateId: Guid.NewGuid().ToSequentialGuid(),

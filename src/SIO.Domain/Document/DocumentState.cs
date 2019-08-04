@@ -7,6 +7,7 @@ namespace SIO.Domain.Document
     {
         public Guid? Id { get; set; }
         public Guid? TranslationId { get; set; }
+        public Guid UserId { get; set; }
         public DocumentCondition Condition { get; set; }
         public long TranslationCharactersProcessed { get; set; }
         public long TranslationCharactersTotal { get; set; }
@@ -19,7 +20,11 @@ namespace SIO.Domain.Document
                 throw new ArgumentNullException(nameof(state));
 
             Id = state.Id;
+            TranslationId = state.TranslationId;
+            UserId = state.UserId;
             Condition = state.Condition;
+            TranslationCharactersProcessed = state.TranslationCharactersProcessed;
+            TranslationCharactersTotal = state.TranslationCharactersTotal;
             Version = state.Version;
         }
     }
