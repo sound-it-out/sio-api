@@ -3,15 +3,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OpenEventSourcing.EntityFrameworkCore.EntityConfiguration;
 using OpenEventSourcing.EntityFrameworkCore.Extensions;
 
-namespace SIO.Domain.Projections.Document
+namespace SIO.Domain.Projections.UserDocuments
 {
-    internal class DocumentTypeConfiguration : IProjectionTypeConfiguration<Document>
+    internal class UserDocumentsTypeConfiguration : IProjectionTypeConfiguration<UserDocuments>
     {
-        public void Configure(EntityTypeBuilder<Document> builder)
+        public void Configure(EntityTypeBuilder<UserDocuments> builder)
         {
-            builder.ToTable(nameof(Document));
-            builder.HasKey(s => s.Id);
-            builder.Property(p => p.Id)
+            builder.ToTable(nameof(UserDocuments));
+            builder.HasKey(s => s.UserId);
+            builder.Property(p => p.UserId)
                    .ValueGeneratedNever();
             builder.Property(p => p.Data)
                    .HasJsonValueConversion();

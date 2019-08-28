@@ -9,6 +9,7 @@ namespace SIO.Domain.Document
         public Guid? TranslationId { get; set; }
         public Guid UserId { get; set; }
         public DocumentCondition Condition { get; set; }
+        public string FileName { get; set; }
         public long TranslationCharactersProcessed { get; set; }
         public long TranslationCharactersTotal { get; set; }
         public int Version { get; set; }
@@ -23,6 +24,7 @@ namespace SIO.Domain.Document
             TranslationId = state.TranslationId;
             UserId = state.UserId;
             Condition = state.Condition;
+            FileName = state.FileName;
             TranslationCharactersProcessed = state.TranslationCharactersProcessed;
             TranslationCharactersTotal = state.TranslationCharactersTotal;
             Version = state.Version;

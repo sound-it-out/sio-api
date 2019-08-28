@@ -7,9 +7,11 @@ namespace SIO.Domain.Document.Events
     public class DocumentUploaded : Event
     {
         public TranslationType TranslationType { get; set; }
-        public DocumentUploaded(Guid aggregateId, int version, TranslationType translationType) : base(aggregateId, version)
+        public string FileName { get; set; }
+        public DocumentUploaded(Guid aggregateId, int version, TranslationType translationType, string fileName) : base(aggregateId, version)
         {
             TranslationType = translationType;
+            FileName = FileName;
         }
     }
 }

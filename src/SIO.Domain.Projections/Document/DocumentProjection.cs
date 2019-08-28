@@ -47,7 +47,8 @@ namespace SIO.Domain.Projections.Document
                     Version = @event.Version,
                     Data = new DocumentData
                     {
-                        Condition = DocumentCondition.Uploaded
+                        Condition = DocumentCondition.Uploaded,
+                        FileName = @event.FileName
                     }
                 };
             });

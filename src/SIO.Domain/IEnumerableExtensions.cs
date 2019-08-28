@@ -34,5 +34,16 @@ namespace SIO.Domain
             if (chunk.Any())
                 yield return chunk;
         }
+
+        public static IEnumerable<T> UpdateItem<T>(this IEnumerable<T> source, Func<T, bool> condition, Action<T> update)
+        {
+            foreach(var item in source)
+            {
+                if (condition(item))
+                    update(item);
+            }
+
+            return source;
+        }
     }
 }

@@ -21,12 +21,13 @@ namespace SIO.Domain.Document
             Handles<TranslationCharactersProcessed>(Handle);
         }
 
-        public void Upload(TranslationType translationType)
+        public void Upload(TranslationType translationType, string fileName)
         {
             Apply(new DocumentUploaded(
                 aggregateId: Guid.NewGuid().ToSequentialGuid(),
                 version: _state.Version + 1,
-                translationType: translationType
+                translationType: translationType,
+                fileName: fileName
             ));
         }
 
@@ -77,6 +78,7 @@ namespace SIO.Domain.Document
         {
             _state.Id = @event.AggregateId;
             _state.Condition = DocumentCondition.Uploaded;
+            _state.FileName = @event.FileName;
             _state.Version = @event.Version;
         }
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using SIO.Infrastructure.Google.Translation;
-using SIO.Infrastructure.Translation;
+using SIO.Infrastructure.Google.Speech;
+using SIO.Infrastructure.Speech;
 
 namespace SIO.Infrastructure.Google
 {

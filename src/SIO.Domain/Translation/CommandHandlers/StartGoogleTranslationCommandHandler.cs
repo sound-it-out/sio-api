@@ -9,8 +9,8 @@ using OpenEventSourcing.Domain;
 using OpenEventSourcing.Events;
 using SIO.Domain.Document;
 using SIO.Infrastructure.File;
-using SIO.Infrastructure.Google.Translation;
-using SIO.Infrastructure.Translation;
+using SIO.Infrastructure.Google.Speech;
+using SIO.Infrastructure.Speech;
 
 namespace SIO.Domain.Translation.Commands
 {
