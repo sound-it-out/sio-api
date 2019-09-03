@@ -8,10 +8,10 @@ namespace SIO.Domain.Document.Events
     {
         public TranslationType TranslationType { get; set; }
         public string FileName { get; set; }
-        public DocumentUploaded(Guid aggregateId, int version, TranslationType translationType, string fileName) : base(aggregateId, version)
+        public DocumentUploaded(Guid aggregateId, TranslationType translationType, string fileName) : base(aggregateId, 1)
         {
             TranslationType = translationType;
-            FileName = FileName;
+            FileName = fileName;
         }
     }
 }

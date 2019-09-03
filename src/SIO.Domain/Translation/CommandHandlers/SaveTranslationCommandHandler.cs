@@ -28,7 +28,7 @@ namespace SIO.Domain.Translation.CommandHandlers
         public async Task ExecuteAsync(SaveTranslationCommand command)
         {
             var aggregate = await _aggregateRepository.GetAsync<Document.Document, DocumentState>(command.CorrelationId);
-            aggregate.AcceptTranslation(command.CorrelationId, command.Version, "");
+            aggregate.AcceptTranslation(command.CorrelationId, command.Version);
 
             var events = aggregate.GetUncommittedEvents();
 
