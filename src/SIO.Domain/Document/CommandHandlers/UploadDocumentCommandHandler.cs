@@ -69,7 +69,7 @@ namespace SIO.Domain.Document.CommandHandlers
 
             events = events.ToList();
 
-            await _aggregateRepository.SaveAsync<Document, DocumentState>(aggregate, 0);
+            await _aggregateRepository.SaveAsync<DocumentState>(aggregate, 0);
             await _eventBus.PublishAsync(events);
         }
     }

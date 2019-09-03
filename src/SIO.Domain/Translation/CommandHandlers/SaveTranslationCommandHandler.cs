@@ -37,7 +37,7 @@ namespace SIO.Domain.Translation.CommandHandlers
 
             events = events.ToList();
 
-            await _aggregateRepository.SaveAsync<Document.Document, DocumentState>(aggregate, command.Version);
+            await _aggregateRepository.SaveAsync<DocumentState>(aggregate, command.Version);
             await _eventBus.PublishAsync(events);
         }
     }

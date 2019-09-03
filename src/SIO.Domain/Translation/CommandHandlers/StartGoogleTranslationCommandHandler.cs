@@ -73,7 +73,7 @@ namespace SIO.Domain.Translation.Commands
 
             events = events.ToList();
 
-            await _aggregateRepository.SaveAsync<Document.Document, DocumentState>(aggregate, command.Version);
+            await _aggregateRepository.SaveAsync<DocumentState>(aggregate, command.Version);
             await _eventBus.PublishAsync(events);
 
             int version = command.Version;
@@ -104,7 +104,7 @@ namespace SIO.Domain.Translation.Commands
 
                         tempEvents = tempEvents.ToList();
 
-                        await _aggregateRepository.SaveAsync<Document.Document, DocumentState>(aggregate, version);
+                        await _aggregateRepository.SaveAsync<DocumentState>(aggregate, version);
                         await _eventBus.PublishAsync(tempEvents);
                     }
                 ));
@@ -132,7 +132,7 @@ namespace SIO.Domain.Translation.Commands
 
                 events = events.ToList();
 
-                await _aggregateRepository.SaveAsync<Document.Document, DocumentState>(aggregate, version);
+                await _aggregateRepository.SaveAsync<DocumentState>(aggregate, version);
                 await _eventBus.PublishAsync(events);
             }    
         }

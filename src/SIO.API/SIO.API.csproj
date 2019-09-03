@@ -8,10 +8,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-    <PackageReference Include="OpenEventSourcing" Version="0.1.0" />
-    <PackageReference Include="OpenEventSourcing.Azure.ServiceBus" Version="0.1.0" />
-    <PackageReference Include="OpenEventSourcing.EntityFrameworkCore.SqlServer" Version="0.1.0" />
-    <PackageReference Include="OpenEventSourcing.Serialization.Json" Version="0.1.0" />
+    <PackageReference Include="OpenEventSourcing" Version="0.2.0" />
+    <PackageReference Include="OpenEventSourcing.Azure.ServiceBus" Version="0.2.0" />
+    <PackageReference Include="OpenEventSourcing.EntityFrameworkCore.SqlServer" Version="0.2.0" />
+    <PackageReference Include="OpenEventSourcing.Serialization.Json" Version="0.2.0" />
     <PackageReference Include="Sentry" Version="1.2.0" />
   </ItemGroup>
 
