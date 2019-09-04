@@ -13,5 +13,12 @@ namespace SIO.Domain.Document.Events
             TranslationType = translationType;
             FileName = fileName;
         }
+
+        public DocumentUploaded(Guid aggregateId, Guid userId, TranslationType translationType, string fileName) : base(aggregateId, 1)
+        {
+            TranslationType = translationType;
+            FileName = fileName;
+            UserId = userId.ToString();
+        }
     }
 }

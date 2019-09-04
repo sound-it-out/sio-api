@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using OpenEventSourcing.Events;
+using OpenEventSourcing.Extensions;
 using SIO.Domain;
 using SIO.Domain.Document;
 using SIO.Domain.Document.Events;
@@ -11,7 +12,7 @@ namespace SIO.Tests.Unit.Domain.Projections.Document
 {
     public class WhenDocumentUploaded : Specification<DocumentProjection>
     {
-        private readonly Guid _aggregateId = Guid.NewGuid();
+        private readonly Guid _aggregateId = Guid.NewGuid().ToSequentialGuid();
         private readonly string _fileName = "Test Document";
         protected override IEnumerable<IEvent> Given()
         {

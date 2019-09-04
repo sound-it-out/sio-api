@@ -16,5 +16,12 @@ namespace SIO.Domain.Translation.Events
             CharacterCount = characterCount;
             CorrelationId = correlationId;
         }
+
+        public TranslationStarted(Guid aggregateId, Guid correlationId, Guid userId, int version, long characterCount) : base(aggregateId, version)
+        {
+            CharacterCount = characterCount;
+            CorrelationId = correlationId;
+            UserId = userId.ToString();
+        }
     }
 }

@@ -39,7 +39,7 @@ namespace SIO.Domain.Projections.UserDocuments
 
         private async Task ApplyAsync(UserVerified @event)
         {
-            await _writer.Add(new Guid(@event.UserId), () =>
+            await _writer.Add(@event.AggregateId, () =>
             {
                 return new UserDocuments
                 {
@@ -63,7 +63,8 @@ namespace SIO.Domain.Projections.UserDocuments
                     new UserDocument
                     {
                         Id = @event.AggregateId,
-                        FileName = @event.FileName
+                        FileName = @event.FileName,
+                        Version = 1
                     }
                 );
             });
@@ -76,7 +77,11 @@ namespace SIO.Domain.Projections.UserDocuments
                 userDocuments.Version++;
                 userDocuments.Data.Documents.UpdateItem(
                     condition: ud => ud.Id == @event.CorrelationId, 
-                    update: ud => ud.Condition = DocumentCondition.TranslationQueued
+                    update: ud => 
+                    {
+                        ud.Condition = DocumentCondition.TranslationQueued;
+                        ud.Version++;
+                    }
                 );
             });
         }
@@ -88,7 +93,11 @@ namespace SIO.Domain.Projections.UserDocuments
                 userDocuments.Version++;
                 userDocuments.Data.Documents.UpdateItem(
                     condition: ud => ud.Id == @event.CorrelationId,
-                    update: ud => ud.Condition = DocumentCondition.TranslationStarted
+                    update: ud =>
+                    {
+                        ud.Condition = DocumentCondition.TranslationStarted;
+                        ud.Version++;
+                    }
                 );
             });
         }
@@ -100,7 +109,11 @@ namespace SIO.Domain.Projections.UserDocuments
                 userDocuments.Version++;
                 userDocuments.Data.Documents.UpdateItem(
                     condition: ud => ud.Id == @event.CorrelationId,
-                    update: ud => ud.Condition = DocumentCondition.TranslationSucceded
+                    update: ud =>
+                    {
+                        ud.Condition = DocumentCondition.TranslationSucceded;
+                        ud.Version++;
+                    }
                 );
             });
         }
@@ -112,7 +125,11 @@ namespace SIO.Domain.Projections.UserDocuments
                 userDocuments.Version++;
                 userDocuments.Data.Documents.UpdateItem(
                     condition: ud => ud.Id == @event.CorrelationId,
-                    update: ud => ud.Condition = DocumentCondition.TranslationFailed
+                    update: ud =>
+                    {
+                        ud.Condition = DocumentCondition.TranslationFailed;
+                        ud.Version++;
+                    }
                 );
             });
         }

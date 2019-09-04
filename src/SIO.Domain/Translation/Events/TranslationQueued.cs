@@ -13,5 +13,11 @@ namespace SIO.Domain.Translation.Events
         {
             CorrelationId = correlationId;
         }
+
+        public TranslationQueued(Guid aggregateId, Guid correlationId, Guid userId, int version) : base(aggregateId, version)
+        {
+            CorrelationId = correlationId;
+            UserId = userId.ToString();
+        }
     }
 }

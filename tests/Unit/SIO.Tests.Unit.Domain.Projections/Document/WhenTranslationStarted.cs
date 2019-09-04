@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using OpenEventSourcing.Events;
+using OpenEventSourcing.Extensions;
 using SIO.Domain;
 using SIO.Domain.Document;
 using SIO.Domain.Document.Events;
@@ -12,8 +13,8 @@ namespace SIO.Tests.Unit.Domain.Projections.Document
 {
     public class WhenTranslationStarted : Specification<DocumentProjection>
     {
-        private readonly Guid _documentId = Guid.NewGuid();
-        private readonly Guid _translationId = Guid.NewGuid();
+        private readonly Guid _documentId = Guid.NewGuid().ToSequentialGuid();
+        private readonly Guid _translationId = Guid.NewGuid().ToSequentialGuid();
         private readonly string _fileName = "Test Document";
         private readonly long _characterCount = 3000;
         protected override IEnumerable<IEvent> Given()

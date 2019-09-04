@@ -8,5 +8,6 @@ namespace SIO.Domain.Projections.UserDocuments
         public Guid Id { get; set; }
         public string FileName { get; set; }
         public DocumentCondition Condition { get; set; }
+        public int Version { get; set; }
     }
 }
