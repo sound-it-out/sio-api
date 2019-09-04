@@ -8,5 +8,10 @@ namespace SIO.Domain.Translation.Events
         public TranslationSucceded(Guid aggregateId, int version) : base(aggregateId, version)
         {
         }
+
+        public TranslationSucceded(Guid aggregateId, Guid correlationId, int version) : base(aggregateId, version)
+        {
+            CorrelationId = correlationId;
+        }
     }
 }

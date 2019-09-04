@@ -100,7 +100,6 @@ namespace SIO.Domain.Projections.Document
         {
             await _writer.Update(@event.CorrelationId.Value, document =>
             {
-                document.Data.Condition = DocumentCondition.TranslationFailed;
                 document.Data.TranslationCharactersProcessed += @event.CharactersProcessed;
                 document.LastModifiedDate = @event.Timestamp;
                 document.Version = @event.Version;

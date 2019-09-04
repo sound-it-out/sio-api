@@ -10,5 +10,11 @@ namespace SIO.Domain.Translation.Events
         {
             CharactersProcessed = charactersProcessed;
         }
+
+        public TranslationCharactersProcessed(Guid aggregateId, Guid correlationId, int version, long charactersProcessed) : base(aggregateId, version)
+        {
+            CharactersProcessed = charactersProcessed;
+            CorrelationId = correlationId;
+        }
     }
 }

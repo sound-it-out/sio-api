@@ -10,5 +10,11 @@ namespace SIO.Domain.Translation.Events
         {
             Error = error;
         }
+
+        public TranslationFailed(Guid aggregateId, Guid correlationId, int version, string error) : base(aggregateId, version)
+        {
+            Error = error;
+            CorrelationId = correlationId;
+        }
     }
 }
