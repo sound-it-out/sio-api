@@ -10,15 +10,15 @@ namespace SIO.Domain.User
         {
             Handles<UserRegistered>(Handle);
             Handles<UserEmailChanged>(Handle);
+            Handles<UserVerified>(Handle);
         }
 
         public override UserState GetState() => new UserState(_state);
 
-        public void Register(Guid aggregateId, int version, string email, string firstName, string lastName)
+        public void Register(Guid aggregateId, string email, string firstName, string lastName)
         {
             Apply(new UserRegistered(
                 aggregateId: aggregateId,
-                version: version,
                 email: email,
                 firstName: firstName,
                 lastName: lastName
@@ -27,6 +27,7 @@ namespace SIO.Domain.User
 
         public void ChangeEmail(Guid aggregateId, string email, int version)
         {
+            version++;
             Apply(new UserEmailChanged(
                 aggregateId: aggregateId,
                 version: version,
@@ -36,6 +37,7 @@ namespace SIO.Domain.User
 
         public void Verify(Guid aggregateId, int version)
         {
+            version++;
             Apply(new UserVerified(
                 aggregateId: aggregateId,
                 version: version
@@ -50,19 +52,19 @@ namespace SIO.Domain.User
             _state.LastName = @event.LastName;
             _state.Verified = false;
             _state.Deleted = false;
-            _state.Version = @event.Version;
+            Version = 1;
         }
 
         public void Handle(UserEmailChanged @event)
         {
             _state.Email = @event.Email;
-            _state.Version = @event.Version;
+            Version++;
         }
 
         public void Handle(UserVerified @event)
         {
             _state.Verified = true;
-            _state.Version = @event.Version;
+            Version++;
         }
     }
 }

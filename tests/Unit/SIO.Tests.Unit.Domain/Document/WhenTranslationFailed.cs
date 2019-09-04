@@ -10,9 +10,10 @@ using SIO.Domain.Translation.Events;
 
 namespace SIO.Tests.Unit.Domain.Document
 {
-    public class WhenTranslationSucceded : Specification<SIO.Domain.Document.Document, SIO.Domain.Document.DocumentState>
+    public class WhenTranslationFailed : Specification<SIO.Domain.Document.Document, SIO.Domain.Document.DocumentState>
     {
         private readonly Guid _aggregateId = Guid.NewGuid().ToSequentialGuid();
+        private readonly string _error = "Test error";
 
         protected override IEnumerable<IEvent> Given()
         {
@@ -24,7 +25,7 @@ namespace SIO.Tests.Unit.Domain.Document
 
         protected override void When()
         {
-            Aggregate.AcceptTranslation(_aggregateId, 4);
+            Aggregate.FailTranslation(_aggregateId, 4, _error);
         }
 
         [Then]
@@ -34,19 +35,39 @@ namespace SIO.Tests.Unit.Domain.Document
         }
 
         [Then]
-        public void ShouldContainUncommitedTranslationStartedEvent()
+        public void ShouldContainUncommitedTranslationFailedEvent()
         {
             var events = Aggregate.GetUncommittedEvents();
 
-            events.Single().Should().BeOfType<TranslationSucceded>();
+            events.Single().Should().BeOfType<TranslationFailed>();
         }
 
         [Then]
-        public void ShouldContainUncommitedTranslationStartedEventWithCorrectVersion()
+        public void ShouldContainUncommitedTranslationFailedEventWithCorrectId()
         {
             var events = Aggregate.GetUncommittedEvents();
 
-            var @event = events.OfType<TranslationSucceded>().Single();
+            var @event = events.OfType<TranslationFailed>().Single();
+
+            @event.AggregateId.Should().Be(_aggregateId);
+        }
+
+        [Then]
+        public void ShouldContainUncommitedTranslationSuccededEventWithCorrectError()
+        {
+            var events = Aggregate.GetUncommittedEvents();
+
+            var @event = events.OfType<TranslationFailed>().Single();
+
+            @event.Error.Should().Be(_error);
+        }
+
+        [Then]
+        public void ShouldContainUncommitedTranslationFailedEventWithCorrectVersion()
+        {
+            var events = Aggregate.GetUncommittedEvents();
+
+            var @event = events.OfType<TranslationFailed>().Single();
 
             @event.Version.Should().Be(5);
         }
@@ -54,20 +75,20 @@ namespace SIO.Tests.Unit.Domain.Document
         [Then]
         public void ShouldContainStateWithCorrectId()
         {
-            var @event = Aggregate.GetUncommittedEvents().OfType<TranslationSucceded>().Single();
+            var @event = Aggregate.GetUncommittedEvents().OfType<TranslationFailed>().Single();
             Aggregate.GetState().Id.Should().Be(@event.AggregateId);
         }
 
         [Then]
         public void ShouldContainStateWithCorrectDocumentCondition()
         {
-            Aggregate.GetState().Condition.Should().Be(DocumentCondition.TranslationSucceded);
+            Aggregate.GetState().Condition.Should().Be(DocumentCondition.TranslationFailed);
         }
 
         [Then]
         public void ShouldContainStateWithCorrectVersion()
         {
-            var @event = Aggregate.GetUncommittedEvents().OfType<TranslationSucceded>().Single();
+            var @event = Aggregate.GetUncommittedEvents().OfType<TranslationFailed>().Single();
             Aggregate.Version.Should().Be(@event.Version);
         }
     }

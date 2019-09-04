@@ -4,24 +4,22 @@ using System.Linq;
 using FluentAssertions;
 using OpenEventSourcing.Events;
 using OpenEventSourcing.Extensions;
-using SIO.Domain.Document;
-using SIO.Domain.Document.Events;
-using SIO.Domain.Translation.Events;
+using SIO.Domain.User.Events;
 
-namespace SIO.Tests.Unit.Domain.Document
+namespace SIO.Tests.Unit.Domain.User
 {
-    public class WhenTranslationQueued : Specification<SIO.Domain.Document.Document, SIO.Domain.Document.DocumentState>
+    public class WhenUserVerified : Specification<SIO.Domain.User.User, SIO.Domain.User.UserState>
     {
         private readonly Guid _aggregateId = Guid.NewGuid().ToSequentialGuid();
 
         protected override IEnumerable<IEvent> Given()
         {
-            yield return new DocumentUploaded(_aggregateId, SIO.Domain.TranslationType.Google, "Test Document");
+            yield return new UserRegistered(_aggregateId, "test@user.com", "test", "user");
         }
 
         protected override void When()
         {
-            Aggregate.QueueTranslation(_aggregateId, 1);
+            Aggregate.Verify(_aggregateId, 1);
         }
 
         [Then]
@@ -31,29 +29,29 @@ namespace SIO.Tests.Unit.Domain.Document
         }
 
         [Then]
-        public void ShouldContainUncommitedTranslationQueuedEvent()
+        public void ShouldContainUncommitedUserVerifiedEvent()
         {
             var events = Aggregate.GetUncommittedEvents();
 
-            events.Single().Should().BeOfType<TranslationQueued>();
+            events.Single().Should().BeOfType<UserVerified>();
         }
 
         [Then]
-        public void ShouldContainUncommitedTranslationQueuedEventWithCorrectId()
+        public void ShouldContainUncommitedUserVerifiedWithCorrectId()
         {
             var events = Aggregate.GetUncommittedEvents();
 
-            var @event = events.OfType<TranslationQueued>().Single();
+            var @event = events.OfType<UserVerified>().Single();
 
             @event.AggregateId.Should().Be(_aggregateId);
         }
 
         [Then]
-        public void ShouldContainUncommitedTranslationQueuedEventWithCorrectVersion()
+        public void ShouldContainUncommitedUserVerifiedEventWithCorrectVersion()
         {
             var events = Aggregate.GetUncommittedEvents();
 
-            var @event = events.OfType<TranslationQueued>().Single();
+            var @event = events.OfType<UserVerified>().Single();
 
             @event.Version.Should().Be(2);
         }
@@ -61,20 +59,20 @@ namespace SIO.Tests.Unit.Domain.Document
         [Then]
         public void ShouldContainStateWithCorrectId()
         {
-            var @event = Aggregate.GetUncommittedEvents().OfType<TranslationQueued>().Single();
+            var @event = Aggregate.GetUncommittedEvents().OfType<UserVerified>().Single();
             Aggregate.GetState().Id.Should().Be(@event.AggregateId);
         }
 
         [Then]
-        public void ShouldContainStateWithCorrectCondition()
+        public void ShouldContainStateWithCorrectVerified()
         {
-            Aggregate.GetState().Condition.Should().Be(DocumentCondition.TranslationQueued);
+            Aggregate.GetState().Verified.Should().Be(true);
         }
 
         [Then]
         public void ShouldContainStateWithCorrectVersion()
         {
-            var @event = Aggregate.GetUncommittedEvents().OfType<TranslationQueued>().Single();
+            var @event = Aggregate.GetUncommittedEvents().OfType<UserVerified>().Single();
             Aggregate.Version.Should().Be(@event.Version);
         }
     }

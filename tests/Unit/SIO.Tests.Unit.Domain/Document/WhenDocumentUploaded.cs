@@ -2,6 +2,7 @@
 using System.Linq;
 using FluentAssertions;
 using OpenEventSourcing.Events;
+using SIO.Domain;
 using SIO.Domain.Document;
 using SIO.Domain.Document.Events;
 
@@ -10,6 +11,7 @@ namespace SIO.Tests.Unit.Domain.Document
     public class WhenCompanyCreated : Specification<SIO.Domain.Document.Document, SIO.Domain.Document.DocumentState>
     {
         private readonly string _fileName = "Test Document";
+        private readonly TranslationType _translationType = TranslationType.Google;
 
         protected override IEnumerable<IEvent> Given()
         {
@@ -18,7 +20,7 @@ namespace SIO.Tests.Unit.Domain.Document
 
         protected override void When()
         {
-            Aggregate.Upload(SIO.Domain.TranslationType.Google, _fileName);
+            Aggregate.Upload(_translationType, _fileName);
         }
 
         [Then]
@@ -28,7 +30,7 @@ namespace SIO.Tests.Unit.Domain.Document
         }
 
         [Then]
-        public void ShouldContainUncommitedDocumentCreatedEvent()
+        public void ShouldContainUncommitedDocumentUploadedEvent()
         {
             var events = Aggregate.GetUncommittedEvents();
 
@@ -43,6 +45,16 @@ namespace SIO.Tests.Unit.Domain.Document
             var @event = events.OfType<DocumentUploaded>().Single();
 
             @event.FileName.Should().Be(_fileName);
+        }
+
+        [Then]
+        public void ShouldContainUncommitedDocumentUploadedWithCondition()
+        {
+            var events = Aggregate.GetUncommittedEvents();
+
+            var @event = events.OfType<DocumentUploaded>().Single();
+
+            @event.TranslationType.Should().Be(_translationType);
         }
 
         [Then]

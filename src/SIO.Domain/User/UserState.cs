@@ -13,6 +13,11 @@ namespace SIO.Domain.User
         public bool Verified { get; set; }
         public int Version { get; set; }
 
+        public UserState()
+        {
+
+        }
+
         public UserState(UserState state)
         {
             if (state == null)

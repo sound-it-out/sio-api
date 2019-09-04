@@ -9,7 +9,7 @@ namespace SIO.Domain.User.Events
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-        public UserRegistered(Guid aggregateId, int version, string email, string firstName, string lastName) : base(aggregateId, version)
+        public UserRegistered(Guid aggregateId, string email, string firstName, string lastName) : base(aggregateId, 1)
         {
             Email = email;
             FirstName = firstName;

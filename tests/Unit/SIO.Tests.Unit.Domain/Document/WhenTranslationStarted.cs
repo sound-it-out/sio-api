@@ -41,6 +41,26 @@ namespace SIO.Tests.Unit.Domain.Document
         }
 
         [Then]
+        public void ShouldContainUncommitedTranslationStartedEventWithCorrectId()
+        {
+            var events = Aggregate.GetUncommittedEvents();
+
+            var @event = events.OfType<TranslationStarted>().Single();
+
+            @event.AggregateId.Should().Be(_aggregateId);
+        }
+
+        [Then]
+        public void ShouldContainUncommitedTranslationStartedEventWithCorrectCharacterCount()
+        {
+            var events = Aggregate.GetUncommittedEvents();
+
+            var @event = events.OfType<TranslationStarted>().Single();
+
+            @event.CharacterCount.Should().Be(_characterCount);
+        }
+
+        [Then]
         public void ShouldContainUncommitedTranslationStartedEventWithCorrectVersion()
         {
             var events = Aggregate.GetUncommittedEvents();

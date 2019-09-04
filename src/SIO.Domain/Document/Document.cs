@@ -89,33 +89,33 @@ namespace SIO.Domain.Document
         {
             _state.TranslationId = @event.AggregateId;
             _state.Condition = DocumentCondition.TranslationQueued;
-            Version += 1;
+            Version++;
         }
 
         public void Handle(TranslationStarted @event)
         {
             _state.Condition = DocumentCondition.TranslationStarted;
             _state.TranslationCharactersTotal = @event.CharacterCount;
-            Version += 1;
+            Version++;
         }
 
         public void Handle(TranslationSucceded @event)
         {
             _state.Condition = DocumentCondition.TranslationSucceded;
-            Version += 1;
+            Version++;
         }
 
         public void Handle(TranslationFailed @event)
         {
             _state.Condition = DocumentCondition.TranslationFailed;
-            Version += 1;
+            Version++;
         }
 
         public void Handle(TranslationCharactersProcessed @event)
         {
             _state.Condition = DocumentCondition.TranslationFailed;
             _state.TranslationCharactersProcessed += @event.CharactersProcessed;
-            Version += 1;
+            Version++;
         }
     }
 }
