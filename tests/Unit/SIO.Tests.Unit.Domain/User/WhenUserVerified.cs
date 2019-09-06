@@ -11,10 +11,13 @@ namespace SIO.Tests.Unit.Domain.User
     public class WhenUserVerified : Specification<SIO.Domain.User.User, SIO.Domain.User.UserState>
     {
         private readonly Guid _aggregateId = Guid.NewGuid().ToSequentialGuid();
+        private readonly string _email = "test@user.com";
+        private readonly string _firstName = "test";
+        private readonly string _lastName = "user";
 
         protected override IEnumerable<IEvent> Given()
         {
-            yield return new UserRegistered(_aggregateId, "test@user.com", "test", "user");
+            yield return new UserRegistered(_aggregateId, _email, _firstName, _lastName);
         }
 
         protected override void When()
@@ -59,12 +62,29 @@ namespace SIO.Tests.Unit.Domain.User
         [Then]
         public void ShouldContainStateWithCorrectId()
         {
-            var @event = Aggregate.GetUncommittedEvents().OfType<UserVerified>().Single();
-            Aggregate.GetState().Id.Should().Be(@event.AggregateId);
+            Aggregate.GetState().Id.Should().Be(_aggregateId);
         }
 
         [Then]
-        public void ShouldContainStateWithCorrectVerified()
+        public void ShouldContainStateWithCorrectEmail()
+        {
+            Aggregate.GetState().Email.Should().Be(_email);
+        }
+
+        [Then]
+        public void ShouldContainStateWithCorrectFirstName()
+        {
+            Aggregate.GetState().FirstName.Should().Be(_firstName);
+        }
+
+        [Then]
+        public void ShouldContainStateWithCorrectLastName()
+        {
+            Aggregate.GetState().LastName.Should().Be(_lastName);
+        }
+
+        [Then]
+        public void ShouldContainStateVerified()
         {
             Aggregate.GetState().Verified.Should().Be(true);
         }
@@ -72,8 +92,7 @@ namespace SIO.Tests.Unit.Domain.User
         [Then]
         public void ShouldContainStateWithCorrectVersion()
         {
-            var @event = Aggregate.GetUncommittedEvents().OfType<UserVerified>().Single();
-            Aggregate.Version.Should().Be(@event.Version);
+            Aggregate.Version.Should().Be(2);
         }
     }
 }

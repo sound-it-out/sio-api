@@ -11,6 +11,7 @@ namespace SIO.Domain.User
         public string LastName { get; set; }
         public bool Deleted { get; set; }
         public bool Verified { get; set; }
+        public long CharacterTokens { get; set; }
         public int Version { get; set; }
 
         public UserState()
@@ -29,6 +30,7 @@ namespace SIO.Domain.User
             LastName = state.LastName;
             Deleted = state.Deleted;
             Verified = state.Verified;
+            CharacterTokens = state.CharacterTokens;
             Version = state.Version;
         }
     }

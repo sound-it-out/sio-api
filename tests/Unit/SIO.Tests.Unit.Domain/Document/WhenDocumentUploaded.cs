@@ -1,15 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using OpenEventSourcing.Events;
+using OpenEventSourcing.Extensions;
 using SIO.Domain;
 using SIO.Domain.Document;
 using SIO.Domain.Document.Events;
 
 namespace SIO.Tests.Unit.Domain.Document
 {
-    public class WhenCompanyCreated : Specification<SIO.Domain.Document.Document, SIO.Domain.Document.DocumentState>
+    public class WhenDocumentUploaded : Specification<SIO.Domain.Document.Document, SIO.Domain.Document.DocumentState>
     {
+        private readonly Guid _aggregateId = Guid.NewGuid().ToSequentialGuid();
         private readonly string _fileName = "Test Document";
         private readonly TranslationType _translationType = TranslationType.Google;
 
@@ -20,7 +23,7 @@ namespace SIO.Tests.Unit.Domain.Document
 
         protected override void When()
         {
-            Aggregate.Upload(_translationType, _fileName);
+            Aggregate.Upload(_aggregateId, _translationType, _fileName);
         }
 
         [Then]
@@ -77,8 +80,7 @@ namespace SIO.Tests.Unit.Domain.Document
         [Then]
         public void ShouldContainStateWithCorrectName()
         {
-            var @event = Aggregate.GetUncommittedEvents().OfType<DocumentUploaded>().Single();
-            Aggregate.GetState().FileName.Should().Be(@event.FileName);
+            Aggregate.GetState().FileName.Should().Be(_fileName);
         }
 
         [Then]
@@ -90,8 +92,7 @@ namespace SIO.Tests.Unit.Domain.Document
         [Then]
         public void ShouldContainStateWithCorrectVersion()
         {
-            var @event = Aggregate.GetUncommittedEvents().OfType<DocumentUploaded>().Single();
-            Aggregate.Version.Should().Be(@event.Version);
+            Aggregate.Version.Should().Be(1);
         }
     }
 }

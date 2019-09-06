@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using OpenEventSourcing.Commands;
 using OpenEventSourcing.Domain;
 using OpenEventSourcing.Events;
+using OpenEventSourcing.Extensions;
 using SIO.Domain.Document.Commands;
 using SIO.Infrastructure.File;
 
@@ -58,6 +59,7 @@ namespace SIO.Domain.Document.CommandHandlers
                 throw new ArgumentNullException(nameof(aggregate));
 
             aggregate.Upload(
+                aggregateId: Guid.NewGuid().ToSequentialGuid(),
                 translationType: command.TranslationType, 
                 fileName: command.File.FileName
             );

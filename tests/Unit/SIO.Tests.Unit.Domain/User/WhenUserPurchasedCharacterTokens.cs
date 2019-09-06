@@ -8,23 +8,23 @@ using SIO.Domain.User.Events;
 
 namespace SIO.Tests.Unit.Domain.User
 {
-    public class WhenUserEmailChanged : Specification<SIO.Domain.User.User, SIO.Domain.User.UserState>
+    public class WhenUserPurchasedCharacterTokens : Specification<SIO.Domain.User.User, SIO.Domain.User.UserState>
     {
         private readonly Guid _aggregateId = Guid.NewGuid().ToSequentialGuid();
         private readonly string _email = "test@user.com";
         private readonly string _firstName = "test";
         private readonly string _lastName = "user";
-        private readonly string _newEmail = "changed@user.com";
+        private readonly long _characterTokens = 20000;
 
         protected override IEnumerable<IEvent> Given()
         {
-            yield return new UserRegistered(_aggregateId, _email, _firstName, _lastName);
+            yield return new UserRegistered(_aggregateId, "test@user.com", "test", "user");
             yield return new UserVerified(_aggregateId, 2);
         }
 
         protected override void When()
         {
-            Aggregate.ChangeEmail(_aggregateId, _newEmail, 2);
+            Aggregate.PurchaseTokens(_aggregateId, 2, _characterTokens);
         }
 
         [Then]
@@ -34,40 +34,39 @@ namespace SIO.Tests.Unit.Domain.User
         }
 
         [Then]
-        public void ShouldContainUncommitedUserEmailChangedEvent()
+        public void ShouldContainUncommitedUserPurchasedCharacterTokensEvent()
         {
             var events = Aggregate.GetUncommittedEvents();
 
-            events.Single().Should().BeOfType<UserEmailChanged>();
+            events.Single().Should().BeOfType<UserPurchasedCharacterTokens>();
         }
 
         [Then]
-        public void ShouldContainUncommitedUserEmailChangedWithCorrectId()
+        public void ShouldContainUncommitedUserPurchasedCharacterTokensWithCorrectId()
         {
             var events = Aggregate.GetUncommittedEvents();
 
-            var @event = events.OfType<UserEmailChanged>().Single();
+            var @event = events.OfType<UserPurchasedCharacterTokens>().Single();
 
             @event.AggregateId.Should().Be(_aggregateId);
         }
 
-
         [Then]
-        public void ShouldContainUncommitedUserEmailChangedWithCorrectEmail()
+        public void ShouldContainUncommitedUserPurchasedCharacterTokensWithCorrectCharacterTokens()
         {
             var events = Aggregate.GetUncommittedEvents();
 
-            var @event = events.OfType<UserEmailChanged>().Single();
+            var @event = events.OfType<UserPurchasedCharacterTokens>().Single();
 
-            @event.Email.Should().Be(_newEmail);
+            @event.CharacterTokens.Should().Be(_characterTokens);
         }
 
         [Then]
-        public void ShouldContainUncommitedUserEmailChangedEventWithCorrectVersion()
+        public void ShouldContainUncommitedUserPurchasedCharacterTokensEventWithCorrectVersion()
         {
             var events = Aggregate.GetUncommittedEvents();
 
-            var @event = events.OfType<UserEmailChanged>().Single();
+            var @event = events.OfType<UserPurchasedCharacterTokens>().Single();
 
             @event.Version.Should().Be(3);
         }
@@ -81,7 +80,7 @@ namespace SIO.Tests.Unit.Domain.User
         [Then]
         public void ShouldContainStateWithCorrectEmail()
         {
-            Aggregate.GetState().Email.Should().Be(_newEmail);
+            Aggregate.GetState().Email.Should().Be(_email);
         }
 
         [Then]
@@ -94,6 +93,12 @@ namespace SIO.Tests.Unit.Domain.User
         public void ShouldContainStateWithCorrectLastName()
         {
             Aggregate.GetState().LastName.Should().Be(_lastName);
+        }
+
+        [Then]
+        public void ShouldContainStateWithCorrectCharacterTokens()
+        {
+            Aggregate.GetState().CharacterTokens.Should().Be(_characterTokens);
         }
 
         [Then]

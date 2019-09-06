@@ -13,11 +13,12 @@ namespace SIO.Tests.Unit.Domain.Document
     public class WhenTranslationStarted : Specification<SIO.Domain.Document.Document, SIO.Domain.Document.DocumentState>
     {
         private readonly Guid _aggregateId = Guid.NewGuid().ToSequentialGuid();
+        private readonly string _fileName = "Test Document";
         private readonly long _characterCount = 4000;
 
         protected override IEnumerable<IEvent> Given()
         {
-            yield return new DocumentUploaded(_aggregateId, SIO.Domain.TranslationType.Google, "Test Document");
+            yield return new DocumentUploaded(_aggregateId, SIO.Domain.TranslationType.Google, _fileName);
             yield return new TranslationQueued(_aggregateId, 2);
         }
 
@@ -73,8 +74,13 @@ namespace SIO.Tests.Unit.Domain.Document
         [Then]
         public void ShouldContainStateWithCorrectId()
         {
-            var @event = Aggregate.GetUncommittedEvents().OfType<TranslationStarted>().Single();
-            Aggregate.GetState().Id.Should().Be(@event.AggregateId);
+            Aggregate.GetState().Id.Should().Be(_aggregateId);
+        }
+
+        [Then]
+        public void ShouldContainStateWithCorrectName()
+        {
+            Aggregate.GetState().FileName.Should().Be(_fileName);
         }
 
         [Then]
@@ -92,8 +98,7 @@ namespace SIO.Tests.Unit.Domain.Document
         [Then]
         public void ShouldContainStateWithCorrectVersion()
         {
-            var @event = Aggregate.GetUncommittedEvents().OfType<TranslationStarted>().Single();
-            Aggregate.Version.Should().Be(@event.Version);
+            Aggregate.Version.Should().Be(3);
         }
     }
 }

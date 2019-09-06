@@ -13,11 +13,12 @@ namespace SIO.Tests.Unit.Domain.Document
     public class WhenTranslationFailed : Specification<SIO.Domain.Document.Document, SIO.Domain.Document.DocumentState>
     {
         private readonly Guid _aggregateId = Guid.NewGuid().ToSequentialGuid();
+        private readonly string _fileName = "Test Document";
         private readonly string _error = "Test error";
 
         protected override IEnumerable<IEvent> Given()
         {
-            yield return new DocumentUploaded(_aggregateId, SIO.Domain.TranslationType.Google, "Test Document");
+            yield return new DocumentUploaded(_aggregateId, SIO.Domain.TranslationType.Google, _fileName);
             yield return new TranslationQueued(_aggregateId, 2);
             yield return new TranslationStarted(_aggregateId, 3, 4000);
             yield return new TranslationCharactersProcessed(_aggregateId, 4, 3000);
@@ -80,6 +81,12 @@ namespace SIO.Tests.Unit.Domain.Document
         }
 
         [Then]
+        public void ShouldContainStateWithCorrectName()
+        {
+            Aggregate.GetState().FileName.Should().Be(_fileName);
+        }
+
+        [Then]
         public void ShouldContainStateWithCorrectDocumentCondition()
         {
             Aggregate.GetState().Condition.Should().Be(DocumentCondition.TranslationFailed);
@@ -88,8 +95,7 @@ namespace SIO.Tests.Unit.Domain.Document
         [Then]
         public void ShouldContainStateWithCorrectVersion()
         {
-            var @event = Aggregate.GetUncommittedEvents().OfType<TranslationFailed>().Single();
-            Aggregate.Version.Should().Be(@event.Version);
+            Aggregate.Version.Should().Be(5);
         }
     }
 }

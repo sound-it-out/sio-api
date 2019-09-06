@@ -13,11 +13,12 @@ namespace SIO.Tests.Unit.Domain.Document
     public class WhenTranslationCharactersProcessed : Specification<SIO.Domain.Document.Document, SIO.Domain.Document.DocumentState>
     {
         private readonly Guid _aggregateId = Guid.NewGuid().ToSequentialGuid();
+        private readonly string _fileName = "Test Document";
         private readonly long _charactersProcessed = 3000;
 
         protected override IEnumerable<IEvent> Given()
         {
-            yield return new DocumentUploaded(_aggregateId, SIO.Domain.TranslationType.Google, "Test Document");
+            yield return new DocumentUploaded(_aggregateId, SIO.Domain.TranslationType.Google, _fileName);
             yield return new TranslationQueued(_aggregateId, 2);
             yield return new TranslationStarted(_aggregateId, 3, 4000);
         }
@@ -79,6 +80,18 @@ namespace SIO.Tests.Unit.Domain.Document
         }
 
         [Then]
+        public void ShouldContainStateWithCorrectName()
+        {
+            Aggregate.GetState().FileName.Should().Be(_fileName);
+        }
+
+        [Then]
+        public void ShouldContainStateWithCorrectCondition()
+        {
+            Aggregate.GetState().Condition.Should().Be(DocumentCondition.TranslationStarted);
+        }
+
+        [Then]
         public void ShouldContainStateWithCorrectTranslationCharactersProcessed()
         {
             Aggregate.GetState().TranslationCharactersProcessed.Should().Be(_charactersProcessed);
@@ -87,8 +100,7 @@ namespace SIO.Tests.Unit.Domain.Document
         [Then]
         public void ShouldContainStateWithCorrectVersion()
         {
-            var @event = Aggregate.GetUncommittedEvents().OfType<TranslationCharactersProcessed>().Single();
-            Aggregate.Version.Should().Be(@event.Version);
+            Aggregate.Version.Should().Be(4);
         }
     }
 }

@@ -9,11 +9,11 @@ using SIO.Domain.User.Events;
 namespace SIO.Tests.Unit.Domain.User
 {
     public class WhenUserRegistered : Specification<SIO.Domain.User.User, SIO.Domain.User.UserState>
-    {
+    {        
+        private readonly Guid _aggregateId = Guid.NewGuid().ToSequentialGuid();
         private readonly string _email = "test@user.com";
         private readonly string _firstName = "test";
         private readonly string _lastName = "user";
-        private readonly Guid _aggregateId = Guid.NewGuid().ToSequentialGuid();
 
         protected override IEnumerable<IEvent> Given()
         {
@@ -38,16 +38,7 @@ namespace SIO.Tests.Unit.Domain.User
 
             events.Single().Should().BeOfType<UserRegistered>();
         }
-
-        [Then]
-        public void ShouldContainUncommitedUserRegisteredWithCorrectEmail()
-        {
-            var events = Aggregate.GetUncommittedEvents();
-
-            var @event = events.OfType<UserRegistered>().Single();
-
-            @event.Email.Should().Be(_email);
-        }
+        
 
         [Then]
         public void ShouldContainUncommitedUserRegisteredWithCorrectId()
@@ -57,6 +48,16 @@ namespace SIO.Tests.Unit.Domain.User
             var @event = events.OfType<UserRegistered>().Single();
 
             @event.AggregateId.Should().Be(_aggregateId);
+        }
+
+        [Then]
+        public void ShouldContainUncommitedUserRegisteredWithCorrectEmail()
+        {
+            var events = Aggregate.GetUncommittedEvents();
+
+            var @event = events.OfType<UserRegistered>().Single();
+
+            @event.Email.Should().Be(_email);
         }
 
         [Then]
@@ -92,36 +93,31 @@ namespace SIO.Tests.Unit.Domain.User
         [Then]
         public void ShouldContainStateWithCorrectId()
         {
-            var @event = Aggregate.GetUncommittedEvents().OfType<UserRegistered>().Single();
-            Aggregate.GetState().Id.Should().Be(@event.AggregateId);
+            Aggregate.GetState().Id.Should().Be(_aggregateId);
         }
 
         [Then]
         public void ShouldContainStateWithCorrectEmail()
         {
-            var @event = Aggregate.GetUncommittedEvents().OfType<UserRegistered>().Single();
-            Aggregate.GetState().Email.Should().Be(@event.Email);
+            Aggregate.GetState().Email.Should().Be(_email);
         }
 
         [Then]
         public void ShouldContainStateWithCorrectFirstName()
         {
-            var @event = Aggregate.GetUncommittedEvents().OfType<UserRegistered>().Single();
-            Aggregate.GetState().FirstName.Should().Be(@event.FirstName);
+            Aggregate.GetState().FirstName.Should().Be(_firstName);
         }
 
         [Then]
         public void ShouldContainStateWithCorrectLastName()
         {
-            var @event = Aggregate.GetUncommittedEvents().OfType<UserRegistered>().Single();
-            Aggregate.GetState().LastName.Should().Be(@event.LastName);
+            Aggregate.GetState().LastName.Should().Be(_lastName);
         }
 
         [Then]
         public void ShouldContainStateWithCorrectVersion()
         {
-            var @event = Aggregate.GetUncommittedEvents().OfType<UserRegistered>().Single();
-            Aggregate.Version.Should().Be(@event.Version);
+            Aggregate.Version.Should().Be(1);
         }
     }
 }
