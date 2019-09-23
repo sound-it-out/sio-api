@@ -18,24 +18,20 @@ namespace SIO.Infrastructure.AWS.File
 
         public async Task<FileResult> DownloadAsync(string fileName, string userId)
         {
-            using (var client = _clientFactory.Invoke())
-            {
-                var request = new GetObjectRequest("", userId, fileName);
-                var result = await client.GetObjectAsync(request);
+            var client = _clientFactory.Invoke();
+            var request = new GetObjectRequest("", userId, fileName);
+            var result = await client.GetObjectAsync(request);
 
-                return new FileResult(result.ContentType, () => result.OpenAsync());
-            }
+            return new FileResult(result.ContentType, () => result.OpenAsync());
         }
 
         public async Task UploadAsync(string fileName, string userId, Stream stream, string contentType)
         {
-            using (var client = _clientFactory.Invoke())
-            {
-                var request = new PutObjectRequest("", userId, fileName);
-                request.SetStream(stream, contentType);
+            var client = _clientFactory.Invoke();
+            var request = new PutObjectRequest("", userId, fileName);
+            request.SetStream(stream, contentType);
 
-                await client.PutObjectAsync(request);
-            }
+            await client.PutObjectAsync(request);
         }
     }
 }
