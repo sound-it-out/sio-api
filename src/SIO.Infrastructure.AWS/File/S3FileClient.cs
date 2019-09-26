@@ -1,37 +1,38 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using SIO.Infrastructure.File;
+using Amazon.Runtime;
 using Amazon.S3;
-using Amazon;
+using Microsoft.AspNetCore.StaticFiles;
+using SIO.Infrastructure.File;
 
 namespace SIO.Infrastructure.AWS.File
 {
     internal class S3FileClient : IFileClient
     {
-        private readonly Func<S3Client> _clientFactory;
+        private readonly IAmazonS3 _client;
 
         public S3FileClient()
         {
-            _clientFactory = () => new S3Client(AwsRegion.EUWest1, new AwsCredential("", ""));
+            _client = new AmazonS3Client(new BasicAWSCredentials("", ""));
         }
 
         public async Task<FileResult> DownloadAsync(string fileName, string userId)
         {
-            var client = _clientFactory.Invoke();
-            var request = new GetObjectRequest("", userId, fileName);
-            var result = await client.GetObjectAsync(request);
+            var file = await _client.GetObjectAsync(userId, fileName);
+            var provider = new FileExtensionContentTypeProvider();
 
-            return new FileResult(result.ContentType, () => result.OpenAsync());
+            if (!provider.TryGetContentType(fileName, out var contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+
+            return new FileResult(contentType, () =>  file.ResponseStream);
         }
 
-        public async Task UploadAsync(string fileName, string userId, Stream stream, string contentType)
+        public async Task UploadAsync(string fileName, string userId, Stream stream)
         {
-            var client = _clientFactory.Invoke();
-            var request = new PutObjectRequest("", userId, fileName);
-            request.SetStream(stream, contentType);
-
-            await client.PutObjectAsync(request);
+            await _client.UploadObjectFromStreamAsync(userId, fileName, stream, new Dictionary<string, object>());
         }
     }
 }

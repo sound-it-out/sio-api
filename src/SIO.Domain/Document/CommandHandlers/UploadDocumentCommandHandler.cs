@@ -48,8 +48,7 @@ namespace SIO.Domain.Document.CommandHandlers
                 await _fileClient.UploadAsync(
                     fileName: command.AggregateId.ToString(),
                     userId: command.UserId,
-                    stream: stream,
-                    contentType: command.File.ContentType
+                    stream: stream
                 );
             }            
 
