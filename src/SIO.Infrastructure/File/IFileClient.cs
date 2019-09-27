@@ -6,7 +6,7 @@ namespace SIO.Infrastructure.File
 {
     public interface IFileClient
     {
-        Task UploadAsync(string fileName, string userId, Stream stream, string contentType);
+        Task UploadAsync(string fileName, string userId, Stream stream);
         Task<FileResult> DownloadAsync(string fileName, string userId);
     }
 }

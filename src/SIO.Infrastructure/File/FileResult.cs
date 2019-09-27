@@ -6,15 +6,15 @@ namespace SIO.Infrastructure.File
 {
     public class FileResult
     {
-        private readonly Func<ValueTask<Stream>> _streamFunc;
+        private readonly Func<Stream> _streamFunc;
         public string ContentType { get; }
 
-        public FileResult(string contentType, Func<ValueTask<Stream>> streamFunc)
+        public FileResult(string contentType, Func<Stream> streamFunc)
         {
             ContentType = contentType;
             _streamFunc = streamFunc;
         }
 
-        public ValueTask<Stream> OpenStreamAsync() => _streamFunc.Invoke();
+        public ValueTask<Stream> OpenStreamAsync() => new ValueTask<Stream>(_streamFunc.Invoke());
     }
 }
