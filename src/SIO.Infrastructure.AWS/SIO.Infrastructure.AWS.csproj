@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.Polly" Version="3.3.102.24" />
+    <PackageReference Include="AWSSDK.Polly" Version="3.3.102.26" />
     <PackageReference Include="AWSSDK.S3" Version="3.3.104.31" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
   </ItemGroup>
