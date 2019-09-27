@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Amazon.S3" Version="0.13.6" />
+    <PackageReference Include="Amazon.S3" Version="0.14.0" />
     <PackageReference Include="Clipboard" Version="1.0.1" />
     <PackageReference Include="Google.Cloud.TextToSpeech.V1" Version="1.0.0" />
     <PackageReference Include="Hangfire" Version="1.7.6" />
