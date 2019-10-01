@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <UserSecretsId>74ac72bc-005b-43f4-9f9f-4fe3a89f3701</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +13,7 @@
     <PackageReference Include="OpenEventSourcing.Azure.ServiceBus" Version="0.2.0" />
     <PackageReference Include="OpenEventSourcing.EntityFrameworkCore.SqlServer" Version="0.2.0" />
     <PackageReference Include="OpenEventSourcing.Serialization.Json" Version="0.2.0" />
-    <PackageReference Include="Sentry" Version="1.2.0" />
+    <PackageReference Include="Sentry.AspNetCore" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>
