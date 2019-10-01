@@ -19,6 +19,12 @@ namespace SIO.API
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseSentry(options =>
+                {
+#if DEBUG
+                    options.Debug = true;
+#endif
+                })
                 .UseStartup<Startup>();
     }
 }
