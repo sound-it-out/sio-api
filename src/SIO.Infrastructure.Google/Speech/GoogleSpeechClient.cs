@@ -44,12 +44,14 @@ namespace SIO.Infrastructure.Google.Speech
         private static void Delay(int delay)
         {
             int i = 0;
-            var delayTimer = new System.Timers.Timer();
-            delayTimer.Interval = delay;
-            delayTimer.AutoReset = false; //so that it only calls the method once
-            delayTimer.Elapsed += (s, args) => i = 1;
-            delayTimer.Start();
-            while (i == 0) { };
+            using (var delayTimer = new System.Timers.Timer())
+            {
+                delayTimer.Interval = delay;
+                delayTimer.AutoReset = false; //so that it only calls the method once
+                delayTimer.Elapsed += (s, args) => i = 1;
+                delayTimer.Start();
+                while (i == 0) { };
+            }
         }
 
         private async Task QueueText(string text, int index, GoogleSpeechRequest request, GoogleSpeechResult result)
