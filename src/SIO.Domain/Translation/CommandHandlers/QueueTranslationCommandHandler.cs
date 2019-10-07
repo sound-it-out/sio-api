@@ -37,15 +37,6 @@ namespace SIO.Domain.Translation.CommandHandlers
 
             aggregate.QueueTranslation(command.AggregateId, command.Version);
 
-            // TODO(matt): get this from blob storage
-            var content = "";
-            var fileStream = File.Open("", FileMode.Open);
-
-            using (var extractor = TextExtractor.Open(fileStream))
-            {
-                content = await extractor.ExtractAsync();
-            }
-
             // Need to enqueue using hangfire as azure service bus has a peek lock of 5 mins and this could be a long running command.
             switch (command.TranslationType)
             {

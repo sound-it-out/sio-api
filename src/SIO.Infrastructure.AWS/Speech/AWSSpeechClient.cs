@@ -33,7 +33,7 @@ namespace SIO.Infrastructure.AWS.Speech
             var response = await _pollyClient.StartSpeechSynthesisTaskAsync(synthesizeSpeechRequest);            
 
             using (var waitHandle = new AutoResetEvent(false))
-            using (var timer = new Timer(
+            using (new Timer(
                     callback: async (e) => { await CheckSynthesisTask(response.SynthesisTask.TaskId, waitHandle); },
                     state: null,
                     dueTime: TimeSpan.Zero,
