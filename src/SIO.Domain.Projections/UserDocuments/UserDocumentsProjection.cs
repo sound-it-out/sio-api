@@ -5,6 +5,7 @@ using OpenEventSourcing.Events;
 using OpenEventSourcing.Projections;
 using SIO.Domain.Document;
 using SIO.Domain.Document.Events;
+using SIO.Domain.Extensions;
 using SIO.Domain.Translation.Events;
 using SIO.Domain.User.Events;
 
