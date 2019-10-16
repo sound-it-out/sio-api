@@ -10,12 +10,16 @@
     <PackageReference Include="FluentAssertions" Version="5.9.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="OpenEventSourcing" Version="0.2.0" />
+    <PackageReference Include="OpenEventSourcing.EntityFrameworkCore" Version="0.2.0" />
+    <PackageReference Include="OpenEventSourcing.EntityFrameworkCore.InMemory" Version="0.2.0" />
+    <PackageReference Include="OpenEventSourcing.EntityFrameworkCore.Sqlite" Version="0.2.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\SIO.Domain\SIO.Domain.csproj" />
+    <ProjectReference Include="..\..\src\SIO.Domain.Projections\SIO.Domain.Projections.csproj" />
+    <ProjectReference Include="..\..\src\SIO.Domain\SIO.Domain.csproj" />
   </ItemGroup>
 
 </Project>

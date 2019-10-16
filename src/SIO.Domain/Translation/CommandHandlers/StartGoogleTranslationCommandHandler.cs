@@ -8,6 +8,7 @@ using OpenEventSourcing.Commands;
 using OpenEventSourcing.Domain;
 using OpenEventSourcing.Events;
 using SIO.Domain.Document;
+using SIO.Domain.Extensions;
 using SIO.Infrastructure.File;
 using SIO.Infrastructure.Google.Speech;
 using SIO.Infrastructure.Speech;
