@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.Polly" Version="3.3.102.31" />
+    <PackageReference Include="AWSSDK.Polly" Version="3.3.102.33" />
     <PackageReference Include="AWSSDK.S3" Version="3.3.104.37" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
