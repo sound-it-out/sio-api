@@ -12,7 +12,7 @@
     <PackageReference Include="OpenEventSourcing" Version="0.2.0" />
     <PackageReference Include="OpenEventSourcing.Azure.ServiceBus" Version="0.2.0" />
     <PackageReference Include="OpenEventSourcing.EntityFrameworkCore.SqlServer" Version="0.2.0" />
-    <PackageReference Include="OpenEventSourcing.Serialization.Json" Version="0.2.0" />
+    <PackageReference Include="OpenEventSourcing.Serialization.Json" Version="0.3.0" />
     <PackageReference Include="Sentry.AspNetCore" Version="1.2.0" />
   </ItemGroup>
 
