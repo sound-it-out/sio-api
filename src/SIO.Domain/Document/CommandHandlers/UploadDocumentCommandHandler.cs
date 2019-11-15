@@ -13,18 +13,18 @@ namespace SIO.Domain.Document.CommandHandlers
 {
     internal class UploadDocumentCommandHandler : ICommandHandler<UploadDocumentCommand>
     {
-        private readonly IEventBus _eventBus;
+        private readonly IEventBusPublisher _eventBusPublisher;
         private readonly IAggregateRepository _aggregateRepository;
         private readonly IAggregateFactory _aggregateFactory;
         private readonly IFileClient _fileClient;
 
-        public UploadDocumentCommandHandler(IEventBus eventBus, 
+        public UploadDocumentCommandHandler(IEventBusPublisher eventBusPublisher, 
             IAggregateRepository aggregateRepository, 
             IAggregateFactory aggregateFactory,
             IFileClient fileClient)
         {
-            if (eventBus == null)
-                throw new ArgumentNullException(nameof(eventBus));
+            if (eventBusPublisher == null)
+                throw new ArgumentNullException(nameof(eventBusPublisher));
             if (aggregateRepository == null)
                 throw new ArgumentNullException(nameof(aggregateRepository));
             if (aggregateFactory == null)
@@ -32,7 +32,7 @@ namespace SIO.Domain.Document.CommandHandlers
             if (fileClient == null)
                 throw new ArgumentNullException(nameof(fileClient));
 
-            _eventBus = eventBus;
+            _eventBusPublisher = eventBusPublisher;
             _aggregateRepository = aggregateRepository;
             _aggregateFactory = aggregateFactory;
             _fileClient = fileClient;
@@ -71,7 +71,7 @@ namespace SIO.Domain.Document.CommandHandlers
             events = events.ToList();
 
             await _aggregateRepository.SaveAsync<DocumentState>(aggregate, 0);
-            await _eventBus.PublishAsync(events);
+            await _eventBusPublisher.PublishAsync(events);
         }
     }
 }

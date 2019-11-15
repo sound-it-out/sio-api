@@ -11,17 +11,17 @@ namespace SIO.Domain.Translation.CommandHandlers
 {
     internal class SaveTranslationCommandHandler : ICommandHandler<SaveTranslationCommand>
     {
-        private readonly IEventBus _eventBus;
+        private readonly IEventBusPublisher _eventBusPublisher;
         private readonly IAggregateRepository _aggregateRepository;
 
-        public SaveTranslationCommandHandler(IEventBus eventBus, IAggregateRepository aggregateRepository)
+        public SaveTranslationCommandHandler(IEventBusPublisher eventBusPublisher, IAggregateRepository aggregateRepository)
         {
-            if (eventBus == null)
-                throw new ArgumentNullException(nameof(eventBus));
+            if (eventBusPublisher == null)
+                throw new ArgumentNullException(nameof(eventBusPublisher));
             if (aggregateRepository == null)
                 throw new ArgumentNullException(nameof(aggregateRepository));
 
-            _eventBus = eventBus;
+            _eventBusPublisher = eventBusPublisher;
             _aggregateRepository = aggregateRepository;
         }
 
@@ -38,7 +38,7 @@ namespace SIO.Domain.Translation.CommandHandlers
             events = events.ToList();
 
             await _aggregateRepository.SaveAsync<DocumentState>(aggregate, command.Version);
-            await _eventBus.PublishAsync(events);
+            await _eventBusPublisher.PublishAsync(events);
         }
     }
 }

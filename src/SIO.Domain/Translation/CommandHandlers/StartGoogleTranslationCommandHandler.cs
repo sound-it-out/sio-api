@@ -17,20 +17,20 @@ namespace SIO.Domain.Translation.Commands
 {
     public class StartGoogleTranslationCommandHandler : ICommandHandler<StartGoogleTranslationCommand>
     {
-        private readonly IEventBus _eventBus;
+        private readonly IEventBusPublisher _eventBusPublisher;
         private readonly ICommandDispatcher _commandDispatcher;
         private readonly IAggregateRepository _aggregateRepository;
         private readonly IFileClient _fileClient;
         private readonly ISpeechClient<GoogleSpeechRequest> _speechClient;
 
-        public StartGoogleTranslationCommandHandler(IEventBus eventBus, 
+        public StartGoogleTranslationCommandHandler(IEventBusPublisher eventBusPublisher, 
             ICommandDispatcher commandDispatcher, 
             IAggregateRepository aggregateRepository,
             IFileClient fileClient,
             ISpeechClient<GoogleSpeechRequest> speechClient)
         {
-            if (eventBus == null)
-                throw new ArgumentNullException(nameof(eventBus));
+            if (eventBusPublisher == null)
+                throw new ArgumentNullException(nameof(eventBusPublisher));
             if (commandDispatcher == null)
                 throw new ArgumentNullException(nameof(commandDispatcher));
             if (aggregateRepository == null)
@@ -40,7 +40,7 @@ namespace SIO.Domain.Translation.Commands
             if (speechClient == null)
                 throw new ArgumentNullException(nameof(speechClient));
 
-            _eventBus = eventBus;
+            _eventBusPublisher = eventBusPublisher;
             _commandDispatcher = commandDispatcher;
             _aggregateRepository = aggregateRepository;
             _fileClient = fileClient;
@@ -75,7 +75,7 @@ namespace SIO.Domain.Translation.Commands
             events = events.ToList();
 
             await _aggregateRepository.SaveAsync<DocumentState>(aggregate, command.Version);
-            await _eventBus.PublishAsync(events);
+            await _eventBusPublisher.PublishAsync(events);
 
             int version = command.Version;
 
@@ -106,7 +106,7 @@ namespace SIO.Domain.Translation.Commands
                         tempEvents = tempEvents.ToList();
 
                         await _aggregateRepository.SaveAsync<DocumentState>(aggregate, version);
-                        await _eventBus.PublishAsync(tempEvents);
+                        await _eventBusPublisher.PublishAsync(tempEvents);
                     }
                 ));
 
@@ -134,7 +134,7 @@ namespace SIO.Domain.Translation.Commands
                 events = events.ToList();
 
                 await _aggregateRepository.SaveAsync<DocumentState>(aggregate, version);
-                await _eventBus.PublishAsync(events);
+                await _eventBusPublisher.PublishAsync(events);
             }    
         }
     }

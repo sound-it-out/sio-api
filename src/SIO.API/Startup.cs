@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenEventSourcing.EntityFrameworkCore.SqlServer;
 using OpenEventSourcing.Extensions;
+using OpenEventSourcing.RabbitMQ.Extensions;
 using OpenEventSourcing.Serialization.Json.Extensions;
 using SIO.Domain.Projections;
 using SIO.Infrastructure;
@@ -28,12 +29,28 @@ namespace SIO.API
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddOpenEventSourcing()
                 .AddEntityFrameworkCoreSqlServer()
+                .AddRabbitMq(options =>
+                {
+                    options.UseConnection(Configuration.GetValue<string>("RabbitMQ:Connection"))
+                        .UseExchange(e =>
+                        {
+                            e.WithName(Configuration.GetValue<string>("RabbitMQ:Exchange:Name"));
+                            e.UseExchangeType(Configuration.GetValue<string>("RabbitMQ:Exchange:Type"));
+                        })
+                        .UseManagementApi(m =>
+                        {
+                            m.WithEndpoint(Configuration.GetValue<string>("RabbitMQ:ManagementApi:Endpoint"));
+                            m.WithCredentials(Configuration.GetValue<string>("RabbitMQ:ManagementApi:Username"), Configuration.GetValue<string>("RabbitMQ:ManagementApi:Password"));
+                        });
+                })
                 .AddCommands()
                 .AddEvents()
                 .AddQueries()
                 .AddJsonSerializers();
 
             services.AddProjections();
+
+            services.AddHostedService<EventConsumer>();
 
             services.AddSIOInfrastructure()
                 .AddS3FileStorage()

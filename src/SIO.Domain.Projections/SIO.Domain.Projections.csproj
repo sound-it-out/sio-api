@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenEventSourcing" Version="0.2.0" />
-    <PackageReference Include="OpenEventSourcing.EntityFrameworkCore" Version="0.2.0" />
+    <PackageReference Include="OpenEventSourcing" Version="0.3.0" />
+    <PackageReference Include="OpenEventSourcing.EntityFrameworkCore" Version="0.3.0" />
   </ItemGroup>
 
   <ItemGroup>
