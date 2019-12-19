@@ -1,13 +1,17 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenEventSourcing.EntityFrameworkCore.DbContexts;
 using OpenEventSourcing.EntityFrameworkCore.SqlServer;
 using OpenEventSourcing.Extensions;
 using OpenEventSourcing.RabbitMQ.Extensions;
 using OpenEventSourcing.Serialization.Json.Extensions;
 using SIO.Domain.Projections;
+using SIO.Domain.Projections.UserDocuments;
+using SIO.Domain.User.Events;
 using SIO.Infrastructure;
 using SIO.Infrastructure.AWS;
 using SIO.Infrastructure.Google;
@@ -37,6 +41,11 @@ namespace SIO.API
                             e.WithName(Configuration.GetValue<string>("RabbitMQ:Exchange:Name"));
                             e.UseExchangeType(Configuration.GetValue<string>("RabbitMQ:Exchange:Type"));
                         })
+                        .AddSubscription(s =>
+                        {
+                            s.ForEvent<UserRegistered>();
+                            s.UseName("sio-api");
+                        })
                         .UseManagementApi(m =>
                         {
                             m.WithEndpoint(Configuration.GetValue<string>("RabbitMQ:ManagementApi:Endpoint"));
@@ -49,10 +58,10 @@ namespace SIO.API
                 .AddJsonSerializers();
 
             services.AddProjections();
-
-            services.AddHostedService<EventConsumer>();
+            services.AddHostedService<SIOEventConsumer>();
 
             services.AddSIOInfrastructure()
+                .AddSqlConnections()
                 .AddS3FileStorage()
                 .AddGoogleSpeechToText();
         }

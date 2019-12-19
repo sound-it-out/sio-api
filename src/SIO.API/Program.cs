@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace SIO.API
 {
@@ -24,6 +17,10 @@ namespace SIO.API
 #if DEBUG
                     options.Debug = true;
 #endif
+                })
+                .UseDefaultServiceProvider((context) =>
+                {
+                    context.ValidateScopes = false;
                 })
                 .UseStartup<Startup>();
     }

@@ -6,11 +6,11 @@ using OpenEventSourcing.Events;
 
 namespace SIO.API
 {
-    internal class EventConsumer : IHostedService
+    internal class SIOEventConsumer : IHostedService
     {
         private readonly IEventBusConsumer _eventBusConsumer;
 
-        public EventConsumer(IEventBusConsumer eventBusConsumer)
+        public SIOEventConsumer(IEventBusConsumer eventBusConsumer)
         {
             if (eventBusConsumer == null)
 
