@@ -32,7 +32,9 @@ namespace SIO.API
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddOpenEventSourcing()
-                .AddEntityFrameworkCoreSqlServer()
+                .AddEntityFrameworkCoreSqlServer(options => {
+                    options.MigrationsAssembly("SIO.Migrations");
+                })
                 .AddRabbitMq(options =>
                 {
                     options.UseConnection(Configuration.GetValue<string>("RabbitMQ:Connection"))

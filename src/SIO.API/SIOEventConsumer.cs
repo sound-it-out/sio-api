@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenEventSourcing.Events;
 
@@ -8,25 +9,26 @@ namespace SIO.API
 {
     internal class SIOEventConsumer : IHostedService
     {
-        private readonly IEventBusConsumer _eventBusConsumer;
+        private readonly IServiceProvider _serviceProvider;
 
-        public SIOEventConsumer(IEventBusConsumer eventBusConsumer)
+        public SIOEventConsumer(IServiceProvider serviceProvider)
         {
-            if (eventBusConsumer == null)
+            if (serviceProvider == null)
+                throw new ArgumentNullException(nameof(serviceProvider));
 
-                throw new ArgumentNullException(nameof(eventBusConsumer));
-
-            _eventBusConsumer = eventBusConsumer;
+            _serviceProvider = serviceProvider;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            return _eventBusConsumer.StartAsync(cancellationToken);
+            using (var scope = _serviceProvider.CreateScope())
+                return scope.ServiceProvider.GetRequiredService<IEventBusConsumer>().StartAsync(cancellationToken);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            return _eventBusConsumer.StopAsync(cancellationToken);
+            using (var scope = _serviceProvider.CreateScope())
+                return scope.ServiceProvider.GetRequiredService<IEventBusConsumer>().StopAsync(cancellationToken);
         }
     }
 }

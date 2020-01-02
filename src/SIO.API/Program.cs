@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore;
+﻿using System;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
 namespace SIO.API
@@ -7,20 +8,24 @@ namespace SIO.API
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            try
+            {
+                CreateWebHostBuilder(args).Build().Run();
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+            .CaptureStartupErrors(false)
                 .UseSentry(options =>
                 {
 #if DEBUG
                     options.Debug = true;
 #endif
-                })
-                .UseDefaultServiceProvider((context) =>
-                {
-                    context.ValidateScopes = false;
                 })
                 .UseStartup<Startup>();
     }

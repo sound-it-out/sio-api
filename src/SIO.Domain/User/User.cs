@@ -15,6 +15,8 @@ namespace SIO.Domain.User
         }
 
         public override UserState GetState() => new UserState(_state);
+        public override Guid? Id => _state.Id;
+        public override int? Version => _state.Version;
 
         public void Register(Guid aggregateId, string email, string firstName, string lastName)
         {
@@ -64,25 +66,25 @@ namespace SIO.Domain.User
             _state.CharacterTokens = 0;
             _state.Verified = false;
             _state.Deleted = false;
-            Version = 1;
+            _state.Version = 1;
         }
 
         public void Handle(UserEmailChanged @event)
         {
             _state.Email = @event.Email;
-            Version++;
+            _state.Version++;
         }
 
         public void Handle(UserVerified @event)
         {
             _state.Verified = true;
-            Version++;
+            _state.Version++;
         }
 
         public void Handle(UserPurchasedCharacterTokens @event)
         {
             _state.CharacterTokens += @event.CharacterTokens;
-            Version++;
+            _state.Version++;
         }
     }
 }

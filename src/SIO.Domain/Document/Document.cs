@@ -8,8 +8,6 @@ namespace SIO.Domain.Document
 {
     public class Document : Aggregate<DocumentState>
     {
-        public override DocumentState GetState() => new DocumentState(_state);
-
         public Document(DocumentState state) : base(state)
         {
             Handles<DocumentUploaded>(Handle);
@@ -19,6 +17,10 @@ namespace SIO.Domain.Document
             Handles<TranslationFailed>(Handle);
             Handles<TranslationCharactersProcessed>(Handle);
         }
+
+        public override DocumentState GetState() => new DocumentState(_state);
+        public override Guid? Id => _state.Id;
+        public override int? Version => _state.Version;
 
         public void Upload(Guid aggregateId, TranslationType translationType, string fileName)
         {
@@ -82,39 +84,39 @@ namespace SIO.Domain.Document
             _state.Id = @event.AggregateId;
             _state.Condition = DocumentCondition.Uploaded;
             _state.FileName = @event.FileName;
-            Version = 1;
+            _state.Version = 1;
         }
 
         public void Handle(TranslationQueued @event)
         {
             _state.TranslationId = @event.AggregateId;
             _state.Condition = DocumentCondition.TranslationQueued;
-            Version++;
+            _state.Version++;
         }
 
         public void Handle(TranslationStarted @event)
         {
             _state.Condition = DocumentCondition.TranslationStarted;
             _state.TranslationCharactersTotal = @event.CharacterCount;
-            Version++;
+            _state.Version++;
         }
 
         public void Handle(TranslationSucceded @event)
         {
             _state.Condition = DocumentCondition.TranslationSucceded;
-            Version++;
+            _state.Version++;
         }
 
         public void Handle(TranslationFailed @event)
         {
             _state.Condition = DocumentCondition.TranslationFailed;
-            Version++;
+            _state.Version++;
         }
 
         public void Handle(TranslationCharactersProcessed @event)
         {
             _state.TranslationCharactersProcessed += @event.CharactersProcessed;
-            Version++;
+            _state.Version++;
         }
     }
 }
