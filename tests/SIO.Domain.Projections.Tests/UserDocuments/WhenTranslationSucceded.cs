@@ -23,7 +23,7 @@ namespace SIO.Tests.Unit.Domain.Projections.UserDocuments
 
         protected override IEnumerable<IEvent> Given()
         {
-            yield return new UserVerified(_userId, 1);
+            yield return new UserVerified(_userId, Guid.NewGuid(), _userId.ToString());
             yield return new DocumentUploaded(_documentId, _userId, TranslationType.Google, _fileName);
             yield return new TranslationQueued(_translationId, _documentId, _userId, 2);
             yield return new TranslationStarted(_translationId, _documentId, _userId, 3, _characterCount);

@@ -18,13 +18,13 @@ namespace SIO.Tests.Unit.Domain.User
 
         protected override IEnumerable<IEvent> Given()
         {
-            yield return new UserRegistered(_aggregateId, "test@user.com", "test", "user");
-            yield return new UserVerified(_aggregateId, 2);
+            yield return new UserRegistered(_aggregateId, Guid.NewGuid(), _aggregateId.ToString(), _email, _firstName, _lastName, "");
+            yield return new UserVerified(_aggregateId, Guid.NewGuid(), _aggregateId.ToString());
         }
 
         protected override void When()
         {
-            Aggregate.PurchaseTokens(_aggregateId, 2, _characterTokens);
+            Aggregate.PurchaseTokens(_aggregateId, 0, _characterTokens);
         }
 
         [Then]
@@ -68,7 +68,7 @@ namespace SIO.Tests.Unit.Domain.User
 
             var @event = events.OfType<UserPurchasedCharacterTokens>().Single();
 
-            @event.Version.Should().Be(3);
+            @event.Version.Should().Be(0);
         }
 
         [Then]
@@ -104,7 +104,7 @@ namespace SIO.Tests.Unit.Domain.User
         [Then]
         public void ShouldContainStateWithCorrectVersion()
         {
-            Aggregate.Version.Should().Be(3);
+            Aggregate.Version.Should().Be(0);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using OpenEventSourcing.Events;
 using OpenEventSourcing.Projections;
 using SIO.Domain.Document;
 using SIO.Domain.Document.Events;
@@ -11,31 +10,16 @@ using SIO.Domain.User.Events;
 
 namespace SIO.Domain.Projections.UserDocuments
 {
-    public class UserDocumentsProjection : IProjection
+    public class UserDocumentsProjection : Projection<UserDocuments>
     {
-        private readonly IProjectionWriter<UserDocuments> _writer;
-        private readonly IDictionary<Type, Func<IEvent, Task>> _handlers;
-
-        public UserDocumentsProjection(IProjectionWriter<UserDocuments> writer)
+        public UserDocumentsProjection(IProjectionWriter<UserDocuments> writer) : base(writer)
         {
-            if (writer == null)
-                throw new ArgumentNullException(nameof(writer));
-
-            _writer = writer;
-            _handlers = new Dictionary<Type, Func<IEvent, Task>>();
-
             Handles<UserVerified>(ApplyAsync);
             Handles<DocumentUploaded>(ApplyAsync);
             Handles<TranslationQueued>(ApplyAsync);
             Handles<TranslationStarted>(ApplyAsync);
             Handles<TranslationSucceded>(ApplyAsync);
             Handles<TranslationFailed>(ApplyAsync);
-        }
-
-        public async Task HandleAsync(IEvent @event)
-        {
-            if (_handlers.TryGetValue(@event.GetType(), out var handler))
-                await handler(@event);
         }
 
         private async Task ApplyAsync(UserVerified @event)
@@ -46,7 +30,7 @@ namespace SIO.Domain.Projections.UserDocuments
                 {
                     UserId = @event.AggregateId,
                     CreatedDate = @event.Timestamp,
-                    Version = @event.Version,
+                    Version = 1,
                     Data = new UserDocumentsData
                     {
                         Documents = new List<UserDocument>()
@@ -133,12 +117,6 @@ namespace SIO.Domain.Projections.UserDocuments
                     }
                 );
             });
-        }
-
-        private void Handles<TEvent>(Func<TEvent, Task> handler)
-            where TEvent : IEvent
-        {
-            _handlers.Add(typeof(TEvent), e => handler((TEvent)e));
         }
     }
 }

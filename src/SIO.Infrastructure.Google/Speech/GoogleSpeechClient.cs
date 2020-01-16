@@ -24,6 +24,7 @@ namespace SIO.Infrastructure.Google.Speech
 
             _textToSpeechClient = TextToSpeechClient.Create(channel);
         }
+
         public async ValueTask<ISpeechResult> TranslateTextAsync(GoogleSpeechRequest request)
         {
             var result = new GoogleSpeechResult();
@@ -35,23 +36,10 @@ namespace SIO.Infrastructure.Google.Speech
                 ));
 
                 // Need to wait some time due to rate limits
-                Delay(61000);
+                await Task.Delay(61000);
             }
 
             return result;
-        }
-
-        private static void Delay(int delay)
-        {
-            int i = 0;
-            using (var delayTimer = new System.Timers.Timer())
-            {
-                delayTimer.Interval = delay;
-                delayTimer.AutoReset = false; //so that it only calls the method once
-                delayTimer.Elapsed += (s, args) => i = 1;
-                delayTimer.Start();
-                while (i == 0) { };
-            }
         }
 
         private async Task QueueText(string text, int index, GoogleSpeechRequest request, GoogleSpeechResult result)

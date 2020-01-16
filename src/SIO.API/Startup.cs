@@ -9,8 +9,11 @@ using OpenEventSourcing.EntityFrameworkCore.SqlServer;
 using OpenEventSourcing.Extensions;
 using OpenEventSourcing.RabbitMQ.Extensions;
 using OpenEventSourcing.Serialization.Json.Extensions;
+using SIO.Domain;
+using SIO.Domain.Document.Events;
 using SIO.Domain.Projections;
 using SIO.Domain.Projections.UserDocuments;
+using SIO.Domain.Translation.Events;
 using SIO.Domain.User.Events;
 using SIO.Infrastructure;
 using SIO.Infrastructure.AWS;
@@ -45,7 +48,14 @@ namespace SIO.API
                         })
                         .AddSubscription(s =>
                         {
-                            s.ForEvent<UserRegistered>();
+
+                            s.ForEvent<DocumentUploaded>();
+                            s.ForEvent<TranslationCharactersProcessed>();
+                            s.ForEvent<TranslationFailed>();
+                            s.ForEvent<TranslationQueued>();
+                            s.ForEvent<TranslationStarted>();
+                            s.ForEvent<TranslationSucceded>();
+                            s.ForEvent<UserPurchasedCharacterTokens>();
                             s.UseName("sio-api");
                         })
                         .UseManagementApi(m =>
@@ -66,6 +76,8 @@ namespace SIO.API
                 .AddSqlConnections()
                 .AddS3FileStorage()
                 .AddGoogleSpeechToText();
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -83,6 +95,8 @@ namespace SIO.API
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            app.UseDomain();
         }
     }
 }

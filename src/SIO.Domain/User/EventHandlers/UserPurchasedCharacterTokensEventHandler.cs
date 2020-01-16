@@ -7,11 +7,11 @@ using SIO.Domain.User.Hubs;
 
 namespace SIO.Domain.User.EventHandlers
 {
-    internal class UserEmailChangedEventHandler : IEventHandler<UserEmailChanged>
+    internal class UserPurchasedCharacterTokensEventHandler : IEventHandler<UserPurchasedCharacterTokens>
     {
         private readonly IHubContext<UserHub> _hubContext;
 
-        public UserEmailChangedEventHandler(IHubContext<UserHub> hubContext)
+        public UserPurchasedCharacterTokensEventHandler(IHubContext<UserHub> hubContext)
         {
             if (hubContext == null)
                 throw new ArgumentNullException(nameof(hubContext));
@@ -19,7 +19,7 @@ namespace SIO.Domain.User.EventHandlers
             _hubContext = hubContext;
         }
 
-        public async Task HandleAsync(UserEmailChanged @event)
+        public async Task HandleAsync(UserPurchasedCharacterTokens @event)
         {
             await _hubContext.NotifyAsync(@event);
         }

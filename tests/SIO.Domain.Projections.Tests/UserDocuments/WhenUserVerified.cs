@@ -13,7 +13,7 @@ namespace SIO.Tests.Unit.Domain.Projections.UserDocuments
         private readonly Guid _userId = Guid.NewGuid().ToSequentialGuid();
         protected override IEnumerable<IEvent> Given()
         {
-            yield return new UserVerified(_userId, 1);
+            yield return new UserVerified(_userId, Guid.NewGuid(), _userId.ToString());
         }
 
         [Then]

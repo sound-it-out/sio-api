@@ -18,38 +18,8 @@ namespace SIO.Domain.User
         public override Guid? Id => _state.Id;
         public override int? Version => _state.Version;
 
-        public void Register(Guid aggregateId, string email, string firstName, string lastName)
-        {
-            Apply(new UserRegistered(
-                aggregateId: aggregateId,
-                email: email,
-                firstName: firstName,
-                lastName: lastName
-            ));
-        }
-
-        public void ChangeEmail(Guid aggregateId, string email, int version)
-        {
-            version++;
-            Apply(new UserEmailChanged(
-                aggregateId: aggregateId,
-                version: version,
-                email: email
-            ));
-        }
-
-        public void Verify(Guid aggregateId, int version)
-        {
-            version++;
-            Apply(new UserVerified(
-                aggregateId: aggregateId,
-                version: version
-            ));
-        }
-
         public void PurchaseTokens(Guid aggregateId, int version, long characterTokens)
         {
-            version++;
             Apply(new UserPurchasedCharacterTokens(
                 aggregateId: aggregateId,
                 version: version,
@@ -66,25 +36,22 @@ namespace SIO.Domain.User
             _state.CharacterTokens = 0;
             _state.Verified = false;
             _state.Deleted = false;
-            _state.Version = 1;
+            _state.Version = 0;
         }
 
         public void Handle(UserEmailChanged @event)
         {
             _state.Email = @event.Email;
-            _state.Version++;
         }
 
         public void Handle(UserVerified @event)
         {
             _state.Verified = true;
-            _state.Version++;
         }
 
         public void Handle(UserPurchasedCharacterTokens @event)
         {
             _state.CharacterTokens += @event.CharacterTokens;
-            _state.Version++;
         }
     }
 }

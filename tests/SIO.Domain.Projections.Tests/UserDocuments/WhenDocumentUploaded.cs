@@ -19,8 +19,8 @@ namespace SIO.Tests.Unit.Domain.Projections.UserDocuments
         private readonly string _fileName = "Test Document";
 
         protected override IEnumerable<IEvent> Given()
-        {
-            yield return new UserVerified(_userId, 1);
+        {            
+            yield return new UserVerified(_userId, Guid.NewGuid(), _userId.ToString());
             yield return new DocumentUploaded(_documentId, _userId, TranslationType.Google, _fileName);
         }
 
