@@ -1,9 +1,12 @@
 ﻿using System;
+using IdentityModel.AspNetCore.OAuth2Introspection;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Logging;
 using OpenEventSourcing.EntityFrameworkCore.DbContexts;
 using OpenEventSourcing.EntityFrameworkCore.SqlServer;
 using OpenEventSourcing.Extensions;
@@ -33,6 +36,28 @@ namespace SIO.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                    .AddIdentityServerAuthentication(options =>
+                    {
+                        options.Authority = Configuration.GetValue<string>("Identity:Authority");
+                        options.ApiName = Configuration.GetValue<string>("Identity:ApiResource");
+                        options.EnableCaching = true;
+                        options.CacheDuration = TimeSpan.FromMinutes(10);
+#if DEBUG
+                        options.RequireHttpsMetadata = false;
+                        IdentityModelEventSource.ShowPII = true;
+#endif
+                        options.TokenRetriever = (request) =>
+                        {
+                            var token = TokenRetrieval.FromAuthorizationHeader()(request);
+
+                            if (string.IsNullOrEmpty(token))
+                                token = TokenRetrieval.FromQueryString()(request);
+
+                            return token;
+                        };
+                    });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddOpenEventSourcing()
                 .AddEntityFrameworkCoreSqlServer(options => {
