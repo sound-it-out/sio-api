@@ -1,12 +1,17 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using IdentityModel.AspNetCore.OAuth2Introspection;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Logging;
+using Microsoft.OpenApi.Models;
 using OpenEventSourcing.EntityFrameworkCore.DbContexts;
 using OpenEventSourcing.EntityFrameworkCore.SqlServer;
 using OpenEventSourcing.Extensions;
@@ -36,6 +41,7 @@ namespace SIO.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                     .AddIdentityServerAuthentication(options =>
                     {
@@ -58,7 +64,6 @@ namespace SIO.API
                         };
                     });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddOpenEventSourcing()
                 .AddEntityFrameworkCoreSqlServer(options => {
                     options.MigrationsAssembly("SIO.Migrations");
@@ -103,11 +108,72 @@ namespace SIO.API
                 .AddGoogleSpeechToText();
 
             services.AddSignalR();
+
+            services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+            services.AddApiVersioning(options => options.ReportApiVersions = true);
+
+            services.AddSwaggerGen(options =>
+            {
+                var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
+
+                foreach (var description in provider.ApiVersionDescriptions)
+                {
+                    var info = new OpenApiInfo()
+                    {
+                        Title = $"Sound It Out Api v{description.ApiVersion}",
+                        Version = description.ApiVersion.ToString(),
+                        Description = $"Sound It Out Api v{description.ApiVersion}",
+                        Contact = new OpenApiContact { Name = "Support", Email = "support@sound-it-out.com" },
+                    };
+
+                    if (description.IsDeprecated)
+                        info.Description += "- This Api version has been deprecated.";
+
+                    options.SwaggerDoc(description.GroupName, info);
+                }
+
+
+                options.DescribeAllEnumsAsStrings();
+                options.DescribeStringEnumsInCamelCase();
+                //options.DocumentFilter<LowercaseDocumentFilter>();
+                //options.OperationFilter<DefaultValuesOperationFilter>();
+                //options.OperationFilter<AuthorizeCheckOperationFilter>();
+                options.DescribeAllParametersInCamelCase();
+
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\".\n\nIn the value below you will need to include \"Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+
+                //options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+            });
+
+            services.AddMvcCore()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddApiExplorer()
+                .AddVersionedApiExplorer(options =>
+               {
+                   options.AssumeDefaultVersionWhenUnspecified = false;
+                   options.GroupNameFormat = "VVVV";
+                   options.SubstituteApiVersionInUrl = true;
+               })
+                .AddJsonFormatters(); ;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors(o =>
+            {
+                o.AllowAnyHeader()
+                .AllowCredentials()
+                .AllowAnyMethod()
+                .WithOrigins(new[] { "http://localhost:8080"});
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -119,9 +185,26 @@ namespace SIO.API
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+
+            var apiVersionDescriptionProvider = app.ApplicationServices.GetRequiredService<IApiVersionDescriptionProvider>();
+            app.UseStaticFiles();
+            app.UseAuthentication();
+
+            app.UseSwagger(options => options.RouteTemplate = "/api-docs/{documentName}/swagger.json");
+
+            app.UseSwaggerUI(options =>
+            {
+                options.RoutePrefix = string.Empty;
+                options.DocumentTitle = "Sound It Out Api";
+                //options.InjectStylesheet("/css/api.css");
+                //options.InjectJavascript("/js/api.js");
+
+                foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+                    options.SwaggerEndpoint($"/api-docs/{description.GroupName}/swagger.json", $"v{description.GroupName.ToUpperInvariant()}");
+            });
 
             app.UseDomain();
+            app.UseMvc();
         }
     }
 }
