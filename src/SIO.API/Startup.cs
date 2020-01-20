@@ -128,12 +128,6 @@ namespace SIO.API
                     options.SwaggerDoc(description.GroupName, info);
                 }
 
-
-                options.DescribeAllEnumsAsStrings();
-                options.DescribeStringEnumsInCamelCase();
-                //options.DocumentFilter<LowercaseDocumentFilter>();
-                //options.OperationFilter<DefaultValuesOperationFilter>();
-                //options.OperationFilter<AuthorizeCheckOperationFilter>();
                 options.DescribeAllParametersInCamelCase();
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -192,8 +186,6 @@ namespace SIO.API
             {
                 options.RoutePrefix = string.Empty;
                 options.DocumentTitle = "Sound It Out Api";
-                //options.InjectStylesheet("/css/api.css");
-                //options.InjectJavascript("/js/api.js");
 
                 foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
                     options.SwaggerEndpoint($"/api-docs/{description.GroupName}/swagger.json", $"v{description.GroupName.ToUpperInvariant()}");
