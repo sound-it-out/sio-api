@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SIO.Domain.Projections.Document;
 using SIO.Domain.Projections.User;
-using SIO.Domain.Projections.UserDocuments;
+using SIO.Domain.Projections.UserDocument;
 
 namespace SIO.Domain.Projections
 {
@@ -15,11 +15,11 @@ namespace SIO.Domain.Projections
 
             source.AddScoped<DocumentProjection>();
             source.AddScoped<UserProjection>();
-            source.AddScoped<UserDocumentsProjection>();
+            source.AddScoped<UserDocumentProjection>();
 
             source.AddHostedService<PollingProjector<DocumentProjection>>();
             source.AddHostedService<PollingProjector<UserProjection>>();
-            source.AddHostedService<PollingProjector<UserDocumentsProjection>>();
+            source.AddHostedService<PollingProjector<UserDocumentProjection>>();
 
             return source;
         }

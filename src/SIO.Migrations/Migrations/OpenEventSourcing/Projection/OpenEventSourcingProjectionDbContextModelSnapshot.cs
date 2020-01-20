@@ -71,8 +71,10 @@ namespace SIO.Migrations.Migrations.OpenEventSourcing.Projection
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("SIO.Domain.Projections.UserDocuments.UserDocuments", b =>
+            modelBuilder.Entity("SIO.Domain.Projections.UserDocument.UserDocument", b =>
                 {
+                    b.Property<Guid>("DocumentId");
+
                     b.Property<Guid>("UserId");
 
                     b.Property<DateTimeOffset>("CreatedDate");
@@ -83,9 +85,9 @@ namespace SIO.Migrations.Migrations.OpenEventSourcing.Projection
 
                     b.Property<int>("Version");
 
-                    b.HasKey("UserId");
+                    b.HasKey("DocumentId", "UserId");
 
-                    b.ToTable("UserDocuments");
+                    b.ToTable("UserDocument");
                 });
 #pragma warning restore 612, 618
         }

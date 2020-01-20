@@ -53,9 +53,10 @@ namespace SIO.Migrations.Migrations.OpenEventSourcing.Projection
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserDocuments",
+                name: "UserDocument",
                 columns: table => new
                 {
+                    DocumentId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false),
                     Data = table.Column<string>(nullable: true),
                     CreatedDate = table.Column<DateTimeOffset>(nullable: false),
@@ -64,7 +65,7 @@ namespace SIO.Migrations.Migrations.OpenEventSourcing.Projection
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserDocuments", x => x.UserId);
+                    table.PrimaryKey("PK_UserDocument", x => new { x.DocumentId, x.UserId });
                 });
         }
 
@@ -80,7 +81,7 @@ namespace SIO.Migrations.Migrations.OpenEventSourcing.Projection
                 name: "User");
 
             migrationBuilder.DropTable(
-                name: "UserDocuments");
+                name: "UserDocument");
         }
     }
 }
