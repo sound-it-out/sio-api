@@ -11,17 +11,10 @@ namespace SIO.API
     {
         public static async Task Main(string[] args)
         {
-            try
-            {
-                var host = CreateWebHostBuilder(args).Build();
+            var host = CreateWebHostBuilder(args).Build();
 
-                await host.SeedDatabaseAsync();
-                await host.RunAsync();
-            }
-            catch(Exception e)
-            {
-                throw e;
-            }
+            await host.SeedDatabaseAsync();
+            await host.RunAsync();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

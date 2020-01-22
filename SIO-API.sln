@@ -38,6 +38,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SIO.Domain.Tests", "tests\S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SIO.Domain.Projections.Tests", "tests\SIO.Domain.Projections.Tests\SIO.Domain.Projections.Tests.csproj", "{1D5EB6E8-8B77-4936-8A6D-480ED2A2584B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SIO.Hangfire", "src\SIO.Hangfire\SIO.Hangfire.csproj", "{0CB51DBB-7CE0-4DC5-913C-091B850C8D91}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,10 @@ Global
 		{1D5EB6E8-8B77-4936-8A6D-480ED2A2584B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D5EB6E8-8B77-4936-8A6D-480ED2A2584B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D5EB6E8-8B77-4936-8A6D-480ED2A2584B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CB51DBB-7CE0-4DC5-913C-091B850C8D91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CB51DBB-7CE0-4DC5-913C-091B850C8D91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CB51DBB-7CE0-4DC5-913C-091B850C8D91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CB51DBB-7CE0-4DC5-913C-091B850C8D91}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +100,7 @@ Global
 		{BD9E4EC2-9BB8-430F-9907-8234C7C73FC4} = {3992E848-E52E-46A2-9088-E60B9DD0BC10}
 		{F51FF45F-8799-445F-B106-47AE728895A1} = {A9E3E6D1-F905-46C7-8758-CF9A31048127}
 		{1D5EB6E8-8B77-4936-8A6D-480ED2A2584B} = {A9E3E6D1-F905-46C7-8758-CF9A31048127}
+		{0CB51DBB-7CE0-4DC5-913C-091B850C8D91} = {3992E848-E52E-46A2-9088-E60B9DD0BC10}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DC760A09-5C97-4316-B75F-1F4FEA9D4CFE}

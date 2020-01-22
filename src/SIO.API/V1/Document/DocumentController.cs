@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using OpenEventSourcing.Commands;
+using OpenEventSourcing.Extensions;
 using OpenEventSourcing.Queries;
+using SIO.API.V1.Document.Requests;
 using SIO.API.V1.Document.Responses;
+using SIO.Domain.Document.Commands;
 using SIO.Domain.Projections.UserDocument.Queries;
 
 namespace SIO.API.V1.Document
@@ -12,13 +16,18 @@ namespace SIO.API.V1.Document
     public class DocumentController : SIOController
     {
         private readonly IQueryDispatcher _queryDispatcher;
+        private readonly ICommandDispatcher _commandDispatcher;
 
-        public DocumentController(IQueryDispatcher queryDispatcher)
+        public DocumentController(IQueryDispatcher queryDispatcher,
+            ICommandDispatcher commandDispatcher)
         {
             if (queryDispatcher == null)
                 throw new ArgumentNullException(nameof(queryDispatcher));
+            if (commandDispatcher == null)
+                throw new ArgumentNullException(nameof(commandDispatcher));
 
             _queryDispatcher = queryDispatcher;
+            _commandDispatcher = commandDispatcher;
         }
 
         [HttpGet]
@@ -32,6 +41,14 @@ namespace SIO.API.V1.Document
                 Condition = d.Data.Condition,
                 FileName = d.Data.FileName
             });
+        }
+
+        [HttpPost("upload")]
+        public async Task<IActionResult> Upload([FromForm]UploadRequest request)
+        {
+            await _commandDispatcher.DispatchAsync(new UploadDocumentCommand(Guid.NewGuid().ToSequentialGuid(), Guid.NewGuid(), 0, CurrentUserId.ToString(), request.File, request.TranslationType));
+
+            return Accepted();
         }
     }
 }

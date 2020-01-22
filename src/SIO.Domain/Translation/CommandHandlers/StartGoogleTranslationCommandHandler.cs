@@ -65,7 +65,7 @@ namespace SIO.Domain.Translation.Commands
             var textChunks = text.ChunkWithDelimeters(5000, '.', '!', '?', ')', '"', '}', ']');
 
             var aggregate = await _aggregateRepository.GetAsync<Document.Document, DocumentState>(command.CorrelationId);
-            aggregate.StartTranslation(command.CorrelationId, command.Version, textChunks.Sum(tc => tc.Length));
+            aggregate.StartTranslation(command.AggregateId, command.Version, textChunks.Sum(tc => tc.Length));
 
             var events = aggregate.GetUncommittedEvents();
 
@@ -96,7 +96,7 @@ namespace SIO.Domain.Translation.Commands
                     {
                         Interlocked.Increment(ref version);
 
-                        aggregate.ProcessTranslationCharacters(command.CorrelationId, version, length);
+                        aggregate.ProcessTranslationCharacters(command.AggregateId, version, length);
 
                         var tempEvents = aggregate.GetUncommittedEvents();
 

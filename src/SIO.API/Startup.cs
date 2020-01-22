@@ -1,4 +1,6 @@
 ﻿using System;
+using Hangfire;
+using Hangfire.SqlServer;
 using IdentityModel.AspNetCore.OAuth2Introspection;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
@@ -59,6 +61,8 @@ namespace SIO.API
                             return token;
                         };
                     });
+
+            JobStorage.Current = new SqlServerStorage(Configuration.GetConnectionString("DefaultConnection"));
 
             services.AddOpenEventSourcing()
                 .AddEntityFrameworkCoreSqlServer(options => {
@@ -150,7 +154,7 @@ namespace SIO.API
                    options.GroupNameFormat = "VVVV";
                    options.SubstituteApiVersionInUrl = true;
                })
-                .AddJsonFormatters(); ;
+                .AddJsonFormatters();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <UserSecretsId>5ccac80e-7fe3-479d-aff0-7011a943e927</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="OpenEventSourcing" Version="0.4.0" />
+    <PackageReference Include="OpenEventSourcing.Azure.ServiceBus" Version="0.4.0" />
+    <PackageReference Include="OpenEventSourcing.EntityFrameworkCore.SqlServer" Version="0.4.0" />
+    <PackageReference Include="OpenEventSourcing.Serialization.Json" Version="0.4.0" />
+    <PackageReference Include="OpenEventSourcing.RabbitMQ" Version="0.4.0" />
+    <PackageReference Include="Sentry.AspNetCore" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SIO.Domain.Projections\SIO.Domain.Projections.csproj" />
+    <ProjectReference Include="..\SIO.Domain\SIO.Domain.csproj" />
+    <ProjectReference Include="..\SIO.Infrastructure.AWS\SIO.Infrastructure.AWS.csproj" />
+    <ProjectReference Include="..\SIO.Infrastructure.Google\SIO.Infrastructure.Google.csproj" />
+    <ProjectReference Include="..\SIO.Infrastructure\SIO.Infrastructure.csproj" />
+    <ProjectReference Include="..\SIO.Migrations\SIO.Migrations.csproj" />
+  </ItemGroup>
+
+</Project>

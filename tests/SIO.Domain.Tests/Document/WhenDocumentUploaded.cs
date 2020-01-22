@@ -23,7 +23,7 @@ namespace SIO.Tests.Unit.Domain.Document
 
         protected override void When()
         {
-            Aggregate.Upload(_aggregateId, _translationType, _fileName);
+            Aggregate.Upload(_aggregateId, Guid.NewGuid(), _translationType, _fileName);
         }
 
         [Then]

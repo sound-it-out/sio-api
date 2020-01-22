@@ -59,6 +59,7 @@ namespace SIO.Domain.Document.CommandHandlers
 
             aggregate.Upload(
                 aggregateId: Guid.NewGuid().ToSequentialGuid(),
+                userId: new Guid(command.UserId),
                 translationType: command.TranslationType, 
                 fileName: command.File.FileName
             );

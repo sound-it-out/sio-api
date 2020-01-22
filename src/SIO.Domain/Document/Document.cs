@@ -22,10 +22,11 @@ namespace SIO.Domain.Document
         public override Guid? Id => _state.Id;
         public override int? Version => _state.Version;
 
-        public void Upload(Guid aggregateId, TranslationType translationType, string fileName)
+        public void Upload(Guid aggregateId, Guid userId, TranslationType translationType, string fileName)
         {
             Apply(new DocumentUploaded(
                 aggregateId: aggregateId,
+                userId: userId,
                 translationType: translationType,
                 fileName: fileName
             ));
