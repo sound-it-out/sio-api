@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SIO.Infrastructure.Google\SIO.Infrastructure.Google.csproj" />
     <ProjectReference Include="..\SIO.Infrastructure\SIO.Infrastructure.csproj" />
   </ItemGroup>
 

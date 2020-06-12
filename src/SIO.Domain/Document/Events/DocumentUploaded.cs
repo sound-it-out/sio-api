@@ -1,6 +1,5 @@
 ﻿using System;
 using OpenEventSourcing.Events;
-using SIO.Domain.Translation;
 
 namespace SIO.Domain.Document.Events
 {

@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using SIO.Infrastructure.File;
+using SIO.Infrastructure.File.Local;
 
 namespace SIO.Infrastructure
 {
@@ -10,6 +9,13 @@ namespace SIO.Infrastructure
         public static ISIOInfrastructureBuilder AddSqlConnections(this ISIOInfrastructureBuilder builder)
         {
             builder.Services.AddTransient<IDbConnectionFactory, SqlConnectionFactory>();
+
+            return builder;
+        }
+
+        public static ISIOInfrastructureBuilder AddLocalFileStorage(this ISIOInfrastructureBuilder builder)
+        {
+            builder.Services.AddTransient<IFileClient, LocalFileClient>();
 
             return builder;
         }

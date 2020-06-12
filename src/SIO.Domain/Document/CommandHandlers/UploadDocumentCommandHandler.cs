@@ -46,7 +46,7 @@ namespace SIO.Domain.Document.CommandHandlers
             using(var stream = command.File.OpenReadStream())
             {
                 await _fileClient.UploadAsync(
-                    fileName: command.AggregateId.ToString(),
+                    fileName: $"{command.AggregateId.ToString()}{Path.GetExtension(command.File.FileName)}",
                     userId: command.UserId,
                     stream: stream
                 );

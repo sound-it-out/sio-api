@@ -23,15 +23,17 @@ using SIO.Domain.Translation.Events;
 using SIO.Domain.User.Events;
 using SIO.Infrastructure;
 using SIO.Infrastructure.AWS;
-using SIO.Infrastructure.Google;
 
 namespace SIO.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IHostingEnvironment _env;
+
+        public Startup(IConfiguration configuration, IHostingEnvironment  hostingEnvironment)
         {
             Configuration = configuration;
+            _env = hostingEnvironment;
         }
 
         public IConfiguration Configuration { get; }
@@ -102,10 +104,14 @@ namespace SIO.API
             services.AddProjections();
             services.AddHostedService<SIOEventConsumer>();
 
-            services.AddSIOInfrastructure()
+            var infrastructure = services.AddSIOInfrastructure()
                 .AddSqlConnections()
-                .AddS3FileStorage()
-                .AddGoogleSpeechToText();
+
+            if (_env.IsDevelopment())
+                infrastructure.AddLocalFileStorage();
+            else
+                infrastructure.AddS3FileStorage();
+
 
             services.AddSignalR();
 
