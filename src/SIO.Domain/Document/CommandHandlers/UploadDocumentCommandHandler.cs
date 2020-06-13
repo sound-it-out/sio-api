@@ -58,7 +58,7 @@ namespace SIO.Domain.Document.CommandHandlers
                 throw new ArgumentNullException(nameof(aggregate));
 
             aggregate.Upload(
-                aggregateId: Guid.NewGuid().ToSequentialGuid(),
+                aggregateId: command.AggregateId,
                 userId: new Guid(command.UserId),
                 translationType: command.TranslationType, 
                 fileName: command.File.FileName

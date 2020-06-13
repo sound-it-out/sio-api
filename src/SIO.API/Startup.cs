@@ -105,7 +105,7 @@ namespace SIO.API
             services.AddHostedService<SIOEventConsumer>();
 
             var infrastructure = services.AddSIOInfrastructure()
-                .AddSqlConnections()
+                .AddSqlConnections();
 
             if (_env.IsDevelopment())
                 infrastructure.AddLocalFileStorage();
