@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using OpenEventSourcing.Events;
 
 namespace SIO.Domain.Translation.Events
@@ -14,6 +15,7 @@ namespace SIO.Domain.Translation.Events
             CorrelationId = correlationId;
         }
 
+        [JsonConstructor]
         public TranslationSucceded(Guid aggregateId, Guid correlationId, Guid userId, int version) : base(aggregateId, version)
         {
             CorrelationId = correlationId;

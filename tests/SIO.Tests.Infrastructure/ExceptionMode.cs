@@ -1,4 +1,4 @@
-﻿namespace SIO.Tests.Unit.Domain
+﻿namespace SIO.Tests.Infrastructure
 {
     public enum ExceptionMode
     {

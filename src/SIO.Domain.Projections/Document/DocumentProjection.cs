@@ -16,6 +16,7 @@ namespace SIO.Domain.Projections.Document
             Handles<TranslationSucceded>(ApplyAsync);
             Handles<TranslationFailed>(ApplyAsync);
             Handles<TranslationCharactersProcessed>(ApplyAsync);
+            Handles<DocumentDeleted>(ApplyAsync);
         }
 
         private async Task ApplyAsync(DocumentUploaded @event)
@@ -86,6 +87,11 @@ namespace SIO.Domain.Projections.Document
                 document.LastModifiedDate = @event.Timestamp;
                 document.Version = @event.Version;
             });
+        }
+
+        private async Task ApplyAsync(DocumentDeleted @event)
+        {
+            await _writer.Remove(@event.AggregateId);
         }
     }
 }

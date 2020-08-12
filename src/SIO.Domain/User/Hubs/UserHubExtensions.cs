@@ -6,14 +6,14 @@ namespace SIO.Domain.User.Hubs
 {
     internal static class UserHubExtensions
     {
-        public static Task NotifyAsync(this IHubContext<UserHub> source, UserPurchasedCharacterTokens @event)
+        public static async Task NotifyAsync(this IHubContext<UserHub> source, UserPurchasedCharacterTokens @event)
         {
-            return source.Clients.User(@event.UserId).SendAsync(nameof(UserPurchasedCharacterTokens), @event);
+            await source.Clients.User(@event.UserId).SendAsync(nameof(UserPurchasedCharacterTokens), @event);
         }
 
-        public static Task NotifyAsync(this IHubContext<UserHub> source, UserEmailChanged @event)
+        public static async Task NotifyAsync(this IHubContext<UserHub> source, UserEmailChanged @event)
         {
-            return source.Clients.User(@event.AggregateId.ToString()).SendAsync(nameof(UserEmailChanged), @event);
+            await source.Clients.User(@event.AggregateId.ToString()).SendAsync(nameof(UserEmailChanged), @event);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using OpenEventSourcing.Commands;
 using OpenEventSourcing.Events;
 using SIO.Domain.Document.Events;
 using SIO.Domain.Document.Hubs;

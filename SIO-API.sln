@@ -9,15 +9,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A9E3E6D1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E43CAFD7-EF5C-46A4-A974-7D62115D4860}"
 	ProjectSection(SolutionItems) = preProject
-		docs\migrations.md = docs\migrations.md
+		..\sio-translator\docs\migrations.md = ..\sio-translator\docs\migrations.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4276F16E-B37C-4913-87C6-5FD9C2F39A3B}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		.github\ISSUE_TEMPLATE\bug_report.md = .github\ISSUE_TEMPLATE\bug_report.md
+		.github\workflows\build.yml = .github\workflows\build.yml
+		.github\ISSUE_TEMPLATE\feature_request.md = .github\ISSUE_TEMPLATE\feature_request.md
 		LICENSE = LICENSE
+		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
 		README.md = README.md
+		.github\workflows\release.yml = .github\workflows\release.yml
+		.github\weekly-digest.yml = .github\weekly-digest.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SIO.API", "src\SIO.API\SIO.API.csproj", "{431CDBB3-810C-4D03-BB4C-6D7FC1A175EA}"
@@ -35,6 +41,16 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SIO.Domain.Tests", "tests\SIO.Domain.Tests\SIO.Domain.Tests.csproj", "{F51FF45F-8799-445F-B106-47AE728895A1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SIO.Domain.Projections.Tests", "tests\SIO.Domain.Projections.Tests\SIO.Domain.Projections.Tests.csproj", "{1D5EB6E8-8B77-4936-8A6D-480ED2A2584B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SIO.API.Tests", "tests\SIO.API.Tests\SIO.API.Tests.csproj", "{0109DED6-2D19-4B28-96C4-0FE52CF8CDFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SIO.Infrastructure.Tests", "tests\SIO.Infrastructure.Tests\SIO.Infrastructure.Tests.csproj", "{24E1DF84-BF27-4DBE-890D-F7B2E811E11F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SIO.Infrastructure.AWS.Tests", "tests\SIO.Infrastructure.AWS.Tests\SIO.Infrastructure.AWS.Tests.csproj", "{9DB448AE-DC62-467F-A1F4-6400925BF23C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SIO.Migrations.Tests", "tests\SIO.Migrations.Tests\SIO.Migrations.Tests.csproj", "{B92A74B0-6A6C-43A1-B953-DAAE857771FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SIO.Tests.Infrastructure", "tests\SIO.Tests.Infrastructure\SIO.Tests.Infrastructure.csproj", "{73B08499-7996-4BA0-9404-AADF6E12C23A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,6 +90,26 @@ Global
 		{1D5EB6E8-8B77-4936-8A6D-480ED2A2584B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D5EB6E8-8B77-4936-8A6D-480ED2A2584B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D5EB6E8-8B77-4936-8A6D-480ED2A2584B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0109DED6-2D19-4B28-96C4-0FE52CF8CDFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0109DED6-2D19-4B28-96C4-0FE52CF8CDFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0109DED6-2D19-4B28-96C4-0FE52CF8CDFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0109DED6-2D19-4B28-96C4-0FE52CF8CDFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24E1DF84-BF27-4DBE-890D-F7B2E811E11F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24E1DF84-BF27-4DBE-890D-F7B2E811E11F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24E1DF84-BF27-4DBE-890D-F7B2E811E11F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24E1DF84-BF27-4DBE-890D-F7B2E811E11F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DB448AE-DC62-467F-A1F4-6400925BF23C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DB448AE-DC62-467F-A1F4-6400925BF23C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DB448AE-DC62-467F-A1F4-6400925BF23C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DB448AE-DC62-467F-A1F4-6400925BF23C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B92A74B0-6A6C-43A1-B953-DAAE857771FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B92A74B0-6A6C-43A1-B953-DAAE857771FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B92A74B0-6A6C-43A1-B953-DAAE857771FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B92A74B0-6A6C-43A1-B953-DAAE857771FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73B08499-7996-4BA0-9404-AADF6E12C23A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73B08499-7996-4BA0-9404-AADF6E12C23A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73B08499-7996-4BA0-9404-AADF6E12C23A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73B08499-7996-4BA0-9404-AADF6E12C23A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,6 +123,11 @@ Global
 		{429C202F-F271-4878-AD44-68049DFCFC22} = {3992E848-E52E-46A2-9088-E60B9DD0BC10}
 		{F51FF45F-8799-445F-B106-47AE728895A1} = {A9E3E6D1-F905-46C7-8758-CF9A31048127}
 		{1D5EB6E8-8B77-4936-8A6D-480ED2A2584B} = {A9E3E6D1-F905-46C7-8758-CF9A31048127}
+		{0109DED6-2D19-4B28-96C4-0FE52CF8CDFF} = {A9E3E6D1-F905-46C7-8758-CF9A31048127}
+		{24E1DF84-BF27-4DBE-890D-F7B2E811E11F} = {A9E3E6D1-F905-46C7-8758-CF9A31048127}
+		{9DB448AE-DC62-467F-A1F4-6400925BF23C} = {A9E3E6D1-F905-46C7-8758-CF9A31048127}
+		{B92A74B0-6A6C-43A1-B953-DAAE857771FD} = {A9E3E6D1-F905-46C7-8758-CF9A31048127}
+		{73B08499-7996-4BA0-9404-AADF6E12C23A} = {A9E3E6D1-F905-46C7-8758-CF9A31048127}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DC760A09-5C97-4316-B75F-1F4FEA9D4CFE}

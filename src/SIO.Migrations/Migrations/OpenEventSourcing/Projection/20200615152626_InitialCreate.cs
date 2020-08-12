@@ -65,7 +65,7 @@ namespace SIO.Migrations.Migrations.OpenEventSourcing.Projection
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserDocument", x => new { x.DocumentId, x.UserId });
+                    table.PrimaryKey("PK_UserDocument", x => x.DocumentId);
                 });
         }
 

@@ -16,6 +16,7 @@ namespace SIO.Domain.Projections.UserDocument
             Handles<TranslationStarted>(ApplyAsync);
             Handles<TranslationSucceded>(ApplyAsync);
             Handles<TranslationFailed>(ApplyAsync);
+            Handles<DocumentDeleted>(ApplyAsync);
         }
 
         private async Task ApplyAsync(DocumentUploaded @event)
@@ -75,6 +76,11 @@ namespace SIO.Domain.Projections.UserDocument
                 userDocument.Data.Condition = DocumentCondition.TranslationFailed;
                 userDocument.LastModifiedDate = DateTimeOffset.UtcNow;
             });
+        }
+
+        private async Task ApplyAsync(DocumentDeleted @event)
+        {
+            await _writer.Remove(@event.AggregateId);
         }
     }
 }

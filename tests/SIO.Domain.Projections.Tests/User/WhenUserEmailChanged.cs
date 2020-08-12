@@ -5,6 +5,7 @@ using OpenEventSourcing.Events;
 using OpenEventSourcing.Extensions;
 using SIO.Domain.Projections.User;
 using SIO.Domain.User.Events;
+using SIO.Tests.Infrastructure;
 
 namespace SIO.Tests.Unit.Domain.Projections.User
 {

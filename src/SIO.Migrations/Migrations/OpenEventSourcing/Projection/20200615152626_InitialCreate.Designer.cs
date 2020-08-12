@@ -10,7 +10,7 @@ using OpenEventSourcing.EntityFrameworkCore.DbContexts;
 namespace SIO.Migrations.Migrations.OpenEventSourcing.Projection
 {
     [DbContext(typeof(OpenEventSourcingProjectionDbContext))]
-    [Migration("20200120134848_InitialCreate")]
+    [Migration("20200615152626_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -77,17 +77,17 @@ namespace SIO.Migrations.Migrations.OpenEventSourcing.Projection
                 {
                     b.Property<Guid>("DocumentId");
 
-                    b.Property<Guid>("UserId");
-
                     b.Property<DateTimeOffset>("CreatedDate");
 
                     b.Property<string>("Data");
 
                     b.Property<DateTimeOffset?>("LastModifiedDate");
 
+                    b.Property<Guid>("UserId");
+
                     b.Property<int>("Version");
 
-                    b.HasKey("DocumentId", "UserId");
+                    b.HasKey("DocumentId");
 
                     b.ToTable("UserDocument");
                 });

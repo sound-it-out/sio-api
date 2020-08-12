@@ -11,9 +11,9 @@ namespace SIO.Domain
         {
             app.UseSignalR(routes =>
             {
-                routes.MapHub<DocumentHub>($"/{nameof(DocumentHub).ToLower()}");
-                routes.MapHub<TranslationHub>($"/{nameof(TranslationHub).ToLower()}");
-                routes.MapHub<UserHub>($"/{nameof(UserHub).ToLower()}");
+                routes.MapHub<DocumentHub>($"/v1/{nameof(DocumentHub).ToLower()}");
+                routes.MapHub<TranslationHub>($"/v1/{nameof(TranslationHub).ToLower()}");
+                routes.MapHub<UserHub>($"/v1/{nameof(UserHub).ToLower()}");
             });
 
             return app;

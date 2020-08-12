@@ -7,6 +7,7 @@ using OpenEventSourcing.Extensions;
 using SIO.Domain;
 using SIO.Domain.Document;
 using SIO.Domain.Document.Events;
+using SIO.Tests.Infrastructure;
 
 namespace SIO.Tests.Unit.Domain.Document
 {

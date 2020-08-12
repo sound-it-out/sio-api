@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Hangfire;
 using Hangfire.SqlServer;
 using IdentityModel.AspNetCore.OAuth2Introspection;
@@ -7,15 +8,19 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi.Models;
+using OpenEventSourcing.Azure.ServiceBus.Extensions;
 using OpenEventSourcing.EntityFrameworkCore.SqlServer;
 using OpenEventSourcing.Extensions;
 using OpenEventSourcing.RabbitMQ.Extensions;
 using OpenEventSourcing.Serialization.Json.Extensions;
+using SIO.API.V1;
 using SIO.Domain;
 using SIO.Domain.Document.Events;
 using SIO.Domain.Projections;
@@ -42,6 +47,8 @@ namespace SIO.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
+            services.AddControllers();
+            services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                     .AddIdentityServerAuthentication(options =>
                     {
@@ -70,31 +77,25 @@ namespace SIO.API
                 .AddEntityFrameworkCoreSqlServer(options => {
                     options.MigrationsAssembly("SIO.Migrations");
                 })
-                .AddRabbitMq(options =>
+                .AddAzureServiceBus(options =>
                 {
-                    options.UseConnection(Configuration.GetValue<string>("RabbitMQ:Connection"))
-                        .UseExchange(e =>
-                        {
-                            e.WithName(Configuration.GetValue<string>("RabbitMQ:Exchange:Name"));
-                            e.UseExchangeType(Configuration.GetValue<string>("RabbitMQ:Exchange:Type"));
-                        })
-                        .AddSubscription(s =>
-                        {
-
-                            s.ForEvent<DocumentUploaded>();
-                            s.ForEvent<TranslationCharactersProcessed>();
-                            s.ForEvent<TranslationFailed>();
-                            s.ForEvent<TranslationQueued>();
-                            s.ForEvent<TranslationStarted>();
-                            s.ForEvent<TranslationSucceded>();
-                            s.ForEvent<UserPurchasedCharacterTokens>();
-                            s.UseName("sio-api");
-                        })
-                        .UseManagementApi(m =>
-                        {
-                            m.WithEndpoint(Configuration.GetValue<string>("RabbitMQ:ManagementApi:Endpoint"));
-                            m.WithCredentials(Configuration.GetValue<string>("RabbitMQ:ManagementApi:Username"), Configuration.GetValue<string>("RabbitMQ:ManagementApi:Password"));
-                        });
+                    options.UseConnection(Configuration.GetValue<string>("Azure:ServiceBus:ConnectionString"))
+                    .UseTopic(e =>
+                    {
+                        e.WithName(Configuration.GetValue<string>("Azure:ServiceBus:Topic"));
+                    })
+                    .AddSubscription(s =>
+                    {
+                        s.UseName(Configuration.GetValue<string>("Azure:ServiceBus:Subscription"));
+                        s.ForEvent<DocumentUploaded>();
+                        s.ForEvent<DocumentDeleted>();
+                        s.ForEvent<TranslationCharactersProcessed>();
+                        s.ForEvent<TranslationFailed>();
+                        s.ForEvent<TranslationQueued>();
+                        s.ForEvent<TranslationStarted>();
+                        s.ForEvent<TranslationSucceded>();
+                        s.ForEvent<UserPurchasedCharacterTokens>();
+                    });
                 })
                 .AddCommands()
                 .AddEvents()
@@ -112,7 +113,7 @@ namespace SIO.API
             else
                 infrastructure.AddS3FileStorage();
 
-
+            services.AddSingleton<IUserIdProvider, SubjectUserIdProvider>();
             services.AddSignalR();
 
             services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
@@ -151,58 +152,72 @@ namespace SIO.API
                 //options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
             });
 
+            services.AddApiVersioning(options =>
+            {
+                options.ReportApiVersions = true;
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+            });
             services.AddMvcCore()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddApiExplorer()
-                .AddVersionedApiExplorer(options =>
-               {
-                   options.AssumeDefaultVersionWhenUnspecified = false;
-                   options.GroupNameFormat = "VVVV";
-                   options.SubstituteApiVersionInUrl = true;
-               })
-                .AddJsonFormatters();
+                   .AddApiExplorer();
+
+            services.AddMvc()
+                .AddRazorRuntimeCompilation()
+                .SetCompatibilityVersion(CompatibilityVersion.Latest);
+
+            services.AddVersionedApiExplorer(options =>
+            {
+                options.AssumeDefaultVersionWhenUnspecified = false;
+                options.GroupNameFormat = "VVVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseCors(o =>
-            {
-                o.AllowAnyHeader()
+            if (env.IsDevelopment())
+                app.UseDeveloperExceptionPage();
+
+            if (!env.IsDevelopment())
+                app.UseHttpsRedirection();
+
+            app.UseCors(builder => {
+                builder.WithOrigins(Configuration.GetSection("CORS:Origins")
+                    .AsEnumerable()
+                    .Select(kvp => kvp.Value)
+                    .Where(o => !string.IsNullOrEmpty(o))
+                    .ToArray()
+                )
                 .AllowCredentials()
-                .AllowAnyMethod()
-                .WithOrigins(new[] { "http://localhost:8080"});
+                .AllowAnyHeader()
+                .AllowAnyMethod();
             });
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
 
-            app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseAuthorization();
+            app.UseStaticFiles();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             var apiVersionDescriptionProvider = app.ApplicationServices.GetRequiredService<IApiVersionDescriptionProvider>();
-            app.UseStaticFiles();
-            app.UseAuthentication();
 
             app.UseSwagger(options => options.RouteTemplate = "/api-docs/{documentName}/swagger.json");
 
             app.UseSwaggerUI(options =>
             {
-                options.RoutePrefix = string.Empty;
-                options.DocumentTitle = "Sound It Out Api";
+                options.RoutePrefix = "api-docs";
+                options.DocumentTitle = "Sound it out Api";
+                options.DisplayRequestDuration();
+                options.OAuthClientId("sio-api-docs-client");
 
                 foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
                     options.SwaggerEndpoint($"/api-docs/{description.GroupName}/swagger.json", $"v{description.GroupName.ToUpperInvariant()}");
             });
-
-            app.UseDomain();
-            app.UseMvc();
         }
     }
 }

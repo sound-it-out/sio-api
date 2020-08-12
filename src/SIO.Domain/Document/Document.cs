@@ -16,6 +16,7 @@ namespace SIO.Domain.Document
             Handles<TranslationSucceded>(Handle);
             Handles<TranslationFailed>(Handle);
             Handles<TranslationCharactersProcessed>(Handle);
+            Handles<DocumentDeleted>(Handle);
         }
 
         public override DocumentState GetState() => new DocumentState(_state);
@@ -80,6 +81,15 @@ namespace SIO.Domain.Document
             ));
         }
 
+        public void Delete(Guid aggregateId, int version)
+        {
+            version++;
+            Apply(new DocumentDeleted(
+                aggregateId: aggregateId,
+                version: version
+            ));
+        }
+
         public void Handle(DocumentUploaded @event)
         {
             _state.Id = @event.AggregateId;
@@ -117,6 +127,12 @@ namespace SIO.Domain.Document
         public void Handle(TranslationCharactersProcessed @event)
         {
             _state.TranslationCharactersProcessed += @event.CharactersProcessed;
+            _state.Version++;
+        }
+
+        public void Handle(DocumentDeleted @event)
+        {
+            _state.Condition = DocumentCondition.Deleted;
             _state.Version++;
         }
     }

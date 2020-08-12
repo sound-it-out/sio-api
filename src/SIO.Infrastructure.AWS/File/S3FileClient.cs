@@ -17,6 +17,11 @@ namespace SIO.Infrastructure.AWS.File
             _client = new AmazonS3Client(new BasicAWSCredentials("", ""));
         }
 
+        public Task DeleteAsync(string fileName, string userId)
+        {
+            return _client.DeleteAsync(userId, fileName, new Dictionary<string, object>());
+        }
+
         public async Task<FileResult> DownloadAsync(string fileName, string userId)
         {
             var file = await _client.GetObjectAsync(userId, fileName);

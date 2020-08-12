@@ -10,7 +10,7 @@ namespace SIO.Domain.Projections.UserDocument
         public void Configure(EntityTypeBuilder<UserDocument> builder)
         {
             builder.ToTable(nameof(UserDocument));
-            builder.HasKey(s => new { s.DocumentId, s.UserId});
+            builder.HasKey(s => s.DocumentId);
             builder.Property(p => p.DocumentId)
                    .ValueGeneratedNever();
             builder.Property(p => p.UserId)

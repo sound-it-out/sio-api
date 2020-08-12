@@ -75,17 +75,17 @@ namespace SIO.Migrations.Migrations.OpenEventSourcing.Projection
                 {
                     b.Property<Guid>("DocumentId");
 
-                    b.Property<Guid>("UserId");
-
                     b.Property<DateTimeOffset>("CreatedDate");
 
                     b.Property<string>("Data");
 
                     b.Property<DateTimeOffset?>("LastModifiedDate");
 
+                    b.Property<Guid>("UserId");
+
                     b.Property<int>("Version");
 
-                    b.HasKey("DocumentId", "UserId");
+                    b.HasKey("DocumentId");
 
                     b.ToTable("UserDocument");
                 });
