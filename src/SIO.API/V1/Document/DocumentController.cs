@@ -16,7 +16,7 @@ using SIO.Domain.Projections.UserDocument.Queries;
 
 namespace SIO.API.V1.Document
 {
-    //[Authorize]
+    [Authorize]
     public class DocumentController : SIOController
     {
         private readonly IQueryDispatcher _queryDispatcher;
@@ -51,7 +51,7 @@ namespace SIO.API.V1.Document
         [HttpGet("{id}/download")]
         public async Task<IActionResult> Download(Guid id)
         {
-            var documentsResult = await _queryDispatcher.DispatchAsync(new DownloadByIdQuery(id, Guid.NewGuid(), "e586f75b-7e2a-4e92-aca0-e2468a7b33a0"));
+            var documentsResult = await _queryDispatcher.DispatchAsync(new DownloadByIdQuery(id, Guid.NewGuid(), CurrentUserId.ToString()));
             return File(await documentsResult.Stream, documentsResult.ContentType, $"{Path.GetFileNameWithoutExtension(documentsResult.Filename)}.mp3");
         }
 

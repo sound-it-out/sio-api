@@ -71,7 +71,6 @@ namespace SIO.Domain.Projections
                     try
                     {
                         var page = await _eventStore.GetEventsAsync(state.Position);
-                        var projection = _scope.ServiceProvider.GetRequiredService<TProjection>();
 
                         foreach (var @event in page.Events)
                             await _projection.HandleAsync(@event);
