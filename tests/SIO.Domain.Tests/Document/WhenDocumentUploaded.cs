@@ -7,6 +7,7 @@ using OpenEventSourcing.Extensions;
 using SIO.Domain;
 using SIO.Domain.Document;
 using SIO.Domain.Document.Events;
+using SIO.Tests.Infrastructure;
 
 namespace SIO.Tests.Unit.Domain.Document
 {
@@ -23,7 +24,7 @@ namespace SIO.Tests.Unit.Domain.Document
 
         protected override void When()
         {
-            Aggregate.Upload(_aggregateId, _translationType, _fileName);
+            Aggregate.Upload(_aggregateId, Guid.NewGuid(), _translationType, _fileName);
         }
 
         [Then]

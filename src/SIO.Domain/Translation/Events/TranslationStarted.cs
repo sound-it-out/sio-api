@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using OpenEventSourcing.Events;
 
 namespace SIO.Domain.Translation.Events
@@ -17,6 +18,7 @@ namespace SIO.Domain.Translation.Events
             CorrelationId = correlationId;
         }
 
+        [JsonConstructor]
         public TranslationStarted(Guid aggregateId, Guid correlationId, Guid userId, int version, long characterCount) : base(aggregateId, version)
         {
             CharacterCount = characterCount;

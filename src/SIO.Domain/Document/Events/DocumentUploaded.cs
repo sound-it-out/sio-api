@@ -1,6 +1,6 @@
 ﻿using System;
+using Newtonsoft.Json;
 using OpenEventSourcing.Events;
-using SIO.Domain.Translation;
 
 namespace SIO.Domain.Document.Events
 {
@@ -14,6 +14,7 @@ namespace SIO.Domain.Document.Events
             FileName = fileName;
         }
 
+        [JsonConstructor]
         public DocumentUploaded(Guid aggregateId, Guid userId, TranslationType translationType, string fileName) : base(aggregateId, 1)
         {
             TranslationType = translationType;

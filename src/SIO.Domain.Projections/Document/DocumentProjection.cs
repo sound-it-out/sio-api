@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using OpenEventSourcing.Events;
+﻿using System.Threading.Tasks;
 using OpenEventSourcing.Projections;
 using SIO.Domain.Document;
 using SIO.Domain.Document.Events;
@@ -9,31 +6,17 @@ using SIO.Domain.Translation.Events;
 
 namespace SIO.Domain.Projections.Document
 {
-    public class DocumentProjection : IProjection
+    public class DocumentProjection : Projection<Document>
     {
-        private readonly IProjectionWriter<Document> _writer;
-        private readonly IDictionary<Type, Func<IEvent, Task>> _handlers;
-
-        public DocumentProjection(IProjectionWriter<Document> writer)
+        public DocumentProjection(IProjectionWriter<Document> writer) : base(writer)
         {
-            if (writer == null)
-                throw new ArgumentNullException(nameof(writer));
-
-            _writer = writer;
-            _handlers = new Dictionary<Type, Func<IEvent, Task>>();
-
             Handles<DocumentUploaded>(ApplyAsync);
             Handles<TranslationQueued>(ApplyAsync);
             Handles<TranslationStarted>(ApplyAsync);
             Handles<TranslationSucceded>(ApplyAsync);
             Handles<TranslationFailed>(ApplyAsync);
             Handles<TranslationCharactersProcessed>(ApplyAsync);
-        }
-
-        public async Task HandleAsync(IEvent @event)
-        {
-            if (_handlers.TryGetValue(@event.GetType(), out var handler))
-                await handler(@event);
+            Handles<DocumentDeleted>(ApplyAsync);
         }
 
         private async Task ApplyAsync(DocumentUploaded @event)
@@ -106,10 +89,9 @@ namespace SIO.Domain.Projections.Document
             });
         }
 
-        private void Handles<TEvent>(Func<TEvent, Task> handler)
-            where TEvent : IEvent
+        private async Task ApplyAsync(DocumentDeleted @event)
         {
-            _handlers.Add(typeof(TEvent), e => handler((TEvent)e));
+            await _writer.Remove(@event.AggregateId);
         }
     }
 }

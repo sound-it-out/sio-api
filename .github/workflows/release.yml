@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  push:
+    branches: [ release/* ]
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    # Install .NET Core
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+
+    # Restore projects
+    - name: Restore projects
+      run: dotnet restore
+
+    # Build projects
+    - name: Build projects
+      run: dotnet build --configuration Release --no-restore
+
+    # Test SIO.API.Tests
+    - name: Test SIO.API.Tests
+      run: dotnet test tests/SIO.API.Tests/SIO.API.Tests.csproj --configuration Release --no-restore --no-build --verbosity normal -- xunit.parallelizeAssembly=true
+    # Test SIO.Domain.Projections.Tests
+    - name: Test SIO.Domain.Projections.Tests
+      run: dotnet test tests/SIO.Domain.Projections.Tests/SIO.Domain.Projections.Tests.csproj --configuration Release --no-restore --no-build --verbosity normal -- xunit.parallelizeAssembly=true
+    # Test SIO.Domain.Tests
+    - name: Test SIO.Domain.Tests
+      run: dotnet test tests/SIO.Domain.Tests/SIO.Domain.Tests.csproj --configuration Release --no-restore --no-build --verbosity normal -- xunit.parallelizeAssembly=true
+    # Test SIO.Infrastructure.AWS.Tests
+    - name: Test SIO.Infrastructure.AWS.Tests
+      run: dotnet test tests/SIO.Infrastructure.AWS.Tests/SIO.Infrastructure.AWS.Tests.csproj --configuration Release --no-restore --no-build --verbosity normal -- xunit.parallelizeAssembly=true
+    # Test SIO.Infrastructure.Tests
+    - name: Test SIO.Infrastructure.Tests
+      run: dotnet test tests/SIO.Infrastructure.Tests/SIO.Infrastructure.Tests.csproj --configuration Release --no-restore --no-build --verbosity normal -- xunit.parallelizeAssembly=true
+    # Test SIO.Migrations.Tests
+    - name: Test SIO.Migrations.Tests
+      run: dotnet test tests/SIO.Migrations.Tests/SIO.Migrations.Tests.csproj --configuration Release --no-restore --no-build --verbosity normal -- xunit.parallelizeAssembly=true

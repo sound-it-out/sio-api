@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using OpenEventSourcing.Domain;
 using OpenEventSourcing.Events;
+using SIO.Tests.Infrastructure;
 
 namespace SIO.Tests.Unit.Domain
 {

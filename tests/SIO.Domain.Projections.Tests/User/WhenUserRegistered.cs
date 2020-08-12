@@ -5,6 +5,7 @@ using OpenEventSourcing.Events;
 using OpenEventSourcing.Extensions;
 using SIO.Domain.Projections.User;
 using SIO.Domain.User.Events;
+using SIO.Tests.Infrastructure;
 
 namespace SIO.Tests.Unit.Domain.Projections.User
 {
@@ -16,7 +17,7 @@ namespace SIO.Tests.Unit.Domain.Projections.User
         private readonly string _lastName = "user";
         protected override IEnumerable<IEvent> Given()
         {
-            yield return new UserRegistered(_aggregateId, _email, _firstName, _lastName);
+            yield return new UserRegistered(_aggregateId, Guid.NewGuid(), _aggregateId.ToString(), _email, _firstName, _lastName, "");
         }
 
         [Then]
@@ -80,7 +81,7 @@ namespace SIO.Tests.Unit.Domain.Projections.User
         {
             var user = Context.Find<SIO.Domain.Projections.User.User>(_aggregateId);
 
-            user.Version.Should().Be(1);
+            user.Version.Should().Be(0);
         }
     }
 }

@@ -8,6 +8,7 @@ using SIO.Domain.Document;
 using SIO.Domain.Document.Events;
 using SIO.Domain.Projections.Document;
 using SIO.Domain.Translation.Events;
+using SIO.Tests.Infrastructure;
 
 namespace SIO.Tests.Unit.Domain.Projections.Document
 {

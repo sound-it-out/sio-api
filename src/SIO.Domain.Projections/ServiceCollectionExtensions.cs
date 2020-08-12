@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
-using OpenEventSourcing.Projections;
+using SIO.Domain.Projections.Document;
+using SIO.Domain.Projections.User;
+using SIO.Domain.Projections.UserDocument;
 
 namespace SIO.Domain.Projections
 {
@@ -11,15 +13,13 @@ namespace SIO.Domain.Projections
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            source.Scan(scan =>
-            {
-                scan.FromApplicationDependencies()
-                    .AddClasses(classes => classes.AssignableTo(typeof(IProjection)))
-                    .AsSelfWithInterfaces()
-                    .WithScopedLifetime();
-            });
+            source.AddScoped<DocumentProjection>();
+            source.AddScoped<UserProjection>();
+            source.AddScoped<UserDocumentProjection>();
 
-            source.AddSingleton(typeof(IProjector<>), typeof(PollingProjector<>));
+            source.AddHostedService<PollingProjector<DocumentProjection>>();
+            source.AddHostedService<PollingProjector<UserProjection>>();
+            source.AddHostedService<PollingProjector<UserDocumentProjection>>();
 
             return source;
         }

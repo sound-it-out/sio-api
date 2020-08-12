@@ -6,6 +6,7 @@
         TranslationQueued,
         TranslationStarted,
         TranslationSucceded,
-        TranslationFailed
+        TranslationFailed,
+        Deleted
     }
 }
