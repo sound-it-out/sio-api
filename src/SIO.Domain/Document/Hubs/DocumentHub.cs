@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.SignalR;
 namespace SIO.Domain.Document.Hubs
 {
     [Authorize]
-    internal class DocumentHub : Hub
+    public class DocumentHub : Hub
     {
     }
 }

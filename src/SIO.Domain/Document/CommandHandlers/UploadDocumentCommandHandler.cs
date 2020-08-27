@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 using OpenEventSourcing.Commands;
 using OpenEventSourcing.Domain;
 using OpenEventSourcing.Events;
-using OpenEventSourcing.Extensions;
 using SIO.Domain.Document.Commands;
-using SIO.Infrastructure.File;
+using SIO.Infrastructure.Files;
 
 namespace SIO.Domain.Document.CommandHandlers
 {
@@ -46,7 +45,7 @@ namespace SIO.Domain.Document.CommandHandlers
             using(var stream = command.File.OpenReadStream())
             {
                 await _fileClient.UploadAsync(
-                    fileName: $"{command.AggregateId.ToString()}{Path.GetExtension(command.File.FileName)}",
+                    fileName: $"{command.AggregateId}{Path.GetExtension(command.File.FileName)}",
                     userId: command.UserId,
                     stream: stream
                 );
@@ -60,7 +59,7 @@ namespace SIO.Domain.Document.CommandHandlers
             aggregate.Upload(
                 aggregateId: command.AggregateId,
                 userId: new Guid(command.UserId),
-                translationType: command.TranslationType, 
+                translationOption: command.TranslationOption, 
                 fileName: command.File.FileName
             );
 

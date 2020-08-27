@@ -2,7 +2,7 @@
 
 namespace SIO.Domain.Translation.Hubs
 {
-    internal class TranslationHub : Hub
+    public class TranslationHub : Hub
     {
     }
 }

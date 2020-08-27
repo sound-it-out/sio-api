@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using OpenEventSourcing.EntityFrameworkCore.DbContexts;
 using OpenEventSourcing.Queries;
 using SIO.Domain.Projections.Document.Queries;
-using SIO.Infrastructure.File;
+using SIO.Infrastructure.Files;
 
 namespace SIO.Domain.Projections.Document.QueryHandlers
 {

@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SIO.Infrastructure.AWS\SIO.Infrastructure.AWS.csproj" />
-    <ProjectReference Include="..\SIO.Tests.Infrastructure\SIO.Tests.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

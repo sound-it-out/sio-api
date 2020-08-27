@@ -1,8 +1,9 @@
 ﻿using System;
 using OpenEventSourcing.Domain;
-using OpenEventSourcing.Extensions;
 using SIO.Domain.Document.Events;
 using SIO.Domain.Translation.Events;
+using SIO.Infrastructure;
+using SIO.Infrastructure.Translations;
 
 namespace SIO.Domain.Document
 {
@@ -23,12 +24,13 @@ namespace SIO.Domain.Document
         public override Guid? Id => _state.Id;
         public override int? Version => _state.Version;
 
-        public void Upload(Guid aggregateId, Guid userId, TranslationType translationType, string fileName)
+        public void Upload(Guid aggregateId, Guid userId, TranslationOption translationOption, string fileName)
         {
             Apply(new DocumentUploaded(
                 aggregateId: aggregateId,
                 userId: userId,
-                translationType: translationType,
+                translationType: translationOption.Type,
+                translationSubject: translationOption.Subject,
                 fileName: fileName
             ));
         }

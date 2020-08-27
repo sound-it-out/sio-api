@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using FluentAssertions;
 using OpenEventSourcing.Events;
 using OpenEventSourcing.Extensions;
-using SIO.Domain;
 using SIO.Domain.Document;
 using SIO.Domain.Document.Events;
 using SIO.Domain.Projections.Document;
-using SIO.Tests.Infrastructure;
+using SIO.Infrastructure;
+using SIO.Testing.Attributes;
 
 namespace SIO.Tests.Unit.Domain.Projections.Document
 {
@@ -17,7 +17,7 @@ namespace SIO.Tests.Unit.Domain.Projections.Document
         private readonly string _fileName = "Test Document";
         protected override IEnumerable<IEvent> Given()
         {
-            yield return new DocumentUploaded(_aggregateId, TranslationType.Google, _fileName);
+            yield return new DocumentUploaded(_aggregateId, TranslationType.Google, "test", _fileName);
         }
 
         [Then]

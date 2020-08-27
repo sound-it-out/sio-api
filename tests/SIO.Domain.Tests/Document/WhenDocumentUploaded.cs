@@ -4,10 +4,11 @@ using System.Linq;
 using FluentAssertions;
 using OpenEventSourcing.Events;
 using OpenEventSourcing.Extensions;
-using SIO.Domain;
 using SIO.Domain.Document;
 using SIO.Domain.Document.Events;
-using SIO.Tests.Infrastructure;
+using SIO.Infrastructure;
+using SIO.Infrastructure.Translations;
+using SIO.Testing.Attributes;
 
 namespace SIO.Tests.Unit.Domain.Document
 {
@@ -15,7 +16,7 @@ namespace SIO.Tests.Unit.Domain.Document
     {
         private readonly Guid _aggregateId = Guid.NewGuid().ToSequentialGuid();
         private readonly string _fileName = "Test Document";
-        private readonly TranslationType _translationType = TranslationType.Google;
+        private readonly TranslationOption _translationOption = new TranslationOption("Test", TranslationType.Google);
 
         protected override IEnumerable<IEvent> Given()
         {
@@ -24,7 +25,7 @@ namespace SIO.Tests.Unit.Domain.Document
 
         protected override void When()
         {
-            Aggregate.Upload(_aggregateId, Guid.NewGuid(), _translationType, _fileName);
+            Aggregate.Upload(_aggregateId, Guid.NewGuid(), _translationOption, _fileName);
         }
 
         [Then]
@@ -58,7 +59,7 @@ namespace SIO.Tests.Unit.Domain.Document
 
             var @event = events.OfType<DocumentUploaded>().Single();
 
-            @event.TranslationType.Should().Be(_translationType);
+            @event.TranslationType.Should().Be(_translationOption.Type);
         }
 
         [Then]

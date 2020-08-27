@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 using OpenEventSourcing.Commands;
 using OpenEventSourcing.Domain;
 using OpenEventSourcing.Events;
-using OpenEventSourcing.Extensions;
 using SIO.Domain.Document.Commands;
-using SIO.Infrastructure.File;
+using SIO.Infrastructure.Files;
 
 namespace SIO.Domain.Document.CommandHandlers
 {
@@ -46,14 +45,14 @@ namespace SIO.Domain.Document.CommandHandlers
             var aggregate = await _aggregateRepository.GetAsync<Document, DocumentState>(command.AggregateId);
 
             await _fileClient.DeleteAsync(
-                fileName: $"{command.AggregateId.ToString()}{Path.GetExtension(aggregate.GetState().FileName)}",
+                fileName: $"{command.AggregateId}{Path.GetExtension(aggregate.GetState().FileName)}",
                 userId: command.UserId
             );
 
             if(aggregate.GetState().TranslationId.HasValue)
             {
                 await _fileClient.DeleteAsync(
-                    fileName: $"{aggregate.GetState().TranslationId.ToString()}.mp3",
+                    fileName: $"{aggregate.GetState().TranslationId}.mp3",
                     userId: command.UserId
                 );
             }
@@ -70,7 +69,7 @@ namespace SIO.Domain.Document.CommandHandlers
 
             events = events.ToList();
 
-            await _aggregateRepository.SaveAsync<DocumentState>(aggregate, command.Version);
+            await _aggregateRepository.SaveAsync(aggregate, command.Version);
             await _eventBusPublisher.PublishAsync(events);
         }
     }
