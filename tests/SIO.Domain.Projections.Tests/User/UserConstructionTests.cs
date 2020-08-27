@@ -1,12 +1,12 @@
 ﻿using System;
 using FluentAssertions;
-using Xunit;
+using SIO.Testing.Attributes;
 
 namespace SIO.Tests.Unit.Domain.Projections.UserDocuments
 {
     public class UserConstructionTests
     {
-        [Fact]
+        [Unit]
         public void WhenInstantiatedWithNullProjectionWriterThenShouldThrowArgumentNullException()
         {
             Action act = () => new SIO.Domain.Projections.User.UserProjection(null);

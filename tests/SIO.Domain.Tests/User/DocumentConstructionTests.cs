@@ -1,12 +1,12 @@
 ﻿using System;
 using FluentAssertions;
-using Xunit;
+using SIO.Testing.Attributes;
 
 namespace SIO.Tests.Unit.Domain.User
 {
     public class UserConstructionTests
     {
-        [Fact]
+        [Unit]
         public void WhenConstructedWithNullStateThenShouldThrowArgumentNullException()
         {
             Action act = () => new SIO.Domain.User.User(null);
