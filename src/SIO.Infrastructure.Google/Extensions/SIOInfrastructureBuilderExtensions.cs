@@ -9,7 +9,7 @@ namespace SIO.Infrastructure.Google.Extensions
     {
         public static ISIOInfrastructureBuilder AddGoogleInfrastructure(this ISIOInfrastructureBuilder builder, IConfiguration configuration)
         {
-            return builder.AddGooglConfiguration(configuration)
+            return builder.AddGoogleConfiguration(configuration)
                 .AddGoogleTranslations();
         }
 
@@ -19,7 +19,7 @@ namespace SIO.Infrastructure.Google.Extensions
             return builder;
         }
 
-        public static ISIOInfrastructureBuilder AddGooglConfiguration(this ISIOInfrastructureBuilder builder, IConfiguration configuration)
+        public static ISIOInfrastructureBuilder AddGoogleConfiguration(this ISIOInfrastructureBuilder builder, IConfiguration configuration)
         {
             builder.Services.Configure<GoogleCredentialOptions>(configuration.GetSection("Google:Credentails"));
             return builder;

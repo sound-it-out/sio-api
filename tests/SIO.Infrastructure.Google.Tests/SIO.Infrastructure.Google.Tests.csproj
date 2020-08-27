@@ -5,13 +5,14 @@
 
     <IsPackable>false</IsPackable>
 
-    <UserSecretsId>2507fcc2-b29f-4d4b-b018-8c8c0e1377d2</UserSecretsId>
+    <UserSecretsId>91608232-4b5e-45d3-ad5a-2f89b2b686a8</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="Hangfire.MemoryStorage" Version="1.7.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.7" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <PrivateAssets>all</PrivateAssets>
@@ -21,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\SIO.Infrastructure.AWS\SIO.Infrastructure.AWS.csproj" />
+    <ProjectReference Include="..\..\src\SIO.Infrastructure.Google\SIO.Infrastructure.Google.csproj" />
     <ProjectReference Include="..\..\src\SIO.Testing\SIO.Testing.csproj" />
   </ItemGroup>
 
