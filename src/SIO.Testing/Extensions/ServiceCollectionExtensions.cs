@@ -11,7 +11,7 @@ namespace SIO.Testing.Extensions
     {
         public static IServiceCollection AddInMemoryFiles(this IServiceCollection source)
         {
-            source.AddScoped<IFileClient, InMemoryFileClient>();
+            source.AddSingleton<IFileClient, InMemoryFileClient>();
             return source;
         }
 
@@ -24,9 +24,9 @@ namespace SIO.Testing.Extensions
 
         public static IServiceCollection AddInMemoryEventBus(this IServiceCollection source)
         {
-            source.AddScoped<InMemoryEventBus>();
-            source.AddScoped<IEventBusPublisher, InMemoryEventBus>(sp => sp.GetRequiredService<InMemoryEventBus>());
-            source.AddScoped<IEventBusConsumer, InMemoryEventBus>(sp => sp.GetRequiredService<InMemoryEventBus>());
+            source.AddSingleton<InMemoryEventBus>();
+            source.AddSingleton<IEventBusPublisher, InMemoryEventBus>(sp => sp.GetRequiredService<InMemoryEventBus>());
+            source.AddSingleton<IEventBusConsumer, InMemoryEventBus>(sp => sp.GetRequiredService<InMemoryEventBus>());
             return source;
         }
     }

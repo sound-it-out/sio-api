@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenEventSourcing.EntityFrameworkCore.DbContexts;
 
-namespace SIO.Migrations
+namespace SIO.Migrations.Extensions
 {
     public static class HostExtensions
     {

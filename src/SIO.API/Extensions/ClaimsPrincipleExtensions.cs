@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using IdentityModel;
 
-namespace SIO.API
+namespace SIO.API.Extensions
 {
     internal static class ClaimsPrincipleExtensions
     {

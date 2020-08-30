@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenEventSourcing.Events;
 
-namespace SIO.API
+namespace SIO.Infrastructure.Events
 {
     internal class SIOEventConsumer : IHostedService
     {

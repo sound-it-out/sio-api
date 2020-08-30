@@ -59,7 +59,6 @@ namespace SIO.API.V1.Document
         public async Task<IActionResult> Upload([FromForm]UploadRequest request)
         {
             await _commandDispatcher.DispatchAsync(new UploadDocumentCommand(Guid.NewGuid().ToSequentialGuid(), Guid.NewGuid(), 0, CurrentUserId.ToString(), request.File, request.TranslationOption));
-
             return Accepted();
         }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.SqlServer;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
@@ -20,18 +18,15 @@ using Microsoft.OpenApi.Models;
 using OpenEventSourcing.Azure.ServiceBus.Extensions;
 using OpenEventSourcing.EntityFrameworkCore.SqlServer;
 using OpenEventSourcing.Extensions;
-using OpenEventSourcing.RabbitMQ.Extensions;
 using OpenEventSourcing.Serialization.Json.Extensions;
 using SIO.API.V1;
-using SIO.Domain;
 using SIO.Domain.Document.Events;
 using SIO.Domain.Document.Hubs;
-using SIO.Domain.Projections;
+using SIO.Domain.Projections.Extensions;
 using SIO.Domain.Translation.Events;
 using SIO.Domain.Translation.Hubs;
 using SIO.Domain.User.Events;
 using SIO.Domain.User.Hubs;
-using SIO.Infrastructure;
 using SIO.Infrastructure.AWS;
 using SIO.Infrastructure.AWS.Extensions;
 using SIO.Infrastructure.Extensions;
@@ -131,9 +126,9 @@ namespace SIO.API
                 .AddJsonSerializers();
 
             services.AddProjections();
-            services.AddHostedService<SIOEventConsumer>();
 
             var infrastructure = services.AddSIOInfrastructure()
+                .AddEvents()
                 .AddAWSConfiguration(_configuration)
                 .AddAWSTranslations()
                 .AddGoogleInfrastructure(_configuration)

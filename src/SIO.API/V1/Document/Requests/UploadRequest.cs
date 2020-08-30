@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using SIO.Infrastructure;
 using SIO.Infrastructure.Translations;
 
 namespace SIO.API.V1.Document.Requests

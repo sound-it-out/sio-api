@@ -16,14 +16,24 @@ namespace SIO.Domain.Document.Events
             TranslationSubject = translationSubject;
             FileName = fileName;
         }
-
-        [JsonConstructor]
+        
         public DocumentUploaded(Guid aggregateId, Guid userId, TranslationType translationType, string translationSubject, string fileName) : base(aggregateId, 1)
         {
             TranslationType = translationType;
             TranslationSubject = translationSubject;
             FileName = fileName;
             UserId = userId.ToString();
+        }
+
+        [JsonConstructor]
+        public DocumentUploaded(Guid aggregateId, Guid userId, Guid casuationId, Guid correlationId, TranslationType translationType, string translationSubject, string fileName) : base(aggregateId, 1)
+        {
+            TranslationType = translationType;
+            TranslationSubject = translationSubject;
+            FileName = fileName;
+            UserId = userId.ToString();
+            CausationId = casuationId;
+            CorrelationId = correlationId;
         }
     }
 }
