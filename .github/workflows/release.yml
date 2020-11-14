@@ -8,11 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    # Install .NET Core
-    - name: Setup .NET Core
+    # Install .NET
+    - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.101
+        dotnet-version: 5.0.100
 
     # Restore projects
     - name: Restore projects
@@ -24,7 +24,7 @@ jobs:
 
     # Run test projects
     - name: Run test projects
-      run: dotnet test SIO-Translator.sln --configuration Release --no-restore --no-build --verbosity normal -- xunit.parallelizeAssembly=true
+      run: dotnet test SIO-API.sln --configuration Release --no-restore --no-build --verbosity normal -- xunit.parallelizeAssembly=true
       env: 
         SIO_AWS__CREDENTIALS__ACCESSKEY: ${{ secrets.AWS_CREDENTAILS_ACCESSKEY }}
         SIO_AWS__CREDENTIALS__SECRETKEY: ${{ secrets.AWS_CREDENTAILS_SECRETKEY }}

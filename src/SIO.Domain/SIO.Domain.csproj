@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,11 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Amazon.S3" Version="0.14.1" />
+    <PackageReference Include="Amazon.S3" Version="0.19.0" />
     <PackageReference Include="Clipboard" Version="1.2.1" />
-    <PackageReference Include="Google.Cloud.TextToSpeech.V1" Version="1.0.0" />
-    <PackageReference Include="Hangfire" Version="1.7.7" />
-    <PackageReference Include="Hangfire.Core" Version="1.7.9" />
+    <PackageReference Include="Google.Cloud.TextToSpeech.V1" Version="2.1.0" />
+    <PackageReference Include="Hangfire" Version="1.7.17" />
+    <PackageReference Include="Hangfire.Core" Version="1.7.17" />
     <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.2.2" />
     <PackageReference Include="OpenEventSourcing" Version="0.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
