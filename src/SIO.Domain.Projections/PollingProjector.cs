@@ -70,6 +70,8 @@ namespace SIO.Domain.Projections
                 {
                     try
                     {
+                        await context.Entry(state).ReloadAsync();
+
                         var page = await _eventStore.GetEventsAsync(state.Position);
 
                         foreach (var @event in page.Events)

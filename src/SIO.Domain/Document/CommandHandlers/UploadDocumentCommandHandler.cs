@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 using OpenEventSourcing.Commands;
 using OpenEventSourcing.Domain;
 using OpenEventSourcing.Events;
-using OpenEventSourcing.Extensions;
 using SIO.Domain.Document.Commands;
-using SIO.Infrastructure.File;
+using SIO.Infrastructure.Files;
 
 namespace SIO.Domain.Document.CommandHandlers
 {
@@ -40,39 +39,46 @@ namespace SIO.Domain.Document.CommandHandlers
 
         public async Task ExecuteAsync(UploadDocumentCommand command)
         {
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
-
-            using(var stream = command.File.OpenReadStream())
+            try
             {
-                await _fileClient.UploadAsync(
-                    fileName: $"{command.AggregateId.ToString()}{Path.GetExtension(command.File.FileName)}",
-                    userId: command.UserId,
-                    stream: stream
+                if (command == null)
+                    throw new ArgumentNullException(nameof(command));
+
+                using (var stream = command.File.OpenReadStream())
+                {
+                    await _fileClient.UploadAsync(
+                        fileName: $"{command.AggregateId}{Path.GetExtension(command.File.FileName)}",
+                        userId: command.UserId,
+                        stream: stream
+                    );
+                }
+
+                var aggregate = _aggregateFactory.FromHistory<Document, DocumentState>(Enumerable.Empty<IEvent>());
+
+                if (aggregate == null)
+                    throw new ArgumentNullException(nameof(aggregate));
+
+                aggregate.Upload(
+                    aggregateId: command.AggregateId,
+                    userId: new Guid(command.UserId),
+                    translationOption: command.TranslationOption,
+                    fileName: command.File.FileName
                 );
-            }            
 
-            var aggregate = _aggregateFactory.FromHistory<Document, DocumentState>(Enumerable.Empty<IEvent>());
+                var events = aggregate.GetUncommittedEvents();
 
-            if(aggregate == null)
-                throw new ArgumentNullException(nameof(aggregate));
+                foreach (var @event in events)
+                    @event.UpdateFrom(command);
 
-            aggregate.Upload(
-                aggregateId: command.AggregateId,
-                userId: new Guid(command.UserId),
-                translationType: command.TranslationType, 
-                fileName: command.File.FileName
-            );
+                events = events.ToList();
 
-            var events = aggregate.GetUncommittedEvents();
-
-            foreach (var @event in events)
-                @event.UpdateFrom(command);
-
-            events = events.ToList();
-
-            await _aggregateRepository.SaveAsync<DocumentState>(aggregate, 0);
-            await _eventBusPublisher.PublishAsync(events);
+                await _aggregateRepository.SaveAsync<DocumentState>(aggregate, 0);
+                await _eventBusPublisher.PublishAsync(events);
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
         }
     }
 }

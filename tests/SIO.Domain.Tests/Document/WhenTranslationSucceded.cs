@@ -7,7 +7,8 @@ using OpenEventSourcing.Extensions;
 using SIO.Domain.Document;
 using SIO.Domain.Document.Events;
 using SIO.Domain.Translation.Events;
-using SIO.Tests.Infrastructure;
+using SIO.Infrastructure;
+using SIO.Testing.Attributes;
 
 namespace SIO.Tests.Unit.Domain.Document
 {
@@ -18,7 +19,7 @@ namespace SIO.Tests.Unit.Domain.Document
 
         protected override IEnumerable<IEvent> Given()
         {
-            yield return new DocumentUploaded(_aggregateId, SIO.Domain.TranslationType.Google, _fileName);
+            yield return new DocumentUploaded(_aggregateId, TranslationType.Google, "test", _fileName);
             yield return new TranslationQueued(_aggregateId, 2);
             yield return new TranslationStarted(_aggregateId, 3, 4000);
             yield return new TranslationCharactersProcessed(_aggregateId, 4, 3000);

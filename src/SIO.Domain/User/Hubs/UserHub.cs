@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace SIO.Domain.User.Hubs
 {
-    internal class UserHub : Hub
+    public class UserHub : Hub
     {
     }
 }

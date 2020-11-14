@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.SqlServer;
 using IdentityModel.AspNetCore.OAuth2Introspection;
@@ -8,40 +8,43 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi.Models;
 using OpenEventSourcing.Azure.ServiceBus.Extensions;
 using OpenEventSourcing.EntityFrameworkCore.SqlServer;
 using OpenEventSourcing.Extensions;
-using OpenEventSourcing.RabbitMQ.Extensions;
 using OpenEventSourcing.Serialization.Json.Extensions;
 using SIO.API.V1;
-using SIO.Domain;
 using SIO.Domain.Document.Events;
-using SIO.Domain.Projections;
+using SIO.Domain.Document.Hubs;
+using SIO.Domain.Projections.Extensions;
 using SIO.Domain.Translation.Events;
+using SIO.Domain.Translation.Hubs;
 using SIO.Domain.User.Events;
-using SIO.Infrastructure;
+using SIO.Domain.User.Hubs;
 using SIO.Infrastructure.AWS;
+using SIO.Infrastructure.AWS.Extensions;
+using SIO.Infrastructure.Extensions;
+using SIO.Infrastructure.Google.Extensions;
 
 namespace SIO.API
 {
     public class Startup
     {
-        private readonly IHostingEnvironment _env;
+        private readonly IHostEnvironment _env;
+        private readonly IConfiguration _configuration;
 
-        public Startup(IConfiguration configuration, IHostingEnvironment  hostingEnvironment)
+        public Startup(IHostEnvironment env,
+            IConfiguration configuration)
         {
-            Configuration = configuration;
-            _env = hostingEnvironment;
+            _env = env;
+            _configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -52,8 +55,8 @@ namespace SIO.API
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                     .AddIdentityServerAuthentication(options =>
                     {
-                        options.Authority = Configuration.GetValue<string>("Identity:Authority");
-                        options.ApiName = Configuration.GetValue<string>("Identity:ApiResource");
+                        options.Authority = _configuration.GetValue<string>("Identity:Authority");
+                        options.ApiName = _configuration.GetValue<string>("Identity:ApiResource");
                         options.EnableCaching = true;
                         options.CacheDuration = TimeSpan.FromMinutes(10);
 #if DEBUG
@@ -69,9 +72,29 @@ namespace SIO.API
 
                             return token;
                         };
+                        options.JwtBearerEvents.OnAuthenticationFailed = (ctx) =>
+                        {
+                            return Task.CompletedTask;
+                        };
+                        options.JwtBearerEvents.OnTokenValidated = (ctx) =>
+                        {
+                            return Task.CompletedTask;
+                        };
+                        options.JwtBearerEvents.OnChallenge = (ctx) =>
+                        {
+                            return Task.CompletedTask;
+                        };
+                        options.JwtBearerEvents.OnMessageReceived = (ctx) =>
+                        {
+                            return Task.CompletedTask;
+                        };
+                        options.JwtBearerEvents.OnForbidden = (ctx) =>
+                        {
+                            return Task.CompletedTask;
+                        };
                     });
 
-            JobStorage.Current = new SqlServerStorage(Configuration.GetConnectionString("DefaultConnection"));
+            JobStorage.Current = new SqlServerStorage(_configuration.GetConnectionString("DefaultConnection"));
 
             services.AddOpenEventSourcing()
                 .AddEntityFrameworkCoreSqlServer(options => {
@@ -79,14 +102,14 @@ namespace SIO.API
                 })
                 .AddAzureServiceBus(options =>
                 {
-                    options.UseConnection(Configuration.GetValue<string>("Azure:ServiceBus:ConnectionString"))
+                    options.UseConnection(_configuration.GetValue<string>("Azure:ServiceBus:ConnectionString"))
                     .UseTopic(e =>
                     {
-                        e.WithName(Configuration.GetValue<string>("Azure:ServiceBus:Topic"));
+                        e.WithName(_configuration.GetValue<string>("Azure:ServiceBus:Topic"));
                     })
                     .AddSubscription(s =>
                     {
-                        s.UseName(Configuration.GetValue<string>("Azure:ServiceBus:Subscription"));
+                        s.UseName(_configuration.GetValue<string>("Azure:ServiceBus:Subscription"));
                         s.ForEvent<DocumentUploaded>();
                         s.ForEvent<DocumentDeleted>();
                         s.ForEvent<TranslationCharactersProcessed>();
@@ -103,15 +126,18 @@ namespace SIO.API
                 .AddJsonSerializers();
 
             services.AddProjections();
-            services.AddHostedService<SIOEventConsumer>();
 
             var infrastructure = services.AddSIOInfrastructure()
+                .AddEvents()
+                .AddAWSConfiguration(_configuration)
+                .AddAWSTranslations()
+                .AddGoogleInfrastructure(_configuration)
                 .AddSqlConnections();
 
             if (_env.IsDevelopment())
-                infrastructure.AddLocalFileStorage();
+                infrastructure.AddLocalInfrastructure();
             else
-                infrastructure.AddS3FileStorage();
+                infrastructure.AddAWSFiles();             
 
             services.AddSingleton<IUserIdProvider, SubjectUserIdProvider>();
             services.AddSignalR();
@@ -174,7 +200,7 @@ namespace SIO.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
@@ -182,25 +208,23 @@ namespace SIO.API
             if (!env.IsDevelopment())
                 app.UseHttpsRedirection();
 
-            app.UseCors(builder => {
-                builder.WithOrigins(Configuration.GetSection("CORS:Origins")
-                    .AsEnumerable()
-                    .Select(kvp => kvp.Value)
-                    .Where(o => !string.IsNullOrEmpty(o))
-                    .ToArray()
-                )
-                .AllowCredentials()
+            app.UseCors(x => x
+                .AllowAnyMethod()
                 .AllowAnyHeader()
-                .AllowAnyMethod();
-            });
+                .SetIsOriginAllowed(origin => true) // allow any origin
+                .AllowCredentials());
 
 
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<DocumentHub>($"/v1/{nameof(DocumentHub).ToLower()}");
+                endpoints.MapHub<TranslationHub>($"/v1/{nameof(TranslationHub).ToLower()}");
+                endpoints.MapHub<UserHub>($"/v1/{nameof(UserHub).ToLower()}");
                 endpoints.MapControllers();
             });
 

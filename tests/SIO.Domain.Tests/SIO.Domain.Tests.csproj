@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SIO.Domain\SIO.Domain.csproj" />
-    <ProjectReference Include="..\SIO.Tests.Infrastructure\SIO.Tests.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\SIO.Testing\SIO.Testing.csproj" />
   </ItemGroup>
 
 </Project>

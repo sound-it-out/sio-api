@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using SIO.API.Extensions;
 
 namespace SIO.API.V1
 {

@@ -5,7 +5,7 @@ using OpenEventSourcing.Events;
 using OpenEventSourcing.Extensions;
 using SIO.Domain.Projections.User;
 using SIO.Domain.User.Events;
-using SIO.Tests.Infrastructure;
+using SIO.Testing.Attributes;
 
 namespace SIO.Tests.Unit.Domain.Projections.User
 {

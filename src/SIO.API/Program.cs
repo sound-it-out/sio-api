@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using SIO.Migrations;
+using SIO.Migrations.Extensions;
 
 namespace SIO.API
 {

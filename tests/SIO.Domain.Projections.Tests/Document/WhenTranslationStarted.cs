@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using FluentAssertions;
 using OpenEventSourcing.Events;
 using OpenEventSourcing.Extensions;
-using SIO.Domain;
 using SIO.Domain.Document;
 using SIO.Domain.Document.Events;
 using SIO.Domain.Projections.Document;
 using SIO.Domain.Translation.Events;
-using SIO.Tests.Infrastructure;
+using SIO.Infrastructure;
+using SIO.Testing.Attributes;
 
 namespace SIO.Tests.Unit.Domain.Projections.Document
 {
@@ -20,7 +20,7 @@ namespace SIO.Tests.Unit.Domain.Projections.Document
         private readonly long _characterCount = 3000;
         protected override IEnumerable<IEvent> Given()
         {
-            yield return new DocumentUploaded(_documentId, TranslationType.Google, _fileName);
+            yield return new DocumentUploaded(_documentId, TranslationType.Google, "test", _fileName);
             yield return new TranslationQueued(_translationId, _documentId, 2);
             yield return new TranslationStarted(_translationId, _documentId, 3, _characterCount);
         }

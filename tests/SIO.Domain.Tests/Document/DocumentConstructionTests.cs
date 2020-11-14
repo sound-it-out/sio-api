@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using FluentAssertions;
-using Xunit;
+using SIO.Testing.Attributes;
 
 namespace SIO.Tests.Unit.Domain.Document
 {
     public class DocumentConstructionTests
     {
-        [Fact]
+        [Unit]
         public void WhenConstructedWithNullStateThenShouldThrowArgumentNullException()
         {
             Action act = () => new SIO.Domain.Document.Document(null);
