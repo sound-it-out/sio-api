@@ -21,10 +21,9 @@ using Xunit;
 
 namespace SIO.API.Tests.V1.Document.DocumentController.Download
 {
-    public class WhenUserIsAuthenticated : AuthenticatedServerSpecification<HttpResponseMessage>, IClassFixture<FileClientFixture>
+    public class WhenUserIsAuthenticated : AuthenticatedServerSpecification<HttpResponseMessage>
     {
-        private readonly Lazy<FileClientFixture> _fileClientFixture;
-        private IFileClient FileClient => _fileClientFixture.Value;
+        private IFileClient FileClient => _webApplicationFactory.Services.GetRequiredService<IFileClient>();
 
         private HttpClient _client;
         private static Guid _userId = TestClaimsProvider.UserId;
@@ -36,13 +35,8 @@ namespace SIO.API.Tests.V1.Document.DocumentController.Download
         private static string _documentFileName = "test.txt";
         private static string _translationFileName = "test.mp3";
 
-        public WhenUserIsAuthenticated(ConfigurationFixture configurationFixture, EventSeederFixture eventSeederFixture, FileClientFixture fileClientFixture, AuthenticatedAPIWebApplicationFactory webApplicationFactory) : base(configurationFixture, eventSeederFixture, webApplicationFactory)
+        public WhenUserIsAuthenticated(ConfigurationFixture configurationFixture, AuthenticatedAPIWebApplicationFactory webApplicationFactory) : base(configurationFixture, webApplicationFactory)
         {
-            _fileClientFixture = new Lazy<FileClientFixture>(() =>
-            {
-                fileClientFixture.InitFileClient(_webApplicationFactory.Services.GetRequiredService<IFileClient>());
-                return fileClientFixture;
-            });
         }
 
         protected override void BuildHost(IWebHostBuilder builder)

@@ -20,7 +20,7 @@ namespace SIO.API.Tests.V1.User.UserController.Me
         private string _firstname;
         private string _lastname;
 
-        public WhenUserIsAuthenticated(ConfigurationFixture configurationFixture, EventSeederFixture eventSeederFixture, AuthenticatedAPIWebApplicationFactory webApplicationFactory) : base(configurationFixture, eventSeederFixture, webApplicationFactory)
+        public WhenUserIsAuthenticated(ConfigurationFixture configurationFixture, AuthenticatedAPIWebApplicationFactory webApplicationFactory) : base(configurationFixture, webApplicationFactory)
         {
         }
 

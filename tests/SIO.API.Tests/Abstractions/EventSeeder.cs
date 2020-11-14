@@ -8,29 +8,16 @@ using OpenEventSourcing.Events;
 
 namespace SIO.API.Tests.Abstractions
 {
-    public class EventSeederFixture : IEventSeeder
+    public class EventSeeder : IEventSeeder
     {
-        private readonly CancellationTokenSource _cts = new CancellationTokenSource();
-        private Task _seedTask;
-        private readonly object _lockObj = new object();
+        private readonly IServiceProvider _serviceProvider;
 
-        private IServiceProvider _serviceProvider;
-        public void Init(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
-
-        public async Task SeedAsync(params IEvent[] events)
+        public EventSeeder(IServiceProvider serviceProvider)
         {
-            lock (_lockObj)
-            {
-                if (_seedTask == null)
-                {
-                    _seedTask = Task.Run(async () => await InternalSeedAsync(events), _cts.Token);
-                }
-            }
-
-            await _seedTask;
+            _serviceProvider = serviceProvider;
         }
 
-        private async Task InternalSeedAsync(params IEvent[] events)
+        public async Task SeedAsync(params IEvent[] events)
         {
             using (var scope = _serviceProvider.CreateScope())
             {

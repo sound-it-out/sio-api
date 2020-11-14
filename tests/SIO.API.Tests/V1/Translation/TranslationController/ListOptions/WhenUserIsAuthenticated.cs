@@ -12,7 +12,7 @@ namespace SIO.API.Tests.V1.Translation.TranslationController.ListOptions
 {
     public class WhenUserIsAuthenticated : AuthenticatedServerSpecification<HttpResponseMessage>
     {
-        public WhenUserIsAuthenticated(ConfigurationFixture configurationFixture, EventSeederFixture eventSeederFixture, AuthenticatedAPIWebApplicationFactory webApplicationFactory) : base(configurationFixture, eventSeederFixture, webApplicationFactory)
+        public WhenUserIsAuthenticated(ConfigurationFixture configurationFixture, AuthenticatedAPIWebApplicationFactory webApplicationFactory) : base(configurationFixture, webApplicationFactory)
         {
         }
 

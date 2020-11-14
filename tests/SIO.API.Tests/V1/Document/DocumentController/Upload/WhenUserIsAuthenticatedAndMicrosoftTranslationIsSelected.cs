@@ -15,7 +15,7 @@ namespace SIO.API.Tests.V1.Document.DocumentController.Upload
 {
     public class WhenUserIsAuthenticatedAndMicrosoftTranslationIsSelected : AuthenticatedServerSpecification<HttpResponseMessage>
     {
-        public WhenUserIsAuthenticatedAndMicrosoftTranslationIsSelected(ConfigurationFixture configurationFixture, EventSeederFixture eventSeederFixture, AuthenticatedAPIWebApplicationFactory webApplicationFactory) : base(configurationFixture, eventSeederFixture, webApplicationFactory)
+        public WhenUserIsAuthenticatedAndMicrosoftTranslationIsSelected(ConfigurationFixture configurationFixture, AuthenticatedAPIWebApplicationFactory webApplicationFactory) : base(configurationFixture, webApplicationFactory)
         {
         }
 

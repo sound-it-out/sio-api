@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -22,7 +23,7 @@ namespace SIO.API.Tests.V1.Document.DocumentController.Upload
     public class WhenUserIsAuthenticatedAndAWSTranslationIsSelected : AuthenticatedServerSpecification<HttpResponseMessage>
     {
         private readonly string _fileName = "test.txt";
-        public WhenUserIsAuthenticatedAndAWSTranslationIsSelected(ConfigurationFixture configurationFixture, EventSeederFixture eventSeederFixture, AuthenticatedAPIWebApplicationFactory webApplicationFactory) : base(configurationFixture, eventSeederFixture, webApplicationFactory)
+        public WhenUserIsAuthenticatedAndAWSTranslationIsSelected(ConfigurationFixture configurationFixture, AuthenticatedAPIWebApplicationFactory webApplicationFactory) : base(configurationFixture, webApplicationFactory)
         {
         }
 
@@ -70,8 +71,9 @@ namespace SIO.API.Tests.V1.Document.DocumentController.Upload
 
                 using (var context = dbContextFactory.Create())
                 {
-                    var @event = await context.Events.FirstAsync(e => e.Type == typeof(DocumentUploaded).FullName);
-
+                    var documentId = new Guid((await Result.Content.ReadAsStringAsync()).Replace('"', ' '));
+                    var @event = await context.Events.FirstAsync(e => e.AggregateId == documentId);
+                    var test = await context.Events.ToListAsync();
                     var fileClient = _webApplicationFactory.Services.GetRequiredService<IFileClient>();
                     var file = await fileClient.DownloadAsync($"{@event.AggregateId}.txt", TestClaimsProvider.UserId.ToString());
                     file.Should().NotBeNull();

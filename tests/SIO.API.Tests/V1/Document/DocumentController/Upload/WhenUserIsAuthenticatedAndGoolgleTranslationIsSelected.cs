@@ -15,7 +15,7 @@ namespace SIO.API.Tests.V1.Document.DocumentController.Upload
 {
     public class WhenUserIsAuthenticatedAndGoolgleTranslationIsSelected : AuthenticatedServerSpecification<HttpResponseMessage>
     {
-        public WhenUserIsAuthenticatedAndGoolgleTranslationIsSelected(ConfigurationFixture configurationFixture, EventSeederFixture eventSeederFixture, AuthenticatedAPIWebApplicationFactory webApplicationFactory) : base(configurationFixture, eventSeederFixture, webApplicationFactory)
+        public WhenUserIsAuthenticatedAndGoolgleTranslationIsSelected(ConfigurationFixture configurationFixture, AuthenticatedAPIWebApplicationFactory webApplicationFactory) : base(configurationFixture, webApplicationFactory)
         {
         }
 

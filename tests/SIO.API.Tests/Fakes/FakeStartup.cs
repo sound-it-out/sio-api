@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using OpenEventSourcing.Extensions;
 using OpenEventSourcing.Serialization.Json.Extensions;
+using SIO.API.Tests.Abstractions;
 using SIO.API.V1;
 using SIO.Domain.Document.Hubs;
 using SIO.Domain.Projections.Extensions;
@@ -56,6 +57,7 @@ namespace SIO.API.Tests.Fakes
                 .AddInMemoryEventBus()
                 .AddProjections()
                 .AddSingleton<IUserIdProvider, SubjectUserIdProvider>()
+                .AddTransient<IEventSeeder, EventSeeder>()
                 .Configure<RouteOptions>(options => options.LowercaseUrls = true)
                 .AddApiVersioning(options => options.ReportApiVersions = true);
 

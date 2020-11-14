@@ -9,7 +9,7 @@ namespace SIO.API.Tests.V1.Translation.TranslationController.ListOptions
 {
     public class WhenUserIsUnauthenticated : UnauthenticatedServerSpecification<HttpResponseMessage>
     {
-        public WhenUserIsUnauthenticated(ConfigurationFixture configurationFixture, EventSeederFixture eventSeederFixture, UnauthenticatedAPIWebApplicationFactory webApplicationFactory) : base(configurationFixture, eventSeederFixture, webApplicationFactory)
+        public WhenUserIsUnauthenticated(ConfigurationFixture configurationFixture, UnauthenticatedAPIWebApplicationFactory webApplicationFactory) : base(configurationFixture, webApplicationFactory)
         {
         }
 
