@@ -3,15 +3,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using OpenEventSourcing.Events;
 using SIO.Domain.Documents.Events;
-using SIO.Domain.Documents.Hubs;
+using SIO.Domain.Extenions;
+using SIO.Infrastructure.Notifications.Hubs;
 
 namespace SIO.Domain.Documents.EventHandlers
 {
     internal class DocumentDeletedEventHandler : IEventHandler<DocumentDeleted>
     {
-        private readonly IHubContext<DocumentHub> _hubContext;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public DocumentDeletedEventHandler(IHubContext<DocumentHub> hubContext)
+        public DocumentDeletedEventHandler(IHubContext<NotificationHub> hubContext)
         {
             if (hubContext == null)
                 throw new ArgumentNullException(nameof(hubContext));

@@ -2,16 +2,17 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using OpenEventSourcing.Events;
+using SIO.Domain.Extenions;
 using SIO.Domain.Users.Events;
-using SIO.Domain.Users.Hubs;
+using SIO.Infrastructure.Notifications.Hubs;
 
 namespace SIO.Domain.Users.EventHandlers
 {
     internal class UserPurchasedCharacterTokensEventHandler : IEventHandler<UserPurchasedCharacterTokens>
     {
-        private readonly IHubContext<UserHub> _hubContext;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public UserPurchasedCharacterTokensEventHandler(IHubContext<UserHub> hubContext)
+        public UserPurchasedCharacterTokensEventHandler(IHubContext<NotificationHub> hubContext)
         {
             if (hubContext == null)
                 throw new ArgumentNullException(nameof(hubContext));
