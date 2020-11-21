@@ -13,14 +13,12 @@ using OpenEventSourcing.Extensions;
 using OpenEventSourcing.Serialization.Json.Extensions;
 using SIO.API.Tests.Abstractions;
 using SIO.API.V1;
-using SIO.Domain.Documents.Hubs;
 using SIO.Domain.Projections.Extensions;
-using SIO.Domain.Translations.Hubs;
-using SIO.Domain.Users.Hubs;
 using SIO.Infrastructure.AWS;
 using SIO.Infrastructure.AWS.Extensions;
 using SIO.Infrastructure.Extensions;
 using SIO.Infrastructure.Google.Extensions;
+using SIO.Infrastructure.Notifications.Hubs;
 using SIO.Testing.Extensions;
 
 namespace SIO.API.Tests.Fakes
@@ -148,9 +146,7 @@ namespace SIO.API.Tests.Fakes
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<DocumentHub>($"/v1/{nameof(DocumentHub).ToLower()}");
-                endpoints.MapHub<TranslationHub>($"/v1/{nameof(TranslationHub).ToLower()}");
-                endpoints.MapHub<UserHub>($"/v1/{nameof(UserHub).ToLower()}");
+                endpoints.MapHub<NotificationHub>($"/v1/{nameof(NotificationHub).ToLower()}");
                 endpoints.MapControllers();
             });
 
