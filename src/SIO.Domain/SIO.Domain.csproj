@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Translation\Projections\**" />
-    <EmbeddedResource Remove="Translation\Projections\**" />
-    <None Remove="Translation\Projections\**" />
+    <Compile Remove="Translations\Projections\**" />
+    <EmbeddedResource Remove="Translations\Projections\**" />
+    <None Remove="Translations\Projections\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,7 +18,6 @@
     <PackageReference Include="Hangfire.Core" Version="1.7.17" />
     <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.2.2" />
     <PackageReference Include="OpenEventSourcing" Version="0.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>

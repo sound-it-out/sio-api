@@ -37,7 +37,7 @@ namespace SIO.Migrations.Migrations.OpenEventSourcing.Projection
                     b.ToTable("ProjectionState");
                 });
 
-            modelBuilder.Entity("SIO.Domain.Projections.Document.Document", b =>
+            modelBuilder.Entity("SIO.Domain.Projections.Documents.Document", b =>
                 {
                     b.Property<Guid>("Id");
 
@@ -56,7 +56,7 @@ namespace SIO.Migrations.Migrations.OpenEventSourcing.Projection
                     b.ToTable("Document");
                 });
 
-            modelBuilder.Entity("SIO.Domain.Projections.User.User", b =>
+            modelBuilder.Entity("SIO.Domain.Projections.Users.User", b =>
                 {
                     b.Property<Guid>("Id");
 
@@ -73,7 +73,7 @@ namespace SIO.Migrations.Migrations.OpenEventSourcing.Projection
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("SIO.Domain.Projections.UserDocument.UserDocument", b =>
+            modelBuilder.Entity("SIO.Domain.Projections.UsersDocuments.UserDocument", b =>
                 {
                     b.Property<Guid>("DocumentId");
 

@@ -10,9 +10,9 @@ using OpenEventSourcing.Extensions;
 using OpenEventSourcing.Queries;
 using SIO.API.V1.Document.Requests;
 using SIO.API.V1.Document.Responses;
-using SIO.Domain.Document.Commands;
-using SIO.Domain.Projections.Document.Queries;
-using SIO.Domain.Projections.UserDocument.Queries;
+using SIO.Domain.Documents.Commands;
+using SIO.Domain.Projections.Documents.Queries;
+using SIO.Domain.Projections.UsersDocuments.Queries;
 
 namespace SIO.API.V1.Document
 {

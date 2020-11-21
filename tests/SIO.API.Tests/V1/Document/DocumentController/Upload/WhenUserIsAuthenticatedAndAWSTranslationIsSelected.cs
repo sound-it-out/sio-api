@@ -12,7 +12,7 @@ using OpenEventSourcing.EntityFrameworkCore.DbContexts;
 using SIO.API.Tests.Abstractions;
 using SIO.API.Tests.Extensions;
 using SIO.API.V1.Document.Requests;
-using SIO.Domain.Document.Events;
+using SIO.Domain.Documents.Events;
 using SIO.Infrastructure;
 using SIO.Infrastructure.Files;
 using SIO.Infrastructure.Translations;

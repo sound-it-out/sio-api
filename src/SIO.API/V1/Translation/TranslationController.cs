@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenEventSourcing.Queries;
 using SIO.API.V1.Translation.Responses;
-using SIO.Domain.Translation.Queries;
+using SIO.Domain.Translations.Queries;
 
 namespace SIO.API.V1.Translation
 {

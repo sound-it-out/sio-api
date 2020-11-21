@@ -9,7 +9,7 @@ namespace SIO.Tests.Unit.Domain.Document
         [Unit]
         public void WhenConstructedWithNullStateThenShouldThrowArgumentNullException()
         {
-            Action act = () => new SIO.Domain.Document.Document(null);
+            Action act = () => new SIO.Domain.Documents.Document(null);
 
             act.Should().Throw<ArgumentNullException>();
         }

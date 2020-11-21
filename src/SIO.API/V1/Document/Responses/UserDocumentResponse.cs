@@ -1,5 +1,5 @@
 ﻿using System;
-using SIO.Domain.Document;
+using SIO.Domain.Documents;
 
 namespace SIO.API.V1.Document.Responses
 {

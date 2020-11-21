@@ -4,15 +4,15 @@ using System.Linq;
 using FluentAssertions;
 using OpenEventSourcing.Events;
 using OpenEventSourcing.Extensions;
-using SIO.Domain.Document;
-using SIO.Domain.Document.Events;
-using SIO.Domain.Translation.Events;
+using SIO.Domain.Documents;
+using SIO.Domain.Documents.Events;
+using SIO.Domain.Translations.Events;
 using SIO.Infrastructure;
 using SIO.Testing.Attributes;
 
 namespace SIO.Tests.Unit.Domain.Document
 {
-    public class WhenTranslationQueued : Specification<SIO.Domain.Document.Document, SIO.Domain.Document.DocumentState>
+    public class WhenTranslationQueued : Specification<SIO.Domain.Documents.Document, SIO.Domain.Documents.DocumentState>
     {
         private readonly Guid _aggregateId = Guid.NewGuid().ToSequentialGuid();
         private readonly string _fileName = "Test Document";

@@ -40,12 +40,7 @@ namespace SIO.Domain.Projections
             _projectionDbContextFactory = _scope.ServiceProvider.GetRequiredService<IProjectionDbContextFactory>();
         }
 
-        protected override Task ExecuteAsync(CancellationToken cancellationToken)
-        {
-            return Task.Run(() => PollAsync(cancellationToken));
-        }
-
-        private async Task PollAsync(CancellationToken cancellationToken)
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             var projectionName = _projection.GetType().FullName;
             using (var context = _projectionDbContextFactory.Create())

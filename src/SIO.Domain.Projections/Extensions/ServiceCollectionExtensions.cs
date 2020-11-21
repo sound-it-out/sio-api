@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
-using SIO.Domain.Projections.Document;
-using SIO.Domain.Projections.User;
-using SIO.Domain.Projections.UserDocument;
+using SIO.Domain.Projections.Documents;
+using SIO.Domain.Projections.Users;
+using SIO.Domain.Projections.UsersDocuments;
 
 namespace SIO.Domain.Projections.Extensions
 {

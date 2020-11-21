@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.SqlServer;
 using IdentityModel.AspNetCore.OAuth2Introspection;
 using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -14,23 +16,25 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using OpenEventSourcing.Azure.ServiceBus.Extensions;
 using OpenEventSourcing.EntityFrameworkCore.SqlServer;
 using OpenEventSourcing.Extensions;
 using OpenEventSourcing.Serialization.Json.Extensions;
 using SIO.API.V1;
-using SIO.Domain.Document.Events;
-using SIO.Domain.Document.Hubs;
+using SIO.Domain.Documents.Events;
+using SIO.Domain.Documents.Hubs;
 using SIO.Domain.Projections.Extensions;
-using SIO.Domain.Translation.Events;
-using SIO.Domain.Translation.Hubs;
-using SIO.Domain.User.Events;
-using SIO.Domain.User.Hubs;
+using SIO.Domain.Translations.Events;
+using SIO.Domain.Translations.Hubs;
+using SIO.Domain.Users.Events;
+using SIO.Domain.Users.Hubs;
 using SIO.Infrastructure.AWS;
 using SIO.Infrastructure.AWS.Extensions;
 using SIO.Infrastructure.Extensions;
 using SIO.Infrastructure.Google.Extensions;
+using SIO.Infrastructure.Notifications.Hubs;
 
 namespace SIO.API
 {
@@ -52,47 +56,42 @@ namespace SIO.API
             services.AddCors();
             services.AddControllers();
             services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
-            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-                    .AddIdentityServerAuthentication(options =>
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+           .AddJwtBearer(options =>
+           {
+                options.Authority = _configuration.GetValue<string>("Identity:Authority");
+                options.Audience = _configuration.GetValue<string>("Identity:ApiResource");
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = false
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
                     {
-                        options.Authority = _configuration.GetValue<string>("Identity:Authority");
-                        options.ApiName = _configuration.GetValue<string>("Identity:ApiResource");
-                        options.EnableCaching = true;
-                        options.CacheDuration = TimeSpan.FromMinutes(10);
-#if DEBUG
-                        options.RequireHttpsMetadata = false;
-                        IdentityModelEventSource.ShowPII = true;
-#endif
-                        options.TokenRetriever = (request) =>
-                        {
-                            var token = TokenRetrieval.FromAuthorizationHeader()(request);
+                        var token = TokenRetrieval.FromAuthorizationHeader()(context.Request);
 
-                            if (string.IsNullOrEmpty(token))
-                                token = TokenRetrieval.FromQueryString()(request);
+                        if (string.IsNullOrEmpty(token))
+                            token = TokenRetrieval.FromQueryString()(context.Request);
 
-                            return token;
-                        };
-                        options.JwtBearerEvents.OnAuthenticationFailed = (ctx) =>
-                        {
-                            return Task.CompletedTask;
-                        };
-                        options.JwtBearerEvents.OnTokenValidated = (ctx) =>
-                        {
-                            return Task.CompletedTask;
-                        };
-                        options.JwtBearerEvents.OnChallenge = (ctx) =>
-                        {
-                            return Task.CompletedTask;
-                        };
-                        options.JwtBearerEvents.OnMessageReceived = (ctx) =>
-                        {
-                            return Task.CompletedTask;
-                        };
-                        options.JwtBearerEvents.OnForbidden = (ctx) =>
-                        {
-                            return Task.CompletedTask;
-                        };
-                    });
+                        context.Token = token;
+
+                        return Task.CompletedTask;
+                    }
+                };
+           }); 
+           
+            services.AddAuthorization(options =>
+           {
+               options.AddPolicy("ApiScope", policy =>
+               {
+                   policy.RequireAuthenticatedUser();
+                   policy.RequireClaim("scope", "api");
+               });
+           });
 
             JobStorage.Current = new SqlServerStorage(_configuration.GetConnectionString("DefaultConnection"));
 
@@ -222,9 +221,7 @@ namespace SIO.API
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<DocumentHub>($"/v1/{nameof(DocumentHub).ToLower()}");
-                endpoints.MapHub<TranslationHub>($"/v1/{nameof(TranslationHub).ToLower()}");
-                endpoints.MapHub<UserHub>($"/v1/{nameof(UserHub).ToLower()}");
+                endpoints.MapHub<NotificationHub>($"/v1/{nameof(NotificationHub).ToLower()}");
                 endpoints.MapControllers();
             });
 

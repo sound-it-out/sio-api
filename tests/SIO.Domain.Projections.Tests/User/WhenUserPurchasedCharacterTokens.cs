@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using FluentAssertions;
 using OpenEventSourcing.Events;
 using OpenEventSourcing.Extensions;
-using SIO.Domain.Projections.User;
-using SIO.Domain.User.Events;
+using SIO.Domain.Projections.Users;
+using SIO.Domain.Users.Events;
 using SIO.Testing.Attributes;
 
 namespace SIO.Tests.Unit.Domain.Projections.User
@@ -26,7 +26,7 @@ namespace SIO.Tests.Unit.Domain.Projections.User
         [Then]
         public void ThenUserShouldNotBeNull()
         {
-            var user = Context.Find<SIO.Domain.Projections.User.User>(_aggregateId);
+            var user = Context.Find<SIO.Domain.Projections.Users.User>(_aggregateId);
 
             user.Should().NotBeNull();
         }
@@ -34,7 +34,7 @@ namespace SIO.Tests.Unit.Domain.Projections.User
         [Then]
         public void ThenUserShouldHaveCorrectAggregateId()
         {
-            var user = Context.Find<SIO.Domain.Projections.User.User>(_aggregateId);
+            var user = Context.Find<SIO.Domain.Projections.Users.User>(_aggregateId);
 
             user.Id.Should().Be(_aggregateId);
         }
@@ -42,7 +42,7 @@ namespace SIO.Tests.Unit.Domain.Projections.User
         [Then]
         public void ThenUserShouldHaveCorrectEmail()
         {
-            var user = Context.Find<SIO.Domain.Projections.User.User>(_aggregateId);
+            var user = Context.Find<SIO.Domain.Projections.Users.User>(_aggregateId);
 
             user.Data.Email.Should().Be(_email);
         }
@@ -50,7 +50,7 @@ namespace SIO.Tests.Unit.Domain.Projections.User
         [Then]
         public void ThenUserShouldHaveCorrectFirstName()
         {
-            var user = Context.Find<SIO.Domain.Projections.User.User>(_aggregateId);
+            var user = Context.Find<SIO.Domain.Projections.Users.User>(_aggregateId);
 
             user.Data.FirstName.Should().Be(_firstName);
         }
@@ -58,7 +58,7 @@ namespace SIO.Tests.Unit.Domain.Projections.User
         [Then]
         public void ThenUserShouldHaveCorrectLastName()
         {
-            var user = Context.Find<SIO.Domain.Projections.User.User>(_aggregateId);
+            var user = Context.Find<SIO.Domain.Projections.Users.User>(_aggregateId);
 
             user.Data.LastName.Should().Be(_lastName);
         }
@@ -66,7 +66,7 @@ namespace SIO.Tests.Unit.Domain.Projections.User
         [Then]
         public void ThenUserShouldntBeVerified()
         {
-            var user = Context.Find<SIO.Domain.Projections.User.User>(_aggregateId);
+            var user = Context.Find<SIO.Domain.Projections.Users.User>(_aggregateId);
 
             user.Data.Verified.Should().Be(true);
         }
@@ -74,7 +74,7 @@ namespace SIO.Tests.Unit.Domain.Projections.User
         [Then]
         public void ThenUserShouldHaveCorrectCharacterTokens()
         {
-            var user = Context.Find<SIO.Domain.Projections.User.User>(_aggregateId);
+            var user = Context.Find<SIO.Domain.Projections.Users.User>(_aggregateId);
 
             user.Data.CharacterTokens.Should().Be(_characterTokens);
         }
@@ -82,7 +82,7 @@ namespace SIO.Tests.Unit.Domain.Projections.User
         [Then]
         public void ThenUserShouldHaveCorrectVersion()
         {
-            var user = Context.Find<SIO.Domain.Projections.User.User>(_aggregateId);
+            var user = Context.Find<SIO.Domain.Projections.Users.User>(_aggregateId);
 
             user.Version.Should().Be(0);
         }

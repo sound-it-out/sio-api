@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using SIO.API.Tests.Abstractions;
 using SIO.API.Tests.Extensions;
 using SIO.API.V1.User.Responses;
-using SIO.Domain.User.Events;
+using SIO.Domain.Users.Events;
 using SIO.Testing.Attributes;
 
 namespace SIO.API.Tests.V1.User.UserController.Me

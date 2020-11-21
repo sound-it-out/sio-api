@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenEventSourcing.Queries;
 using SIO.API.V1.User.Responses;
-using SIO.Domain.Projections.User.Queries;
+using SIO.Domain.Projections.Users.Queries;
 
 namespace SIO.API.V1.User
 {

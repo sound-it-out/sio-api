@@ -9,7 +9,7 @@ namespace SIO.Tests.Unit.Domain.Projections.UserDocuments
         [Unit]
         public void WhenInstantiatedWithNullProjectionWriterThenShouldThrowArgumentNullException()
         {
-            Action act = () => new SIO.Domain.Projections.User.UserProjection(null);
+            Action act = () => new SIO.Domain.Projections.Users.UserProjection(null);
 
             act.Should().Throw<ArgumentNullException>();
         }

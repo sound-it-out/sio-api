@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using FluentAssertions;
 using OpenEventSourcing.Events;
 using OpenEventSourcing.Extensions;
-using SIO.Domain.Document;
-using SIO.Domain.Document.Events;
-using SIO.Domain.Projections.Document;
-using SIO.Domain.Translation.Events;
+using SIO.Domain.Documents;
+using SIO.Domain.Documents.Events;
+using SIO.Domain.Projections.Documents;
+using SIO.Domain.Translations.Events;
 using SIO.Infrastructure;
 using SIO.Testing.Attributes;
 
@@ -30,7 +30,7 @@ namespace SIO.Tests.Unit.Domain.Projections.Document
         [Then]
         public void ThenDocumentShouldNotBeNull()
         {
-            var document = Context.Find<SIO.Domain.Projections.Document.Document>(_documentId);
+            var document = Context.Find<SIO.Domain.Projections.Documents.Document>(_documentId);
 
             document.Should().NotBeNull();
         }
@@ -38,7 +38,7 @@ namespace SIO.Tests.Unit.Domain.Projections.Document
         [Then]
         public void ThenDocumentShouldHaveCorrectId()
         {
-            var document = Context.Find<SIO.Domain.Projections.Document.Document>(_documentId);
+            var document = Context.Find<SIO.Domain.Projections.Documents.Document>(_documentId);
 
             document.Id.Should().Be(_documentId);
         }
@@ -46,7 +46,7 @@ namespace SIO.Tests.Unit.Domain.Projections.Document
         [Then]
         public void ThenDocumentShouldHaveCorrectFileName()
         {
-            var document = Context.Find<SIO.Domain.Projections.Document.Document>(_documentId);
+            var document = Context.Find<SIO.Domain.Projections.Documents.Document>(_documentId);
 
             document.Data.FileName.Should().Be(_fileName);
         }
@@ -54,7 +54,7 @@ namespace SIO.Tests.Unit.Domain.Projections.Document
         [Then]
         public void ThenDocumentShouldHaveCorrectCondition()
         {
-            var document = Context.Find<SIO.Domain.Projections.Document.Document>(_documentId);
+            var document = Context.Find<SIO.Domain.Projections.Documents.Document>(_documentId);
 
             document.Data.Condition.Should().Be(DocumentCondition.TranslationStarted);
         }
@@ -62,7 +62,7 @@ namespace SIO.Tests.Unit.Domain.Projections.Document
         [Then]
         public void ThenDocumentShouldHaveCorrectTranslationCharactersTotal()
         {
-            var document = Context.Find<SIO.Domain.Projections.Document.Document>(_documentId);
+            var document = Context.Find<SIO.Domain.Projections.Documents.Document>(_documentId);
 
             document.Data.TranslationCharactersTotal.Should().Be(_characterCount);
         }
@@ -70,7 +70,7 @@ namespace SIO.Tests.Unit.Domain.Projections.Document
         [Then]
         public void ThenDocumentShouldHaveCorrectTranslationCharactersProcessed()
         {
-            var document = Context.Find<SIO.Domain.Projections.Document.Document>(_documentId);
+            var document = Context.Find<SIO.Domain.Projections.Documents.Document>(_documentId);
 
             document.Data.TranslationCharactersProcessed.Should().Be(_characterProcessed);
         }
@@ -78,7 +78,7 @@ namespace SIO.Tests.Unit.Domain.Projections.Document
         [Then]
         public void ThenDocumentShouldHaveCorrectVersion()
         {
-            var document = Context.Find<SIO.Domain.Projections.Document.Document>(_documentId);
+            var document = Context.Find<SIO.Domain.Projections.Documents.Document>(_documentId);
 
             document.Version.Should().Be(4);
         }

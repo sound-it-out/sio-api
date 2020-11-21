@@ -4,12 +4,12 @@ using System.Linq;
 using FluentAssertions;
 using OpenEventSourcing.Events;
 using OpenEventSourcing.Extensions;
-using SIO.Domain.User.Events;
+using SIO.Domain.Users.Events;
 using SIO.Testing.Attributes;
 
 namespace SIO.Tests.Unit.Domain.User
 {
-    public class WhenUserPurchasedCharacterTokens : Specification<SIO.Domain.User.User, SIO.Domain.User.UserState>
+    public class WhenUserPurchasedCharacterTokens : Specification<SIO.Domain.Users.User, SIO.Domain.Users.UserState>
     {
         private readonly Guid _aggregateId = Guid.NewGuid().ToSequentialGuid();
         private readonly string _email = "test@user.com";

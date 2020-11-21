@@ -9,7 +9,7 @@ namespace SIO.Tests.Unit.Domain.User
         [Unit]
         public void WhenConstructedWithNullStateThenShouldThrowArgumentNullException()
         {
-            Action act = () => new SIO.Domain.User.User(null);
+            Action act = () => new SIO.Domain.Users.User(null);
 
             act.Should().Throw<ArgumentNullException>();
         }
