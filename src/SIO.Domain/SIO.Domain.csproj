@@ -14,7 +14,7 @@
     <PackageReference Include="Amazon.S3" Version="0.19.0" />
     <PackageReference Include="Clipboard" Version="1.2.1" />
     <PackageReference Include="Google.Cloud.TextToSpeech.V1" Version="2.1.0" />
-    <PackageReference Include="Hangfire" Version="1.7.17" />
+    <PackageReference Include="Hangfire" Version="1.7.22" />
     <PackageReference Include="Hangfire.Core" Version="1.7.17" />
     <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.2.2" />
     <PackageReference Include="OpenEventSourcing" Version="0.4.0" />
