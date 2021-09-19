@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  sio.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ConnectionStrings__Store=Server=sio.sql.store;Initial Catalog=sio-store;User Id=sa;Password=1qaz-pl,
+      - ConnectionStrings__Projection=Server=sio.api.sql.projections;Initial Catalog=sio-api-projections;User Id=sa;Password=1qaz-pl,
+      - ConnectionStrings__Redis=sio.redis,abortConnect=true,allowAdmin=true
+      - ConnectionStrings__AzureStorage=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://host.docker.internal:10000/devstoreaccount1;QueueEndpoint=http://host.docker.internal:10001/devstoreaccount1;
+      - Identity__Authority=http://host.docker.internal:5000
+    ports:
+      - "42213:80"
+      - "44363:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  sio.api.sql.projections:
+    environment:
+      SA_PASSWORD: "1qaz-pl,"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1444:1433"
+    volumes:
+      - /var/opt/mssql/data

@@ -1,6 +1,4 @@
-﻿using System;
-using Newtonsoft.Json;
-using OpenEventSourcing.Events;
+﻿using SIO.Infrastructure.Events;
 
 namespace SIO.Domain.User.Events
 {
@@ -9,28 +7,10 @@ namespace SIO.Domain.User.Events
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string ActivationToken { get; }
+        public string ActivationToken { get; set; }
 
-        public UserRegistered(Guid aggregateId, Guid correlationId, string userId, string email, string firstName, string lastName, string activationToken) : base(aggregateId, 0)
+        public UserRegistered(string subject, int version) : base(subject, version)
         {
-            Email = email;
-            FirstName = firstName;
-            LastName = lastName;
-            ActivationToken = activationToken;
-            CorrelationId = correlationId;
-            UserId = userId;
-        }
-
-        [JsonConstructor]
-        public UserRegistered(Guid aggregateId, Guid correlationId, Guid causationId, string userId, string email, string firstName, string lastName, string activationToken) : base(aggregateId, 0)
-        {
-            Email = email;
-            FirstName = firstName;
-            LastName = lastName;
-            ActivationToken = activationToken;
-            CorrelationId = correlationId;
-            CausationId = causationId;
-            UserId = userId;
         }
     }
 }

@@ -1,23 +1,12 @@
-﻿using System;
-using Newtonsoft.Json;
-using OpenEventSourcing.Events;
+﻿using MessagePack;
+using SIO.Infrastructure.Events;
 
 namespace SIO.Domain.User.Events
 {
     public class UserVerified : Event
     {
-        public UserVerified(Guid aggregateId, Guid correlationId, string userId) : base(aggregateId, 0)
+        public UserVerified(string subject, int version) : base(subject, version)
         {
-            CorrelationId = correlationId;
-            UserId = userId;
-        }
-
-        [JsonConstructor]
-        public UserVerified(Guid aggregateId, Guid causationId, Guid correlationId, string userId) : base(aggregateId, 0)
-        {
-            CorrelationId = correlationId;
-            CausationId = causationId;
-            UserId = userId;
         }
     }
 }

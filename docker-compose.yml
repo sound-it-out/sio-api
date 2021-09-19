@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  sio.api:
+    image: ${DOCKER_REGISTRY-}sioapi
+    container_name: sio.api
+    build:
+      context: .
+      dockerfile: src/SIO.Api/Dockerfile
+  sio.api.sql.projections:
+    image: "microsoft/mssql-server-linux"
+    container_name: sio.api.sql.projections
+networks:    
+  default:
+    external:
+        name: sio.network
