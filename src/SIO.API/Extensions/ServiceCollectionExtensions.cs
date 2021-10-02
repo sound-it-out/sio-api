@@ -118,8 +118,8 @@ namespace SIO.Api.Extensions
                     {
                         Implicit = new OpenApiOAuthFlow
                         {
-                            AuthorizationUrl = new Uri($"{configuration.GetValue<string>("Identity:Authority")}/connect/authorize"),
-                            TokenUrl = new Uri($"{configuration.GetValue<string>("Identity:Authority")}/connect/token"),
+                            AuthorizationUrl = new Uri($"http://host.docker.internal:5000/connect/authorize"),
+                            TokenUrl = new Uri($"http://host.docker.internal:5000/connect/token"),
                             Scopes = new Dictionary<string, string>
                             {
                                 { "api", "api" }

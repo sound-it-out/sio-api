@@ -1,10 +1,12 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SIO.Api.Extensions;
+using SIO.AWS.Extensions;
 using SIO.Domain.Extensions;
+using SIO.Google.Extensions;
 using SIO.Redis.Extensions;
 
 namespace SIO.Api
@@ -26,7 +28,9 @@ namespace SIO.Api
                 .AddAuthentication(_configuration)
                 .AddOpenApi(_configuration)
                 .AddDomain()
-                .AddRedis(o => o.ConnectionString = _configuration.GetConnectionString("Redis"));
+                .AddRedis(o => o.ConnectionString = _configuration.GetConnectionString("Redis"))
+                .AddGoogleTranslations(_configuration)
+                .AddAWSTranslations();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -2,6 +2,7 @@
 {
     public enum TranslationType
     {
-        Google
+        Google,
+        AWS
     }
 }

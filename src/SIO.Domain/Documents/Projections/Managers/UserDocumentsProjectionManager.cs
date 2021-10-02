@@ -37,6 +37,7 @@ namespace SIO.Domain.Documents.Projections.Managers
 
             await Task.WhenAll(_projectionWriters.Select(pw => pw.AddAsync(@event.Subject, () => new UserDocuments
             {
+                UserId = @event.Subject,
                 Documents = new List<UserDocument>()
             }, cancellationToken)));
         }
@@ -49,16 +50,19 @@ namespace SIO.Domain.Documents.Projections.Managers
                 cancellationToken.ThrowIfCancellationRequested();
             }
 
-            await Task.WhenAll(_projectionWriters.Select(pw => pw.UpdateAsync(@event.User, userDocuments =>
+            foreach(var pw in  _projectionWriters)
             {
-                var documents = userDocuments.Documents.ToList();
-                documents.Add(new UserDocument 
+                await pw.UpdateAsync(@event.User, userDocuments =>
                 {
-                    DocumentId = @event.Subject, 
-                    FileName = @event.FileName
-                });
-                userDocuments.Documents = documents;
-            }, cancellationToken)));
+                    var documents = userDocuments.Documents.ToList();
+                    documents.Add(new UserDocument
+                    {
+                        DocumentId = @event.Subject,
+                        FileName = @event.FileName
+                    });
+                    userDocuments.Documents = documents;
+                }, cancellationToken);
+            }
         }
 
         private async Task HandleAsync(DocumentDeleted @event, CancellationToken cancellationToken = default)

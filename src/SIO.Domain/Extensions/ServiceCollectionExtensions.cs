@@ -8,9 +8,14 @@ using SIO.Domain.Documents.CommandHandlers;
 using SIO.Domain.Documents.Commands;
 using SIO.Domain.Documents.Projections;
 using SIO.Domain.Documents.Projections.Managers;
+using SIO.Domain.Documents.Queries;
+using SIO.Domain.Documents.QueryHandlers;
 using SIO.Domain.Processes;
+using SIO.Domain.Translations.Queries;
+using SIO.Domain.Translations.QueryHandlers;
 using SIO.Infrastructure.Commands;
 using SIO.Infrastructure.Projections;
+using SIO.Infrastructure.Queries;
 
 namespace SIO.Domain.Extensions
 {
@@ -18,7 +23,9 @@ namespace SIO.Domain.Extensions
     {
         public static IServiceCollection AddDomain(this IServiceCollection services)
         {
-            return services.AddDocuments();
+            return services.AddDocuments()
+                .AddTranslations()
+                .AddMemoryCache();
         }
 
         public static IServiceCollection AddDocuments(this IServiceCollection services)
@@ -36,12 +43,23 @@ namespace SIO.Domain.Extensions
             services.AddSingleton(sp => UserDocumentsProjectionManagerFactory(sp));
 
             //Register hosted services from singleton to ensure that we can stop and start on demand;
-            //services.AddHostedService(sp => sp.GetRequiredService<IProjector<DocumentAudit>>());
-            //services.AddHostedService(sp => sp.GetRequiredService<IProjector<Document>>());
-            //services.AddHostedService(sp => sp.GetRequiredService<IProjector<UserDocuments>>());
+            services.AddHostedService(sp => sp.GetRequiredService<IProjector<DocumentAudit>>());
+            services.AddHostedService(sp => sp.GetRequiredService<IProjector<Document>>());
+            services.AddHostedService(sp => sp.GetRequiredService<IProjector<UserDocuments>>());
 
             //Commands
             services.AddScoped<ICommandHandler<UploadDocumentCommand>, UploadDocumentCommandHandler>();
+
+            //Queries
+            services.AddScoped<IQueryHandler<GetDocumentsForUserQuery, GetDocumentsForUserQueryResult>, GetDocumentsForUserQueryHandler>();        
+
+            return services;
+        }
+
+        public static IServiceCollection AddTranslations(this IServiceCollection services)
+        {
+            //Queries
+            services.AddScoped<IQueryHandler<GetTranslationOptionsQuery, GetTranslationOptionsQueryResult>, GetTranslationOptionsQueryHandler>();
 
             return services;
         }

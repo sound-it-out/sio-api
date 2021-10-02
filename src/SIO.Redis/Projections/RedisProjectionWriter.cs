@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MessagePack;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using SIO.Infrastructure.Projections;
 using SIO.Infrastructure.Serialization;
 using SIO.Redis.Cache;
-using StackExchange.Redis;
 
 namespace SIO.Redis.Projections
 {
@@ -75,7 +71,7 @@ namespace SIO.Redis.Projections
 
             var view = _eventDeserializer.Deserialize<TView>(await _cache.GetAsync(BuildKey(subject), cancellationToken));
             update(view);
-            await _cache.SetAsync(BuildKey(subject), _eventSerializer.Serialize(view));
+            await _cache.SetAsync(BuildKey(subject), _eventSerializer.Serialize(view), cancellationToken);
             return view;
         }
 
@@ -90,7 +86,8 @@ namespace SIO.Redis.Projections
             var view = await UpdateAsync(subject, view =>
             {
                 update(view);
-            });
+                return view;
+            }, cancellationToken);
 
             return view;
         }
@@ -104,7 +101,7 @@ namespace SIO.Redis.Projections
             }
 
             var keys = await _cache.ScanAsync(BuildKey("*"), cancellationToken);
-            await _cache.RemoveAsync(keys);
+            await _cache.RemoveAsync(keys, cancellationToken);
         }
 
         public async Task<TView> RetrieveAsync(string subject, CancellationToken cancellationToken = default)

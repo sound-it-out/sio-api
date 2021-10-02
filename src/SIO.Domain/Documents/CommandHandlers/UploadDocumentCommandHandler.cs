@@ -85,8 +85,17 @@ namespace SIO.Domain.Documents.CommandHandlers
 
             events = events.ToArray();
 
-            await _aggregateRepository.SaveAsync(aggregate, command, 0);
-            await _eventBusPublisher.PublishAsync(events.Select(@event => new EventNotification<IEvent>(aggregate.Id, @event, command.CorrelationId, CausationId.From(command.Id), @event.Timestamp, command.Actor)));
+            await _aggregateRepository.SaveAsync(aggregate, command, 0, cancellationToken);
+            await _eventBusPublisher.PublishAsync(
+                events.Select(@event => 
+                    new EventNotification<IEvent>(
+                        aggregate.Id,
+                        @event,
+                        command.CorrelationId,
+                        CausationId.From(command.Id),
+                        @event.Timestamp, command.Actor)
+                    )
+                , cancellationToken);
         }
     }
 }

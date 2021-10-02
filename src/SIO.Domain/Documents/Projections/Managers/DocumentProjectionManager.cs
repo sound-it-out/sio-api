@@ -61,7 +61,7 @@ namespace SIO.Domain.Documents.Projections.Managers
                 document.TranslationSubject = @event.Subject;
                 document.TranslationProgress = TranslationProgress.Queued;
                 document.Version = @event.Version;
-            })));
+            }, cancellationToken)));
         }
 
         private async Task HandleAsync(TranslationStarted @event, CancellationToken cancellationToken = default)
@@ -77,7 +77,7 @@ namespace SIO.Domain.Documents.Projections.Managers
                 document.TranslationProgress = TranslationProgress.Started;
                 document.TotalCharacters = @event.CharacterCount;
                 document.Version = @event.Version;
-            })));
+            }, cancellationToken)));
         }
 
         private async Task HandleAsync(TranslationSucceded @event, CancellationToken cancellationToken = default)
@@ -92,7 +92,7 @@ namespace SIO.Domain.Documents.Projections.Managers
             {
                 document.TranslationProgress = TranslationProgress.Completed;
                 document.Version = @event.Version;
-            })));
+            }, cancellationToken)));
         }
 
         private async Task HandleAsync(TranslationFailed @event, CancellationToken cancellationToken = default)
@@ -107,7 +107,7 @@ namespace SIO.Domain.Documents.Projections.Managers
             {
                 document.TranslationProgress = TranslationProgress.Failed;
                 document.Version = @event.Version;
-            })));
+            }, cancellationToken)));
         }
 
         private async Task HandleAsync(TranslationCharactersProcessed @event, CancellationToken cancellationToken = default)
@@ -121,9 +121,9 @@ namespace SIO.Domain.Documents.Projections.Managers
             await Task.WhenAll(_projectionWriters.Select(pw => pw.UpdateAsync(@event.DocumentSubject, document =>
             {
                 document.TranslationProgress = TranslationProgress.Completed;
-                document.TotalCharacters += @event.CharactersProcessed; 
+                document.CharactersProcessed += @event.CharactersProcessed; 
                 document.Version = @event.Version;
-            })));
+            }, cancellationToken)));
         }
 
         private async Task HandleAsync(DocumentDeleted @event, CancellationToken cancellationToken = default)
