@@ -40,11 +40,13 @@ namespace SIO.Domain.Documents.Aggregates
             _state.TranslationType = @event.TranslationType;
             _state.FileName = @event.FileName;
             _state.User = @event.User;
+            Version = @event.Version;
         }
 
         public void Handle(DocumentDeleted @event)
         {
             _state.Deleted = true;
+            Version = @event.Version;
         }
     }
 }
