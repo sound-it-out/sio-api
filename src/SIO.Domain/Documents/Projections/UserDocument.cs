@@ -1,7 +1,4 @@
-﻿using System;
-using MessagePack;
-
-namespace SIO.Domain.Documents.Projections
+﻿namespace SIO.Domain.Documents.Projections
 {
     public class UserDocument
     {

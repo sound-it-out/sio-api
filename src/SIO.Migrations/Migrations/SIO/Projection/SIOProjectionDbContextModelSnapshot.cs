@@ -34,13 +34,25 @@ namespace SIO.Migrations.Migrations.SIO.Projection
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<long>("CharactersProcessed")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("FileName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("TotalCharacters")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("TranslationProgress")
+                        .HasColumnType("int");
 
                     b.Property<string>("TranslationSubject")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TranslationType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -50,13 +62,10 @@ namespace SIO.Migrations.Migrations.SIO.Projection
 
             modelBuilder.Entity("SIO.Domain.Documents.Projections.UserDocuments", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
+                    b.HasKey("UserId");
 
                     b.ToTable("UserDocuments");
                 });

@@ -28,7 +28,7 @@ namespace SIO.Api
                 .AddAuthentication(_configuration)
                 .AddOpenApi(_configuration)
                 .AddDomain()
-                .AddRedis(o => o.ConnectionString = _configuration.GetConnectionString("Redis"))
+                //.AddRedis(o => o.ConnectionString = _configuration.GetConnectionString("Redis"))
                 .AddGoogleTranslations(_configuration)
                 .AddAWSTranslations();
         }

@@ -42,11 +42,6 @@ namespace SIO.Domain.Extensions
             services.AddSingleton(sp => DocumentProjectionManagerFactory(sp));
             services.AddSingleton(sp => UserDocumentsProjectionManagerFactory(sp));
 
-            //Register hosted services from singleton to ensure that we can stop and start on demand;
-            services.AddHostedService(sp => sp.GetRequiredService<IProjector<DocumentAudit>>());
-            services.AddHostedService(sp => sp.GetRequiredService<IProjector<Document>>());
-            services.AddHostedService(sp => sp.GetRequiredService<IProjector<UserDocuments>>());
-
             //Commands
             services.AddScoped<ICommandHandler<UploadDocumentCommand>, UploadDocumentCommandHandler>();
 

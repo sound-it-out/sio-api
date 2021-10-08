@@ -5,7 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SIO.Domain.Documents.Events;
-using SIO.Domain.User.Events;
+using SIO.Domain.Users.Events;
+using SIO.Infrastructure;
 using SIO.Infrastructure.Projections;
 
 namespace SIO.Domain.Documents.Projections.Managers

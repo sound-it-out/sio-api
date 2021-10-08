@@ -1,5 +1,4 @@
-﻿using MessagePack;
-using SIO.Domain.Documents.Events;
+﻿using SIO.Domain.Documents.Events;
 using SIO.Infrastructure.Projections;
 
 namespace SIO.Domain.Documents.Projections

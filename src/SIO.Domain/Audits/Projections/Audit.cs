@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using MessagePack;
 using SIO.Infrastructure.Projections;
 
 namespace SIO.Domain.Audits.Projections

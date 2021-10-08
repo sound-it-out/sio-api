@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SIO.Domain.Audits.Projections;
 using SIO.Domain.Documents.Events;
+using SIO.Infrastructure;
 using SIO.Infrastructure.Projections;
 
 namespace SIO.Domain.Documents.Projections.Managers
@@ -39,7 +40,8 @@ namespace SIO.Domain.Documents.Projections.Managers
                 Events = new AuditEvent[]
                 {
                     new AuditEvent 
-                    { 
+                    {
+                        Id = Subject.New(),
                         TimeStamp = @event.Timestamp, 
                         User = @event.User, 
                         Message = "Document uploaded" 
@@ -61,6 +63,7 @@ namespace SIO.Domain.Documents.Projections.Managers
                 var events = audit.Events.ToList();
                 events.Add(new AuditEvent
                 {
+                    Id = Subject.New(),
                     TimeStamp = @event.Timestamp,
                     User = @event.User,
                     Message = "Document removed"

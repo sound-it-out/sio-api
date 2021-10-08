@@ -1,6 +1,6 @@
 ﻿using SIO.Infrastructure.Events;
 
-namespace SIO.Domain.User.Events
+namespace SIO.Domain.Users.Events
 {
     public class UserPasswordTokenGenerated : Event
     {

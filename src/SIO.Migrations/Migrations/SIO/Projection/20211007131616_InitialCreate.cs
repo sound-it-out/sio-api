@@ -25,7 +25,11 @@ namespace SIO.Migrations.Migrations.SIO.Projection
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     TranslationType = table.Column<int>(type: "int", nullable: false),
                     TranslationSubject = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CharactersProcessed = table.Column<long>(type: "bigint", nullable: false),
+                    TotalCharacters = table.Column<long>(type: "bigint", nullable: false),
+                    TranslationProgress = table.Column<int>(type: "int", nullable: false),
+                    Version = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -50,12 +54,11 @@ namespace SIO.Migrations.Migrations.SIO.Projection
                 name: "UserDocuments",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserDocuments", x => x.Id);
+                    table.PrimaryKey("PK_UserDocuments", x => x.UserId);
                 });
 
             migrationBuilder.CreateTable(
@@ -94,7 +97,7 @@ namespace SIO.Migrations.Migrations.SIO.Projection
                         name: "FK_UserDocument_UserDocuments_ParentId",
                         column: x => x.ParentId,
                         principalTable: "UserDocuments",
-                        principalColumn: "Id",
+                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
 

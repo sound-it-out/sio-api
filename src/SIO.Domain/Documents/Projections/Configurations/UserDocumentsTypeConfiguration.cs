@@ -9,8 +9,8 @@ namespace SIO.Domain.Documents.Projections.Configurations
         public void Configure(EntityTypeBuilder<UserDocuments> builder)
         {
             builder.ToTable(nameof(UserDocuments));
-            builder.HasKey(ud => ud.Id);
-            builder.Property(ud => ud.Id)
+            builder.HasKey(ud => ud.UserId);
+            builder.Property(ud => ud.UserId)
                    .ValueGeneratedNever();
 
             builder.OwnsMany(uds => uds.Documents, b => {

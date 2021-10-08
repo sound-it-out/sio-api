@@ -1,6 +1,6 @@
 ﻿using SIO.Domain.Documents.Events;
 using SIO.Domain.Translations.Events;
-using SIO.Domain.User.Events;
+using SIO.Domain.Users.Events;
 using System;
 
 namespace SIO.Domain

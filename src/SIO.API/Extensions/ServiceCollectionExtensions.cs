@@ -10,8 +10,10 @@ using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi.Models;
 using SIO.Api.OpenApi;
 using SIO.Domain;
+using SIO.Domain.Documents.Projections;
 using SIO.Infrastructure.Azure.ServiceBus.Extensions;
 using SIO.Infrastructure.Azure.Storage.Extensions;
+using SIO.Infrastructure.EntityFrameworkCore.Extensions;
 using SIO.Infrastructure.EntityFrameworkCore.SqlServer.Extensions;
 using SIO.Infrastructure.Extensions;
 using SIO.Infrastructure.Serialization.Json.Extensions;
@@ -59,6 +61,9 @@ namespace SIO.Api.Extensions
                     options.AddStore(configuration.GetConnectionString("Store"), o => o.MigrationsAssembly($"{nameof(SIO)}.{nameof(Migrations)}"));
                     options.AddProjections(configuration.GetConnectionString("Projection"), o => o.MigrationsAssembly($"{nameof(SIO)}.{nameof(Migrations)}"));
                 })
+                .AddEntityFrameworkCoreStoreProjector<Document>()
+                .AddEntityFrameworkCoreStoreProjector<DocumentAudit>()
+                .AddEntityFrameworkCoreStoreProjector<UserDocuments>()
                 .AddAzureServiceBus(options =>
                 {
                     options.UseConnection(configuration.GetConnectionString("AzureServiceBus"))
