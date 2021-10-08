@@ -1,28 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <Compile Remove="Translation\Projections\**" />
-    <EmbeddedResource Remove="Translation\Projections\**" />
-    <None Remove="Translation\Projections\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Amazon.S3" Version="0.19.0" />
-    <PackageReference Include="Clipboard" Version="1.2.1" />
-    <PackageReference Include="Google.Cloud.TextToSpeech.V1" Version="2.1.0" />
-    <PackageReference Include="Hangfire" Version="1.7.17" />
-    <PackageReference Include="Hangfire.Core" Version="1.7.17" />
-    <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.2.2" />
-    <PackageReference Include="OpenEventSourcing" Version="0.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SIO.Infrastructure\SIO.Infrastructure.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
+    <PackageReference Include="SIO.Infrastructure" Version="0.0.3" />
+    <PackageReference Include="SIO.Infrastructure.Azure.Storage" Version="0.0.3" />
+    <PackageReference Include="SIO.Infrastructure.EntityFrameworkCore" Version="0.0.3" />
   </ItemGroup>
 
 </Project>

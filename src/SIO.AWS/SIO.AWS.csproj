@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.Polly" Version="3.7.3.13" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.3.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SIO.Domain\SIO.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
