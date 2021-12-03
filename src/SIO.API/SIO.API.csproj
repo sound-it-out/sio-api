@@ -17,17 +17,15 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
-    <PackageReference Include="SIO.Infrastructure.Azure.ServiceBus" Version="0.0.3" />
-    <PackageReference Include="SIO.Infrastructure.Azure.Storage" Version="0.0.3" />
-    <PackageReference Include="SIO.Infrastructure.RabbitMQ" Version="0.0.3" />
-    <PackageReference Include="SIO.Infrastructure.Serialization.Json" Version="0.0.3" />
+    <PackageReference Include="SIO.Infrastructure.Azure.ServiceBus" Version="0.0.5" />
+    <PackageReference Include="SIO.Infrastructure.Azure.Storage" Version="0.0.5" />
+    <PackageReference Include="SIO.Infrastructure.RabbitMQ" Version="0.0.5" />
+    <PackageReference Include="SIO.Infrastructure.Serialization.Json" Version="0.0.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SIO.AWS\SIO.AWS.csproj" />
     <ProjectReference Include="..\SIO.Domain\SIO.Domain.csproj" />
-    <ProjectReference Include="..\SIO.Google\SIO.Google.csproj" />
     <ProjectReference Include="..\SIO.Migrations\SIO.Migrations.csproj" />
     <ProjectReference Include="..\SIO.Redis\SIO.Redis.csproj" />
   </ItemGroup>

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -10,9 +10,13 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
-    <PackageReference Include="SIO.Infrastructure" Version="0.0.3" />
-    <PackageReference Include="SIO.Infrastructure.Azure.Storage" Version="0.0.3" />
-    <PackageReference Include="SIO.Infrastructure.EntityFrameworkCore" Version="0.0.3" />
+    <PackageReference Include="SIO.Infrastructure" Version="0.0.5" />
+    <PackageReference Include="SIO.Infrastructure.Azure.Storage" Version="0.0.5" />
+    <PackageReference Include="SIO.Infrastructure.EntityFrameworkCore" Version="0.0.5" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="TranslationOptions\Events\" />
   </ItemGroup>
 
 </Project>

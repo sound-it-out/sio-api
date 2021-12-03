@@ -13,14 +13,15 @@ namespace SIO.Domain.Documents.Aggregates
 
         public override DocumentState GetState() => new DocumentState(_state);
 
-        public void Upload(string subject, string user, TranslationType translationType, string fileName)
+        public void Upload(string subject, string user, TranslationType translationType, string fileName, string translationSubject)
         {
             Apply(new DocumentUploaded(
                 subject: subject,
                 version: 1,
                 user: user,
                 translationType: translationType,
-                fileName: fileName
+                fileName: fileName,
+                translationSubject: translationSubject
             ));
         }
 

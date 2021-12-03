@@ -9,8 +9,13 @@ services:
       dockerfile: src/SIO.Api/Dockerfile
     depends_on: 
       - sio.api.sql.projections
+    external_links:
+      - sio.sql.store
+      - sio.rabbitmq
+      - sio.storage
+      - sio.redis
   sio.api.sql.projections:
-    image: "microsoft/mssql-server-linux"
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
     container_name: sio.api.sql.projections
 networks:    
   default:

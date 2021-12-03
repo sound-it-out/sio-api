@@ -70,6 +70,22 @@ namespace SIO.Migrations.Migrations.SIO.Projection
                     b.ToTable("UserDocuments");
                 });
 
+            modelBuilder.Entity("SIO.Domain.TranslationOptions.Projections.TranslationOption", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TranslationType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TranslationOption");
+                });
+
             modelBuilder.Entity("SIO.Infrastructure.EntityFrameworkCore.Entities.ProjectionState", b =>
                 {
                     b.Property<string>("Name")

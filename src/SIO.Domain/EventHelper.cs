@@ -1,4 +1,5 @@
 ﻿using SIO.Domain.Documents.Events;
+using SIO.Domain.TranslationOptions.Events;
 using SIO.Domain.Translations.Events;
 using SIO.Domain.Users.Events;
 using System;
@@ -22,7 +23,8 @@ namespace SIO.Domain
             typeof(UserPasswordTokenGenerated),
             typeof(UserPurchasedCharacterTokens),
             typeof(UserRegistered),
-            typeof(UserVerified)
+            typeof(UserVerified),
+            typeof(TranslationOptionImported)
         };
     }
 }

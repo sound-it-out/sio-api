@@ -10,9 +10,10 @@ using SIO.Domain.Documents.Projections;
 using SIO.Domain.Documents.Projections.Managers;
 using SIO.Domain.Documents.Queries;
 using SIO.Domain.Documents.QueryHandlers;
-using SIO.Domain.Processes;
-using SIO.Domain.Translations.Queries;
-using SIO.Domain.Translations.QueryHandlers;
+using SIO.Domain.TranslationOptions.Projections;
+using SIO.Domain.TranslationOptions.Projections.Managers;
+using SIO.Domain.TranslationOptions.Queries;
+using SIO.Domain.TranslationOptions.QueryHandlers;
 using SIO.Infrastructure.Commands;
 using SIO.Infrastructure.Projections;
 using SIO.Infrastructure.Queries;
@@ -30,14 +31,6 @@ namespace SIO.Domain.Extensions
 
         public static IServiceCollection AddDocuments(this IServiceCollection services)
         {
-            // Projections
-            services.AddScoped<IProjectionManager<DocumentAudit>, DocumentAuditProjectionManager>();
-            services.AddScoped<IProjectionManager<Document>, DocumentProjectionManager>();
-            services.AddScoped<IProjectionManager<UserDocuments>, UserDocumentsProjectionManager>();
-
-            services.AddSingleton<IProjector<DocumentAudit>, StoreProjector<DocumentAudit>>();
-            services.AddSingleton<IProjector<Document>, StoreProjector<Document>>();
-            services.AddSingleton<IProjector<UserDocuments>, StoreProjector<UserDocuments>>();
             services.AddSingleton(sp => DocumentAuditProjectionManagerFactory(sp));
             services.AddSingleton(sp => DocumentProjectionManagerFactory(sp));
             services.AddSingleton(sp => UserDocumentsProjectionManagerFactory(sp));
@@ -53,6 +46,8 @@ namespace SIO.Domain.Extensions
 
         public static IServiceCollection AddTranslations(this IServiceCollection services)
         {
+            services.AddSingleton(sp => TranslationOPtionProjectionManagerFactory(sp));
+
             //Queries
             services.AddScoped<IQueryHandler<GetTranslationOptionsQuery, GetTranslationOptionsQueryResult>, GetTranslationOptionsQueryHandler>();
 
@@ -64,6 +59,14 @@ namespace SIO.Domain.Extensions
             return new Func<IEnumerable<IProjectionWriter<UserDocuments>>, IProjectionManager<UserDocuments>>(writers =>
             {
                 return new UserDocumentsProjectionManager(serviceProvider.GetRequiredService<ILogger<ProjectionManager<UserDocuments>>>(), writers);
+            });
+        }
+
+        private static Func<IEnumerable<IProjectionWriter<TranslationOption>>, IProjectionManager<TranslationOption>> TranslationOPtionProjectionManagerFactory(IServiceProvider serviceProvider)
+        {
+            return new Func<IEnumerable<IProjectionWriter<TranslationOption>>, IProjectionManager<TranslationOption>>(writers =>
+            {
+                return new TranslationOptionProjectionManager(serviceProvider.GetRequiredService<ILogger<ProjectionManager<TranslationOption>>>(), writers);
             });
         }
 

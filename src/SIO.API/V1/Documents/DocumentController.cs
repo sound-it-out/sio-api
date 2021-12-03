@@ -38,7 +38,7 @@ namespace SIO.Api.V1.Documents
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         public async Task<IActionResult> Upload([FromForm] UploadRequest request)
         {
-            await _commandDispatcher.DispatchAsync(new UploadDocumentCommand(Subject.New(), null, 1, CurrentActor, request.File, request.TranslationType));
+            await _commandDispatcher.DispatchAsync(new UploadDocumentCommand(Subject.New(), null, 1, CurrentActor, request.File, request.TranslationType, request.TranslationSubject));
             return Accepted();
         }
 

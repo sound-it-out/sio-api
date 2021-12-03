@@ -1,23 +1,28 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SIO.Api.Extensions;
-using SIO.AWS.Extensions;
 using SIO.Domain.Extensions;
-using SIO.Google.Extensions;
-using SIO.Redis.Extensions;
 
 namespace SIO.Api
 {
     public class Startup
     {
         private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _env;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
+            if(configuration == null)
+                throw new ArgumentNullException(nameof(configuration));
+            if(env == null)
+                throw new ArgumentNullException(nameof(env));
+
             _configuration = configuration;
+            _env = env;
         }        
 
         public void ConfigureServices(IServiceCollection services)
@@ -25,20 +30,18 @@ namespace SIO.Api
             services.AddControllers();
 
             services.AddInfrastructure(_configuration)
-                .AddAuthentication(_configuration)
+                .AddAuthentication(_configuration, _env)
                 .AddOpenApi(_configuration)
-                .AddDomain()
+                .AddDomain();
                 //.AddRedis(o => o.ConnectionString = _configuration.GetConnectionString("Redis"))
-                .AddGoogleTranslations(_configuration)
-                .AddAWSTranslations();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
+            if (_env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 
-            if (!env.IsDevelopment())
+            if (!_env.IsDevelopment())
                 app.UseHttpsRedirection();
 
             app.UseCors(x => x

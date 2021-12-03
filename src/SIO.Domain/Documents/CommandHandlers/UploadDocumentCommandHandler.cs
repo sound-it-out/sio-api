@@ -69,7 +69,8 @@ namespace SIO.Domain.Documents.CommandHandlers
                 subject: command.Subject,
                 user: command.Actor,
                 translationType: command.TranslationType,
-                fileName: command.File.FileName
+                fileName: command.File.FileName,
+                translationSubject: command.TranslationSubject
             );
 
             await _aggregateRepository.SaveAsync(aggregate, command, 0, cancellationToken);
