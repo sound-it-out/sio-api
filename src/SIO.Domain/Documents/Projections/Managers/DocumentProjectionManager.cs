@@ -43,6 +43,7 @@ namespace SIO.Domain.Documents.Projections.Managers
             {
                 Id = @event.Subject, 
                 TranslationType = @event.TranslationType,
+                TranslationOptionSubject = @event.TranslationSubject,
                 FileName = @event.FileName,
                 Version = 1
             }, cancellationToken)));

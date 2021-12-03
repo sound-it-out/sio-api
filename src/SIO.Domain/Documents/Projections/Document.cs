@@ -7,6 +7,7 @@ namespace SIO.Domain.Documents.Projections
     {
         public string Id { get; set; }
         public TranslationType TranslationType { get; set; }
+        public string TranslationOptionSubject { get; set; }
         public string TranslationSubject { get; set; }
         public string FileName { get; set; }
         public long CharactersProcessed { get; set; }

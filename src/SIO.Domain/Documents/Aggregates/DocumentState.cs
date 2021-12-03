@@ -10,6 +10,7 @@ namespace SIO.Domain.Documents.Aggregates
         public string TranslationSubject { get; set; }
         public string User { get; set; }
         public TranslationType TranslationType { get; set; }
+        public string TranslationOptionSubject { get; set; }
         public TranslationProgress Progress { get; set; }
         public string FileName { get; set; }
         public long TranslationCharactersProcessed { get; set; }
@@ -25,6 +26,7 @@ namespace SIO.Domain.Documents.Aggregates
 
             Subject = state.Subject;
             TranslationSubject = state.TranslationSubject;
+            TranslationOptionSubject = state.TranslationOptionSubject;
             User = state.User;
             Progress = state.Progress;
             FileName = state.FileName;

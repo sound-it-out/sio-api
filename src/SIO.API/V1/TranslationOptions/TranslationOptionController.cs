@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,9 +27,9 @@ namespace SIO.Api.V1.Translations
         }
 
         [HttpGet()]
-        public async Task<IEnumerable<TranslationOptionResponse>> ListOptions()
+        public async Task<IEnumerable<TranslationOptionResponse>> ListOptions(CancellationToken cancellationToken = default)
         {
-            var translationOptionsResult = await _queryDispatcher.DispatchAsync(new GetTranslationOptionsQuery(CorrelationId.New(), CurrentActor));
+            var translationOptionsResult = await _queryDispatcher.DispatchAsync(new GetTranslationOptionsQuery(CorrelationId.New(), CurrentActor), cancellationToken);
             return translationOptionsResult.TranslationOptions.Select(to => new TranslationOptionResponse(to.Id, to.Subject, to.TranslationType));
         }
     }

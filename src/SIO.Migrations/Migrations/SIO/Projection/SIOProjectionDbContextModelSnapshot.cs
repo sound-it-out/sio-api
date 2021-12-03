@@ -43,6 +43,9 @@ namespace SIO.Migrations.Migrations.SIO.Projection
                     b.Property<long>("TotalCharacters")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("TranslationOptionSubject")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("TranslationProgress")
                         .HasColumnType("int");
 

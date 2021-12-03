@@ -39,6 +39,7 @@ namespace SIO.Domain.Documents.Aggregates
             Id = @event.Subject;
             _state.Subject = @event.Subject;
             _state.TranslationType = @event.TranslationType;
+            _state.TranslationOptionSubject = @event.TranslationSubject;
             _state.FileName = @event.FileName;
             _state.User = @event.User;
             Version = @event.Version;
