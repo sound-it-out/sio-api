@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SIO.Infrastructure.EntityFrameworkCore.DbContexts;
 using SIO.Infrastructure.Events;
 using SIO.Infrastructure.Projections;
 
@@ -10,11 +11,11 @@ namespace SIO.Domain.Projections
     internal sealed class InMemoryProjector<TView> : IInMemoryProjector<TView>
         where TView : class, IProjection
     {
-        private readonly IEventStore _eventStore;
+        private readonly IEventStore<SIOStoreDbContext> _eventStore;
         private readonly IProjectionManagerFactory<TView> _projectionManagerFactory;
         private readonly ILogger<InMemoryProjector<TView>> _logger;
 
-        public InMemoryProjector(IEventStore eventStore,
+        public InMemoryProjector(IEventStore<SIOStoreDbContext> eventStore,
             IProjectionManagerFactory<TView> projectionManagerFactory,
             ILogger<InMemoryProjector<TView>> logger)
         {

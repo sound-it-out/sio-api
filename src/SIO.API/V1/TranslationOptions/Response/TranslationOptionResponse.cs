@@ -1,4 +1,4 @@
-﻿using SIO.Domain.Documents.Events;
+﻿using SIO.IntegrationEvents.Documents;
 
 namespace SIO.Api.V1.TranslationOptions.Response
 {

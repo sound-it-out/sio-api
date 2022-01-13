@@ -1,5 +1,5 @@
-﻿using SIO.Domain.Documents.Events;
-using SIO.Infrastructure.Projections;
+﻿using SIO.Infrastructure.Projections;
+using SIO.IntegrationEvents.Documents;
 
 namespace SIO.Domain.TranslationOptions.Projections
 {

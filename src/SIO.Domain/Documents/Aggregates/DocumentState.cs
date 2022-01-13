@@ -1,6 +1,6 @@
-﻿using SIO.Domain.Documents.Events;
+﻿using System;
 using SIO.Infrastructure.Domain;
-using System;
+using SIO.IntegrationEvents.Documents;
 
 namespace SIO.Domain.Documents.Aggregates
 {

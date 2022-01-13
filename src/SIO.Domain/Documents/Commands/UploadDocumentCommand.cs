@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
-using SIO.Domain.Documents.Events;
 using SIO.Infrastructure;
 using SIO.Infrastructure.Commands;
+using SIO.IntegrationEvents.Documents;
 
 namespace SIO.Domain.Documents.Commands
 {

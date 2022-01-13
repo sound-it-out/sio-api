@@ -8,6 +8,7 @@ using SIO.Domain.Documents.Aggregates;
 using SIO.Domain.Documents.Commands;
 using SIO.Infrastructure.Commands;
 using SIO.Infrastructure.Domain;
+using SIO.Infrastructure.EntityFrameworkCore.DbContexts;
 using SIO.Infrastructure.Events;
 using SIO.Infrastructure.Files;
 
@@ -16,12 +17,12 @@ namespace SIO.Domain.Documents.CommandHandlers
     internal class UploadDocumentCommandHandler : ICommandHandler<UploadDocumentCommand>
     {
         private readonly ILogger<UploadDocumentCommandHandler> _logger;
-        private readonly IAggregateRepository _aggregateRepository;
+        private readonly IAggregateRepository<SIOStoreDbContext> _aggregateRepository;
         private readonly IAggregateFactory _aggregateFactory;
         private readonly IFileClient _fileClient;
 
         public UploadDocumentCommandHandler(ILogger<UploadDocumentCommandHandler> logger,
-            IAggregateRepository aggregateRepository,
+            IAggregateRepository<SIOStoreDbContext> aggregateRepository,
             IAggregateFactory aggregateFactory,
             IFileClient fileClient)
         {

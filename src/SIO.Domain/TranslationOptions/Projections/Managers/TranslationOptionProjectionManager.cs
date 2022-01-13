@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SIO.Domain.TranslationOptions.Events;
 using SIO.Infrastructure;
 using SIO.Infrastructure.Projections;
+using SIO.IntegrationEvents.TranslationOptions;
 
 namespace SIO.Domain.TranslationOptions.Projections.Managers
 {

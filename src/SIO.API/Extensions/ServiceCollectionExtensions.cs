@@ -16,6 +16,7 @@ using SIO.Domain.Documents.Projections;
 using SIO.Domain.Extensions;
 using SIO.Infrastructure.Azure.ServiceBus.Extensions;
 using SIO.Infrastructure.Azure.Storage.Extensions;
+using SIO.Infrastructure.EntityFrameworkCore.DbContexts;
 using SIO.Infrastructure.EntityFrameworkCore.Extensions;
 using SIO.Infrastructure.EntityFrameworkCore.SqlServer.Extensions;
 using SIO.Infrastructure.Extensions;
@@ -24,6 +25,7 @@ using SIO.Infrastructure.Serialization.Json.Extensions;
 using SIO.Infrastructure.Serialization.MessagePack.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SIO.Api.Extensions
 {
@@ -66,7 +68,7 @@ namespace SIO.Api.Extensions
             var builder = services.AddSIOInfrastructure();
 
                 builder.AddEntityFrameworkCoreSqlServer(options => {
-                    options.AddStore(configuration.GetConnectionString("Store"), o => o.MigrationsAssembly($"{nameof(SIO)}.{nameof(Migrations)}"));
+                    options.AddStore<SIOStoreDbContext>(configuration.GetConnectionString("Store"), o => o.MigrationsAssembly($"{nameof(SIO)}.{nameof(Migrations)}"));
                     options.AddProjections(configuration.GetConnectionString("Projection"), o => o.MigrationsAssembly($"{nameof(SIO)}.{nameof(Migrations)}"));
                 })
                 .AddEntityFrameworkCoreStoreProjector(options => options.WithDomainProjections())
@@ -74,7 +76,7 @@ namespace SIO.Api.Extensions
                 .AddCommands()
                 .AddEvents(options =>
                 {
-                    options.Register(EventHelper.AllEvents);
+                    options.Register(new IntegrationEvents.AllEvents().ToArray());
                 })
                 .AddQueries()
                 .AddJsonSerializers();
