@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SIO.Api.V1.Documents
@@ -36,19 +37,29 @@ namespace SIO.Api.V1.Documents
         
         [HttpPost("upload")]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
-        public async Task<IActionResult> Upload([FromForm] UploadRequest request)
+        public async Task<IActionResult> UploadAsync([FromForm] UploadRequest request, CancellationToken cancellationToken = default)
         {
-            await _commandDispatcher.DispatchAsync(new UploadDocumentCommand(Subject.New(), null, 1, CurrentActor, request.File, request.TranslationType));
+            await _commandDispatcher.DispatchAsync(new UploadDocumentCommand(Subject.New(), null, 1, CurrentActor, request.File, request.TranslationType, request.TranslationSubject), cancellationToken);
             return Accepted();
         }
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IEnumerable<UserDocumentResponse>> GetUserDocuments(int page = 1, int pageSize = 25)
+        public async Task<IEnumerable<UserDocumentResponse>> GetUserDocumentsAsync(int page = 1, int pageSize = 25, CancellationToken cancellationToken = default)
         {
-            var documentsResult = await _queryDispatcher.DispatchAsync(new GetDocumentsForUserQuery(CorrelationId.New(), CurrentActor, page, pageSize));
+            var documentsResult = await _queryDispatcher.DispatchAsync(new GetDocumentsForUserQuery(CorrelationId.New(), CurrentActor, page, pageSize), cancellationToken);
 
             return documentsResult.Documents.Select(d => new UserDocumentResponse(d.DocumentId, d.FileName));
+        }
+
+        [HttpGet("download/{id}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<FileStreamResult> DownloadAsync([FromRoute]string id, CancellationToken cancellationToken = default)
+        {
+            var documentStreamResult = await _queryDispatcher.DispatchAsync(new GetDocumentStreamQuery(CorrelationId.New(), CurrentActor, id), cancellationToken);
+
+
+            return File(documentStreamResult.Stream, documentStreamResult.ContentType, documentStreamResult.FileName);
         }
     }
 }

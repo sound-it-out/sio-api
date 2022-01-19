@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>ce66573c-03e2-4d13-9f5b-4ce9d527b5a2</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
@@ -10,24 +10,22 @@
 
   <ItemGroup>
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.5">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
-    <PackageReference Include="SIO.Infrastructure.Azure.ServiceBus" Version="0.0.3" />
-    <PackageReference Include="SIO.Infrastructure.Azure.Storage" Version="0.0.3" />
-    <PackageReference Include="SIO.Infrastructure.RabbitMQ" Version="0.0.3" />
-    <PackageReference Include="SIO.Infrastructure.Serialization.Json" Version="0.0.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+    <PackageReference Include="SIO.Infrastructure.Azure.ServiceBus" Version="0.0.8" />
+    <PackageReference Include="SIO.Infrastructure.Azure.Storage" Version="0.0.8" />
+    <PackageReference Include="SIO.Infrastructure.RabbitMQ" Version="0.0.8" />
+    <PackageReference Include="SIO.Infrastructure.Serialization.Json" Version="0.0.8" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SIO.AWS\SIO.AWS.csproj" />
     <ProjectReference Include="..\SIO.Domain\SIO.Domain.csproj" />
-    <ProjectReference Include="..\SIO.Google\SIO.Google.csproj" />
     <ProjectReference Include="..\SIO.Migrations\SIO.Migrations.csproj" />
     <ProjectReference Include="..\SIO.Redis\SIO.Redis.csproj" />
   </ItemGroup>

@@ -9,8 +9,10 @@ namespace SIO.Google.Extensions
     {
         public static IServiceCollection AddGoogleTranslations(this IServiceCollection services, IConfiguration configuration)
         {
-            return services.AddGoogleConfiguration(configuration)
-                .AddGoogleTranslations();
+            if(!string.IsNullOrEmpty(configuration.GetValue<string>("Google__Credentials__type")))
+                services.AddGoogleConfiguration(configuration).AddGoogleTranslations();
+
+            return services;
         }
 
         public static IServiceCollection AddGoogleTranslations(this IServiceCollection services)

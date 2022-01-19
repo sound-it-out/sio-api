@@ -1,5 +1,5 @@
-﻿using SIO.Domain.Documents.Events;
-using SIO.Infrastructure.Domain;
+﻿using SIO.Infrastructure.Domain;
+using SIO.IntegrationEvents.Documents;
 
 namespace SIO.Domain.Documents.Aggregates
 {
@@ -13,14 +13,15 @@ namespace SIO.Domain.Documents.Aggregates
 
         public override DocumentState GetState() => new DocumentState(_state);
 
-        public void Upload(string subject, string user, TranslationType translationType, string fileName)
+        public void Upload(string subject, string user, TranslationType translationType, string fileName, string translationSubject)
         {
             Apply(new DocumentUploaded(
                 subject: subject,
                 version: 1,
                 user: user,
                 translationType: translationType,
-                fileName: fileName
+                fileName: fileName,
+                translationSubject: translationSubject
             ));
         }
 
@@ -38,6 +39,7 @@ namespace SIO.Domain.Documents.Aggregates
             Id = @event.Subject;
             _state.Subject = @event.Subject;
             _state.TranslationType = @event.TranslationType;
+            _state.TranslationOptionSubject = @event.TranslationSubject;
             _state.FileName = @event.FileName;
             _state.User = @event.User;
             Version = @event.Version;

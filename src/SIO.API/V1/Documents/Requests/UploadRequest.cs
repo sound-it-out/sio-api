@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
-using SIO.Domain.Documents.Events;
+using SIO.IntegrationEvents.Documents;
 
 namespace SIO.Api.V1.Documents.Requests
 {
-    public record UploadRequest(IFormFile File, TranslationType TranslationType);
+    public record UploadRequest(IFormFile File, TranslationType TranslationType, string TranslationSubject);
 }

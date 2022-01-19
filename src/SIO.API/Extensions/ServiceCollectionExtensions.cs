@@ -1,31 +1,37 @@
 ﻿using IdentityModel.AspNetCore.OAuth2Introspection;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi.Models;
 using SIO.Api.OpenApi;
 using SIO.Domain;
 using SIO.Domain.Documents.Projections;
+using SIO.Domain.Extensions;
 using SIO.Infrastructure.Azure.ServiceBus.Extensions;
 using SIO.Infrastructure.Azure.Storage.Extensions;
+using SIO.Infrastructure.EntityFrameworkCore.DbContexts;
 using SIO.Infrastructure.EntityFrameworkCore.Extensions;
 using SIO.Infrastructure.EntityFrameworkCore.SqlServer.Extensions;
 using SIO.Infrastructure.Extensions;
+using SIO.Infrastructure.RabbitMQ.Extensions;
 using SIO.Infrastructure.Serialization.Json.Extensions;
 using SIO.Infrastructure.Serialization.MessagePack.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SIO.Api.Extensions
 {
     internal static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
         {
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                     .AddIdentityServerAuthentication(options =>
@@ -34,10 +40,13 @@ namespace SIO.Api.Extensions
                         options.ApiName = configuration.GetValue<string>("Identity:ApiResource");
                         options.EnableCaching = true;
                         options.CacheDuration = TimeSpan.FromMinutes(10);
-#if DEBUG
-                        options.RequireHttpsMetadata = false;
-                        IdentityModelEventSource.ShowPII = true;
-#endif
+
+                        if(env.IsDevelopment())
+                        {
+                            options.RequireHttpsMetadata = false;
+                            IdentityModelEventSource.ShowPII = true;
+                        }
+
                         options.TokenRetriever = (request) =>
                         {
                             var token = TokenRetrieval.FromAuthorizationHeader()(request);
@@ -56,32 +65,18 @@ namespace SIO.Api.Extensions
 
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSIOInfrastructure()
-                .AddEntityFrameworkCoreSqlServer(options => {
-                    options.AddStore(configuration.GetConnectionString("Store"), o => o.MigrationsAssembly($"{nameof(SIO)}.{nameof(Migrations)}"));
+            var builder = services.AddSIOInfrastructure();
+
+                builder.AddEntityFrameworkCoreSqlServer(options => {
+                    options.AddStore<SIOStoreDbContext>(configuration.GetConnectionString("Store"), o => o.MigrationsAssembly($"{nameof(SIO)}.{nameof(Migrations)}"));
                     options.AddProjections(configuration.GetConnectionString("Projection"), o => o.MigrationsAssembly($"{nameof(SIO)}.{nameof(Migrations)}"));
                 })
-                .AddEntityFrameworkCoreStoreProjector<Document>()
-                .AddEntityFrameworkCoreStoreProjector<DocumentAudit>()
-                .AddEntityFrameworkCoreStoreProjector<UserDocuments>()
-                .AddAzureServiceBus(options =>
-                {
-                    options.UseConnection(configuration.GetConnectionString("AzureServiceBus"))
-                    .UseTopic(e =>
-                    {
-                        e.WithName(configuration.GetValue<string>("Azure:ServiceBus:Topic"));
-                    })
-                    .AddSubscription(s =>
-                    {
-                        s.UseName(configuration.GetValue<string>("Azure:ServiceBus:Subscription"));
-                        s.ForEvents(EventHelper.AllEvents);
-                    });
-                })
+                .AddEntityFrameworkCoreStoreProjector(options => options.WithDomainProjections())
                 .AddAzureStorage(o => o.ConnectionString = configuration.GetConnectionString("AzureStorage"))
                 .AddCommands()
                 .AddEvents(options =>
                 {
-                    options.Register(EventHelper.AllEvents);
+                    options.Register(new IntegrationEvents.AllEvents().ToArray());
                 })
                 .AddQueries()
                 .AddJsonSerializers();

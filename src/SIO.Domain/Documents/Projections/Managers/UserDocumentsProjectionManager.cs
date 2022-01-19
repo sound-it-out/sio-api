@@ -4,10 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SIO.Domain.Documents.Events;
-using SIO.Domain.Users.Events;
-using SIO.Infrastructure;
 using SIO.Infrastructure.Projections;
+using SIO.IntegrationEvents.Documents;
+using SIO.IntegrationEvents.Users;
 
 namespace SIO.Domain.Documents.Projections.Managers
 {
@@ -51,19 +50,17 @@ namespace SIO.Domain.Documents.Projections.Managers
                 cancellationToken.ThrowIfCancellationRequested();
             }
 
-            foreach(var pw in  _projectionWriters)
+
+            await Task.WhenAll(_projectionWriters.Select(pw => pw.UpdateAsync(@event.User, userDocuments =>
             {
-                await pw.UpdateAsync(@event.User, userDocuments =>
+                var documents = userDocuments.Documents.ToList();
+                documents.Add(new UserDocument
                 {
-                    var documents = userDocuments.Documents.ToList();
-                    documents.Add(new UserDocument
-                    {
-                        DocumentId = @event.Subject,
-                        FileName = @event.FileName
-                    });
-                    userDocuments.Documents = documents;
-                }, cancellationToken);
-            }
+                    DocumentId = @event.Subject,
+                    FileName = @event.FileName
+                });
+                userDocuments.Documents = documents;
+            }, cancellationToken)));
         }
 
         private async Task HandleAsync(DocumentDeleted @event, CancellationToken cancellationToken = default)

@@ -1,5 +1,5 @@
-﻿using SIO.Domain.Documents.Events;
-using SIO.Infrastructure.Projections;
+﻿using SIO.Infrastructure.Projections;
+using SIO.IntegrationEvents.Documents;
 
 namespace SIO.Domain.Documents.Projections
 {
@@ -7,6 +7,7 @@ namespace SIO.Domain.Documents.Projections
     {
         public string Id { get; set; }
         public TranslationType TranslationType { get; set; }
+        public string TranslationOptionSubject { get; set; }
         public string TranslationSubject { get; set; }
         public string FileName { get; set; }
         public long CharactersProcessed { get; set; }

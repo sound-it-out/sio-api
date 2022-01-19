@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SIO.Domain.Documents.Events;
-using SIO.Domain.Translations.Events;
 using SIO.Infrastructure.Projections;
+using SIO.IntegrationEvents.Documents;
+using SIO.IntegrationEvents.Translations;
 
 namespace SIO.Domain.Documents.Projections.Managers
 {
@@ -43,6 +43,7 @@ namespace SIO.Domain.Documents.Projections.Managers
             {
                 Id = @event.Subject, 
                 TranslationType = @event.TranslationType,
+                TranslationOptionSubject = @event.TranslationSubject,
                 FileName = @event.FileName,
                 Version = 1
             }, cancellationToken)));

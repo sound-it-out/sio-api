@@ -3,15 +3,18 @@ version: '3.4'
 services:
   sio.api:
     image: ${DOCKER_REGISTRY-}sioapi
-    container_name: sio.api
     build:
       context: .
       dockerfile: src/SIO.Api/Dockerfile
     depends_on: 
       - sio.api.sql.projections
+    external_links:
+      - sio.sql.store
+      - sio.rabbitmq
+      - sio.storage
+      - sio.redis
   sio.api.sql.projections:
-    image: "microsoft/mssql-server-linux"
-    container_name: sio.api.sql.projections
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
 networks:    
   default:
     external:

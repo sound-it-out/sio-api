@@ -18,7 +18,7 @@ namespace SIO.Domain.Processes
         private CancellationTokenSource StoppingCts { get; set; }
         private readonly IProjectionManager<TProjection> _projectionManager;
         private readonly IServiceScope _scope;
-        private readonly IEventStore _eventStore;
+        private readonly IEventStore<SIOStoreDbContext> _eventStore;
         private readonly ILogger<StoreProjector<TProjection>> _logger;
         private readonly IOptionsSnapshot<StoreProjectorOptions> _options;
         private readonly ISIOProjectionDbContextFactory _projectionDbContextFactory;
@@ -36,7 +36,7 @@ namespace SIO.Domain.Processes
             _logger = logger;
 
             _projectionManager = _scope.ServiceProvider.GetRequiredService<IProjectionManager<TProjection>>();
-            _eventStore = _scope.ServiceProvider.GetRequiredService<IEventStore>();
+            _eventStore = _scope.ServiceProvider.GetRequiredService<IEventStore<SIOStoreDbContext>>();
             _options = _scope.ServiceProvider.GetRequiredService<IOptionsSnapshot<StoreProjectorOptions>>();
             _projectionDbContextFactory = _scope.ServiceProvider.GetRequiredService<ISIOProjectionDbContextFactory>();
 

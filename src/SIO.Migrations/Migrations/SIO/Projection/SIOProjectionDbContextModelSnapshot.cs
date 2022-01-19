@@ -43,6 +43,9 @@ namespace SIO.Migrations.Migrations.SIO.Projection
                     b.Property<long>("TotalCharacters")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("TranslationOptionSubject")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("TranslationProgress")
                         .HasColumnType("int");
 
@@ -68,6 +71,22 @@ namespace SIO.Migrations.Migrations.SIO.Projection
                     b.HasKey("UserId");
 
                     b.ToTable("UserDocuments");
+                });
+
+            modelBuilder.Entity("SIO.Domain.TranslationOptions.Projections.TranslationOption", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TranslationType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TranslationOption");
                 });
 
             modelBuilder.Entity("SIO.Infrastructure.EntityFrameworkCore.Entities.ProjectionState", b =>
