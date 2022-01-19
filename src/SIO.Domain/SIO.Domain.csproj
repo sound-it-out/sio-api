@@ -10,9 +10,9 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-    <PackageReference Include="SIO.Infrastructure" Version="0.0.7" />
-    <PackageReference Include="SIO.Infrastructure.Azure.Storage" Version="0.0.7" />
-    <PackageReference Include="SIO.Infrastructure.EntityFrameworkCore" Version="0.0.7" />
+    <PackageReference Include="SIO.Infrastructure" Version="0.0.8" />
+    <PackageReference Include="SIO.Infrastructure.Azure.Storage" Version="0.0.8" />
+    <PackageReference Include="SIO.Infrastructure.EntityFrameworkCore" Version="0.0.8" />
     <PackageReference Include="SIO.IntegrationEvents" Version="0.0.1" />
   </ItemGroup>
 

@@ -46,9 +46,10 @@ namespace SIO.Api
 
             app.UseCors(x => x
                 .AllowAnyMethod()
-                .AllowAnyHeader()
+                .AllowAnyHeader()                
                 .SetIsOriginAllowed(origin => true) // allow any origin
-                .AllowCredentials());
+                .AllowCredentials()
+                .WithExposedHeaders("Content-Disposition"));
 
             app.UseRouting();
             app.UseAuthentication();

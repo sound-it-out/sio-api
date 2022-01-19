@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SIO.Domain.Audits.Projections;
@@ -31,6 +32,7 @@ namespace SIO.Domain.Extensions
 
         public static IServiceCollection AddDocuments(this IServiceCollection services)
         {
+            services.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
             services.AddSingleton(sp => DocumentAuditProjectionManagerFactory(sp));
             services.AddSingleton(sp => DocumentProjectionManagerFactory(sp));
             services.AddSingleton(sp => UserDocumentsProjectionManagerFactory(sp));
@@ -39,7 +41,8 @@ namespace SIO.Domain.Extensions
             services.AddScoped<ICommandHandler<UploadDocumentCommand>, UploadDocumentCommandHandler>();
 
             //Queries
-            services.AddScoped<IQueryHandler<GetDocumentsForUserQuery, GetDocumentsForUserQueryResult>, GetDocumentsForUserQueryHandler>();        
+            services.AddScoped<IQueryHandler<GetDocumentsForUserQuery, GetDocumentsForUserQueryResult>, GetDocumentsForUserQueryHandler>();
+            services.AddScoped<IQueryHandler<GetDocumentStreamQuery, GetDocumentStreamQueryResult>, GetDocumentStreamQueryHandler>();
 
             return services;
         }
